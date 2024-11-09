@@ -1,6 +1,6 @@
 package mybatis.dao;
 
-import com.kosa.mini.domain.member.SignupDTO;
+import com.kosa.mini.mvc.domain.member.SignupDTO;
 import org.apache.ibatis.annotations.*;
 
 @Mapper

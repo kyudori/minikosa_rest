@@ -1,7 +1,7 @@
 package mybatis.dao;
 
-import com.kosa.mini.domain.home.StoreDTO;
-import com.kosa.mini.domain.store.StoreReviewDTO;
+import com.kosa.mini.mvc.domain.home.StoreDTO;
+import com.kosa.mini.mvc.domain.store.StoreReviewDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;

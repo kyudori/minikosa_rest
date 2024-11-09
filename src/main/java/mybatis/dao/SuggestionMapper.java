@@ -1,6 +1,6 @@
 package mybatis.dao;
 
-import com.kosa.mini.domain.member.ContactUs;
+import com.kosa.mini.mvc.domain.member.ContactUs;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
