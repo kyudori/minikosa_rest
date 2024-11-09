@@ -1,6 +1,6 @@
 package mybatis.dao;
 
-import com.kosa.mini.domain.store.Menu;
+import com.kosa.mini.mvc.domain.store.Menu;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;

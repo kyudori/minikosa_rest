@@ -1,9 +1,9 @@
 package mybatis.dao;
 
-import com.kosa.mini.domain.member.Member;
-import com.kosa.mini.domain.store.Menu;
-import com.kosa.mini.domain.store.Store;
-import com.kosa.mini.domain.store.StoreDTO;
+import com.kosa.mini.mvc.domain.member.Member;
+import com.kosa.mini.mvc.domain.store.Menu;
+import com.kosa.mini.mvc.domain.store.Store;
+import com.kosa.mini.mvc.domain.store.StoreDTO;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;

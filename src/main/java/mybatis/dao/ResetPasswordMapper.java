@@ -1,6 +1,6 @@
 package mybatis.dao;
 
-import com.kosa.mini.domain.member.ResetPasswordDTO;
+import com.kosa.mini.mvc.domain.member.ResetPasswordDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;

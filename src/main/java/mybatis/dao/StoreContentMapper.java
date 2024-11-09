@@ -1,9 +1,9 @@
 package mybatis.dao;
 
+import com.kosa.mini.mvc.domain.store.*;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
-import com.kosa.mini.domain.store.*;
 import org.apache.ibatis.annotations.*;
 
 
