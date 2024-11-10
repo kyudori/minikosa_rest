@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 @SpringBootTest
 class MiniApplicationTests {
 
-	@Value("${spring.datasource.username}")
+	@Value("${test}")
 	private String test;
 
 //	@Test

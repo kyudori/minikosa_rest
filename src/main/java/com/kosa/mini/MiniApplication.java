@@ -7,7 +7,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.kosa.mini"})
+//@ComponentScan(basePackages = {"com.kosa.mini"})
 @MapperScan(value={"mybatis.dao"})
 @EnableJpaRepositories(basePackages = {"com.kosa.mini.api.repository"})
 public class MiniApplication {
