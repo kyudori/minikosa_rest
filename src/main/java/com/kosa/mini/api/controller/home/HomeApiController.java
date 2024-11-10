@@ -14,17 +14,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1")
-@PropertySource("classpath:application-key.properties")
 public class HomeApiController {
-    @Value("${username}")
-    private String username;
-
     @Autowired
     private HomeService service;
 
     @GetMapping({"/", "/home"})
     public List<StoreDTO> goHome(){
-        System.out.println("========================" + username);
         return service.home();
     }
 }
