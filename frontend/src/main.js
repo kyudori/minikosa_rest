@@ -10,7 +10,7 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 import './assets/css/headerFooter.css'
 
 import axios from 'axios'
-axios.defaults.baseURL = process.env.VUE_APP_BACKEND_URL;
+// axios.defaults.baseURL = process.env.VUE_APP_BACKEND_URL;
 
 const app = createApp(App)
 const pinia = createPinia()
