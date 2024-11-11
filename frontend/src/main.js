@@ -10,12 +10,12 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 import './assets/css/headerFooter.css'
 
 import axios from 'axios'
+axios.defaults.baseURL = process.env.VUE_APP_BACKEND_URL;
 
 const app = createApp(App)
+const pinia = createPinia()
 
 app.config.globalProperties.$axios = axios
 
-const pinia = createPinia()
 app.use(pinia)
-
 app.use(router).mount('#app')
