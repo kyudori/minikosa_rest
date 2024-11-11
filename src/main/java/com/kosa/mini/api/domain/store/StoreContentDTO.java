@@ -1,13 +1,17 @@
 package com.kosa.mini.api.domain.store;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class StoreContentDTO {
-   private int storeId;
+   private Long storeId;
    private String storeName;
    private String postcode;
    private String roadAddress;
@@ -19,8 +23,8 @@ public class StoreContentDTO {
    private Date closingTime;
    private String contactNumber;
    private String storePhoto;
-   private int ownerId;
+   private Long ownerId;
    private double ratingAvg;
-   private int countReview;
-   private List<MenuDTO> menuDTO;
+   private Long countReview;
+//   private List<MenuDTO> menuDTO;
 }

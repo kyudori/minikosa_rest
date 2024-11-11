@@ -11,13 +11,11 @@ class MiniApplicationTests {
 	@Value("${test}")
 	private String test;
 
-//	@Test
-//	void contextLoads() {
-//	}
-
 	@Test
 	void keytest() {
 		System.out.println("=============="+test);
 	}
+
+
 
 }
