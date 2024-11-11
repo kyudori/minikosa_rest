@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Date;
 import java.util.Set;
 
 @Entity
@@ -49,10 +50,10 @@ public class Store {
     private Member owner;
 
     @Column(name = "opening_time")
-    private LocalTime openingTime;
+    private Date openingTime;
 
     @Column(name = "closing_time")
-    private LocalTime closingTime;
+    private Date closingTime;
 
     @Column(name = "website_info", length = 255)
     private String websiteInfo;
