@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface StoreRepository extends JpaRepository<Store, Long> {
 
-    @Query("SELECT new com.kosa.mini.api.domain.store.StoreContentDTO(" +
+    @Query(value = "SELECT new com.kosa.mini.api.domain.store.StoreContentDTO(" +
             "s.storeId, " +
             "s.storeName, " +
             "s.postcode, " +
@@ -22,12 +22,9 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
             "s.contactNumber, " +
             "s.storePhoto, " +
             "s.owner.memberId, " +
-            "COALESCE(AVG(r.rating), 0), " +
-            "COUNT(r)) " +
+            "COALESCE(AVG(r.rating), 0) AS ratingAvg, " +
+            "COUNT(r) AS countReview ) " +
             "FROM Store s LEFT JOIN s.reviews r " +
-            "WHERE s.storeId = :id " +
-            "GROUP BY s.storeId, s.storeName, s.postcode, s.roadAddress, s.detailAddress, s.extraAddress, " +
-            "s.storeDescription, s.websiteInfo, s.openingTime, s.closingTime, s.contactNumber, " +
-            "s.storePhoto, s.owner.memberId")
-    StoreContentDTO findStoreWithContent(@Param("id") Long id);
+            "WHERE s.storeId = :storeId ")
+    StoreContentDTO findStoreWithContent(Long storeId);
 }
