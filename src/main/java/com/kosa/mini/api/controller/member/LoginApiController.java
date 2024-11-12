@@ -106,12 +106,12 @@ public class LoginApiController {
         }
 
         try {
-            TokenResponseDTO userSession = loginService.refreshToken(refreshToken);
+            TokenResponseDTO tokenResponseDTO = loginService.refreshToken(refreshToken);
 
             // 새로운 Refresh Token 생성 및 업데이트
-            String newRefreshToken = tokenProvider.generateRefreshToken(userSession.getEmail());
+            String newRefreshToken = tokenProvider.generateRefreshToken(tokenResponseDTO.getEmail());
             loginService.logout(refreshToken); // 기존 Refresh Token 삭제
-            loginService.saveRefreshToken(newRefreshToken, userSession.getEmail()); // 새로운 Refresh Token 저장
+            loginService.saveRefreshToken(newRefreshToken, tokenResponseDTO.getEmail()); // 새로운 Refresh Token 저장
 
             // 새로운 Refresh Token을 HttpOnly 쿠키에 설정 (SameSite 속성 포함)
             ResponseCookie newRefreshCookie = ResponseCookie.from("refresh_token", newRefreshToken)
@@ -125,12 +125,12 @@ public class LoginApiController {
 
             // Access Token은 JSON 응답으로 전달
             TokenResponseDTO responseBody = TokenResponseDTO.builder()
-                    .memberId(userSession.getMemberId())
-                    .name(userSession.getName())
-                    .email(userSession.getEmail())
-                    .nickname(userSession.getNickname())
-                    .roleId(userSession.getRoleId())
-                    .accessToken(userSession.getAccessToken())
+                    .memberId(tokenResponseDTO.getMemberId())
+                    .name(tokenResponseDTO.getName())
+                    .email(tokenResponseDTO.getEmail())
+                    .nickname(tokenResponseDTO.getNickname())
+                    .roleId(tokenResponseDTO.getRoleId())
+                    .accessToken(tokenResponseDTO.getAccessToken())
                     .build();
 
             return ResponseEntity.ok(responseBody);
