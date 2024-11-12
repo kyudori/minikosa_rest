@@ -116,7 +116,7 @@ public class LoginApiController {
             // 새로운 Refresh Token을 HttpOnly 쿠키에 설정 (SameSite 속성 포함)
             ResponseCookie newRefreshCookie = ResponseCookie.from("refresh_token", newRefreshToken)
                     .httpOnly(true)
-                    .secure(true) // HTTPS 사용 시 true
+                    .secure(false) // HTTPS 사용 시 true, 현재는 HTTP 사용
                     .path("/api/v1/refresh-token")
                     .maxAge(tokenProvider.getRefreshTokenExpiration() / 1000)
                     .sameSite("Strict")
