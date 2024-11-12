@@ -43,7 +43,7 @@ public class SignUpServiceImpl implements SignUpService {
                 throw new DuplicateNicknameException("이미 사용 중인 닉네임입니다.");
             }
 
-            Role userRole = roleRepository.findByRoleName("user")
+            Role userRole = roleRepository.findByRoleName("ROLE_USER")
                     .orElseThrow(() -> new SignupException("사용자 역할을 찾을 수 없습니다."));
 
             Member member = new Member();
