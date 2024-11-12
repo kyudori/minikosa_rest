@@ -20,6 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 
 import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableMethodSecurity
@@ -35,7 +36,8 @@ public class SecurityConfig {
                 .cors(cors -> cors
                         .configurationSource(request -> {
                             CorsConfiguration config = new CorsConfiguration();
-                            config.setAllowedOrigins(Arrays.asList("http://localhost:5137")); //Vue.js
+                            config.addAllowedOrigin("*");
+                            //config.setAllowedOrigins(List.of("http://localhost:5137")); //Vue.js
                             config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                             config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Refresh-Token"));
                             config.setAllowCredentials(true); //쿠키 전송 허용

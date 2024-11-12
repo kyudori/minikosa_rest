@@ -10,11 +10,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class UserSessionDTO {
-    private Long memberId;
+    private Integer memberId;
     private String name;
     private String email;
     private String nickname;
-    private Long roleId;
+    private Integer roleId;
     private String accessToken;
     private String refreshToken;
 }

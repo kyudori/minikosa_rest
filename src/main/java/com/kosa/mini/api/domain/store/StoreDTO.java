@@ -7,7 +7,7 @@ import java.util.List;
 
 @Data
 public class StoreDTO {
-    private Long storeId;
+    private Integer storeId;
     private String storeName;
     private String postcode;
     private String roadAddress;
@@ -17,7 +17,7 @@ public class StoreDTO {
     private MultipartFile storePhoto; // 가게 사진 업로드
     private String storePhotoPath; // 가게 사진 이름
     private String storeDescription;
-    private Long ownerId;
+    private Integer ownerId;
     private String openingTime;
     private String closingTime;
     private String websiteInfo;
