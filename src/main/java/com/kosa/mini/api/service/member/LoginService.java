@@ -6,4 +6,7 @@ import com.kosa.mini.api.exception.LoginException;
 
 public interface LoginService {
     UserSessionDTO authenticate(LoginDTO loginDTO) throws LoginException;
+    UserSessionDTO refreshToken(String refreshToken) throws LoginException;
+    void logout(String refreshToken);
+    void saveRefreshToken(String refreshToken, String email);
 }

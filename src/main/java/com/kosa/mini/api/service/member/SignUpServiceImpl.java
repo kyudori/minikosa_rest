@@ -7,19 +7,29 @@ import com.kosa.mini.api.exception.DuplicateEmailException;
 import com.kosa.mini.api.exception.DuplicateNicknameException;
 import com.kosa.mini.api.exception.SignupException;
 import com.kosa.mini.api.repository.MemberRepository;
+import com.kosa.mini.api.repository.RoleRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Slf4j
 @Service
 public class SignUpServiceImpl implements SignUpService {
 
     private final MemberRepository memberRepository;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public SignUpServiceImpl(MemberRepository memberRepository) {
+    public SignUpServiceImpl(MemberRepository memberRepository,
+                             RoleRepository roleRepository,
+                             PasswordEncoder passwordEncoder) {
         this.memberRepository = memberRepository;
+        this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -33,17 +43,17 @@ public class SignUpServiceImpl implements SignUpService {
                 throw new DuplicateNicknameException("이미 사용 중인 닉네임입니다.");
             }
 
-            Role role = new Role();
-            role.setRoleId(1L); //일반 회원
-            
+            Role userRole = roleRepository.findByRoleName("user")
+                    .orElseThrow(() -> new SignupException("사용자 역할을 찾을 수 없습니다."));
+
             Member member = new Member();
             member.setName(dto.getName());
             member.setEmail(dto.getEmail());
             member.setNickname(dto.getNickname());
-            member.setPassword(dto.getPassword());
+            member.setPassword(passwordEncoder.encode(dto.getPassword()));
             member.setPhoneNumber(dto.getPhone_number());
-            member.setRole(role);
-            member.setCreatedAt(java.time.LocalDateTime.now());
+            member.setRole(userRole);
+            member.setCreatedAt(LocalDateTime.now());
 
             memberRepository.save(member);
             log.info("회원가입 성공: " + member.toString());
