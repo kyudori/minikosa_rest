@@ -26,4 +26,10 @@ public class LoginApiController {
         session.setAttribute("user", userSession); // 세션에 사용자 정보 저장
         return userSession;
     }
+
+    @PostMapping("/logout")
+    @ResponseStatus(HttpStatus.OK)
+    public void logout(HttpSession session) {
+        session.invalidate(); // 세션 무효화
+    }
 }

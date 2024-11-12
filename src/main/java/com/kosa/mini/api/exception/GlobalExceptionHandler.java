@@ -13,5 +13,19 @@ public class GlobalExceptionHandler {
     return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
   }
 
+  @ExceptionHandler(SignupException.class)
+  public ResponseEntity<String> handleSignupException(SignupException ex) {
+    return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+  }
+
+  @ExceptionHandler(DuplicateEmailException.class)
+  public ResponseEntity<String> handleDuplicateEmailException(DuplicateEmailException ex) {
+    return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+  }
+
+  @ExceptionHandler(DuplicateNicknameException.class)
+  public ResponseEntity<String> handleDuplicateNicknameException(DuplicateNicknameException ex) {
+    return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+  }
   // 다른 예외
 }
