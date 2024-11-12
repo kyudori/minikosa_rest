@@ -1,7 +1,7 @@
 package com.kosa.mini.api.controller.member;
 
 import com.kosa.mini.api.domain.member.LoginDTO;
-import com.kosa.mini.api.domain.member.UserSessionDTO;
+import com.kosa.mini.api.domain.member.TokenResponseDTO;
 import com.kosa.mini.api.service.member.LoginService;
 import com.kosa.mini.api.security.JwtTokenProvider;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,10 +30,10 @@ public class LoginApiController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginDTO loginDTO, HttpServletResponse response) {
         try {
-            UserSessionDTO userSession = loginService.authenticate(loginDTO);
+            TokenResponseDTO tokenResponseDTO = loginService.authenticate(loginDTO);
 
             // Refresh Token을 HttpOnly 쿠키에 설정 (SameSite 속성 포함)
-            ResponseCookie refreshCookie = ResponseCookie.from("refresh_token", userSession.getRefreshToken())
+            ResponseCookie refreshCookie = ResponseCookie.from("refresh_token", tokenResponseDTO.getRefreshToken())
                     .httpOnly(true)
                     .secure(false) // 개발 환경에서는 false, 배포 시 true
                     .path("/api/v1/refresh-token")
@@ -43,13 +43,13 @@ public class LoginApiController {
             response.addHeader("Set-Cookie", refreshCookie.toString());
 
             // Access Token은 JSON 응답으로 전달
-            UserSessionDTO responseBody = UserSessionDTO.builder()
-                    .memberId(userSession.getMemberId())
-                    .name(userSession.getName())
-                    .email(userSession.getEmail())
-                    .nickname(userSession.getNickname())
-                    .roleId(userSession.getRoleId())
-                    .accessToken(userSession.getAccessToken())
+            TokenResponseDTO responseBody = TokenResponseDTO.builder()
+                    .memberId(tokenResponseDTO.getMemberId())
+                    .name(tokenResponseDTO.getName())
+                    .email(tokenResponseDTO.getEmail())
+                    .nickname(tokenResponseDTO.getNickname())
+                    .roleId(tokenResponseDTO.getRoleId())
+                    .accessToken(tokenResponseDTO.getAccessToken())
                     .build();
 
             return ResponseEntity.ok(responseBody);
@@ -106,7 +106,7 @@ public class LoginApiController {
         }
 
         try {
-            UserSessionDTO userSession = loginService.refreshToken(refreshToken);
+            TokenResponseDTO userSession = loginService.refreshToken(refreshToken);
 
             // 새로운 Refresh Token 생성 및 업데이트
             String newRefreshToken = tokenProvider.generateRefreshToken(userSession.getEmail());
@@ -124,7 +124,7 @@ public class LoginApiController {
             response.addHeader("Set-Cookie", newRefreshCookie.toString());
 
             // Access Token은 JSON 응답으로 전달
-            UserSessionDTO responseBody = UserSessionDTO.builder()
+            TokenResponseDTO responseBody = TokenResponseDTO.builder()
                     .memberId(userSession.getMemberId())
                     .name(userSession.getName())
                     .email(userSession.getEmail())

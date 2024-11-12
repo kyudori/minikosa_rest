@@ -35,6 +35,7 @@ public class JwtTokenProvider {
         Date expiryDate = new Date(now.getTime() + accessTokenExpiration);
 
         return Jwts.builder()
+                .setHeaderParam("typ", "JWT")
                 .setSubject(email)
                 .claim("role", role)
                 .setIssuedAt(now)
@@ -49,6 +50,7 @@ public class JwtTokenProvider {
         Date expiryDate = new Date(now.getTime() + refreshTokenExpiration);
 
         return Jwts.builder()
+                .setHeaderParam("typ", "JWT")
                 .setSubject(email)
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)

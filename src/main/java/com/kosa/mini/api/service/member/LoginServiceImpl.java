@@ -1,7 +1,7 @@
 package com.kosa.mini.api.service.member;
 
 import com.kosa.mini.api.domain.member.LoginDTO;
-import com.kosa.mini.api.domain.member.UserSessionDTO;
+import com.kosa.mini.api.domain.member.TokenResponseDTO;
 import com.kosa.mini.api.entity.Member;
 import com.kosa.mini.api.entity.RefreshToken;
 import com.kosa.mini.api.exception.LoginException;
@@ -42,7 +42,7 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public UserSessionDTO authenticate(LoginDTO loginDTO) throws LoginException {
+    public TokenResponseDTO authenticate(LoginDTO loginDTO) throws LoginException {
         try {
             // 인증 시도
             Authentication authentication = authenticationManager.authenticate(
@@ -67,7 +67,7 @@ public class LoginServiceImpl implements LoginService {
             tokenEntity.setExpiryDate(LocalDateTime.now().plusSeconds(tokenProvider.getRefreshTokenExpiration() / 1000));
             refreshTokenRepository.save(tokenEntity);
 
-            return UserSessionDTO.builder()
+            return TokenResponseDTO.builder()
                     .memberId(member.getMemberId())
                     .name(member.getName())
                     .email(member.getEmail())
@@ -82,7 +82,7 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public UserSessionDTO refreshToken(String refreshToken) throws LoginException {
+    public TokenResponseDTO refreshToken(String refreshToken) throws LoginException {
         Optional<RefreshToken> tokenOpt = refreshTokenRepository.findByToken(refreshToken);
 
         if (!tokenOpt.isPresent() || tokenOpt.get().getExpiryDate().isBefore(LocalDateTime.now())) {
@@ -94,7 +94,7 @@ public class LoginServiceImpl implements LoginService {
 
         String newAccessToken = tokenProvider.generateAccessToken(member.getEmail(), member.getRole().getRoleName());
 
-        return UserSessionDTO.builder()
+        return TokenResponseDTO.builder()
                 .memberId(member.getMemberId())
                 .name(member.getName())
                 .email(member.getEmail())
