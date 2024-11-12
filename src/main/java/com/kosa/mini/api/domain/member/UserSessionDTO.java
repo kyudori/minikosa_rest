@@ -8,5 +8,5 @@ public class UserSessionDTO {
     private String name;
     private String email;
     private String nickname;
-    private Integer roleId;
+    private Long roleId;
 }
