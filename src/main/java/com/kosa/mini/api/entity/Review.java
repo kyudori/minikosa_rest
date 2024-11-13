@@ -1,11 +1,13 @@
 package com.kosa.mini.api.entity;
 
+import com.kosa.mini.mvc.domain.store.StoreReviewDTO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Set;
 
 @Entity
@@ -13,6 +15,7 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Review {
 
     @Id
@@ -37,10 +40,10 @@ public class Review {
     private Integer rating;
 
     @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    private Date createdAt;
 
     @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    private Date updatedAt;
 
     @Column(name = "is_modified")
     private Boolean isModified;
@@ -48,6 +51,7 @@ public class Review {
     // 관계 매핑: 리뷰에 대한 답글들
     @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<ReviewReply> reviewReplies;
+
 }
 
 

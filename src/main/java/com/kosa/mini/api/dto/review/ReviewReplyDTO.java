@@ -1,4 +1,4 @@
-package com.kosa.mini.api.dto.store;
+package com.kosa.mini.api.dto.review;
 
 import lombok.Data;
 

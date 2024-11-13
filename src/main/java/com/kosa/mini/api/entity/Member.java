@@ -55,4 +55,6 @@ public class Member {
     // 관계 매핑: 회원이 제출한 제안들
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<ContactUs> contactUsList;
+
+
 }

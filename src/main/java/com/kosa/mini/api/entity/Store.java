@@ -1,5 +1,7 @@
 package com.kosa.mini.api.entity;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -77,6 +79,11 @@ public class Store {
     // 관계 매핑: 가게에 속한 리뷰들
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Review> reviews;
+
+    @JsonCreator
+    public Store(@JsonProperty("storeId") Integer storeId) {
+        this.storeId = storeId;
+    }
 }
 
 
