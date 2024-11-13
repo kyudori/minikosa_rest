@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 
 @Data
 public class ContactUs {
-    private Long contactId;
+    private Integer contactId;
     private Long memberId;
     private String memberName; // 작성자 이름
     private String title;

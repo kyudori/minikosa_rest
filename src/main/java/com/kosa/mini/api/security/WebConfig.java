@@ -1,4 +1,4 @@
-package com.kosa.mini.api.config;
+package com.kosa.mini.api.security;
 
 import com.kosa.mini.mvc.interceptor.AdminInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;

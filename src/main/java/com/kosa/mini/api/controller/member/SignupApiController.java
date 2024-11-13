@@ -6,6 +6,7 @@ import com.kosa.mini.api.exception.DuplicateNicknameException;
 import com.kosa.mini.api.exception.SignupException;
 import com.kosa.mini.api.service.member.SignUpService;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/signup")
 public class SignupApiController {
@@ -22,7 +24,8 @@ public class SignupApiController {
     private final SignUpService signUpService;
 
     @Autowired
-    private SignupApiController(SignUpService signUpService) {
+    public SignupApiController(SignUpService signUpService) {
+
         this.signUpService = signUpService;
     }
 
@@ -39,12 +42,11 @@ public class SignupApiController {
 
         try {
             boolean success = signUpService.signUp(dto);
+            Map<String, String> response = new HashMap<>();
             if(success) {
-                Map<String, String> response = new HashMap<>();
                 response.put("message", "회원가입이 성공적으로 완료되었습니다.");
                 return ResponseEntity.status(HttpStatus.CREATED).body(response);
             } else {
-                Map<String, String> response = new HashMap<>();
                 response.put("error", "회원가입에 실패했습니다.");
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
             }
