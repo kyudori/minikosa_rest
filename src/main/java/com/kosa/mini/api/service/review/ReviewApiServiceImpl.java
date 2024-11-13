@@ -1,36 +1,34 @@
 package com.kosa.mini.api.service.review;
 
 import com.kosa.mini.api.dto.review.ReviewSaveDTO;
+import com.kosa.mini.api.dto.review.ReviewResponseDTO;
 import com.kosa.mini.api.dto.review.StoreReviewDTO;
 import com.kosa.mini.api.entity.Member;
 import com.kosa.mini.api.entity.Review;
 import com.kosa.mini.api.entity.Store;
+import com.kosa.mini.api.exception.MemberNotFoundException;
+import com.kosa.mini.api.exception.StoreNotFoundException;
 import com.kosa.mini.api.repository.MemberRepository;
 import com.kosa.mini.api.repository.ReviewRepository;
 import com.kosa.mini.api.repository.StoreRepository;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class ReviewApiServiceImpl implements ReviewApiService {
 
-    @Autowired
-    private ReviewRepository reviewRepository;
-    private StoreRepository storeRepository;
-    private MemberRepository memberRepository;
+    private final ReviewRepository reviewRepository;
+    private final StoreRepository storeRepository;
+    private final MemberRepository memberRepository;
 
-    @PersistenceContext
-    private EntityManager entityManager;
-
-
-    public List<StoreReviewDTO> getReply(Integer storeId) {
+    @Override
+    public List<StoreReviewDTO> getReplies(Integer storeId) {
         List<Review> reviews = reviewRepository.findByStoreStoreId(storeId);
         return reviews.stream()
                 .map(review -> StoreReviewDTO.builder()
@@ -45,16 +43,35 @@ public class ReviewApiServiceImpl implements ReviewApiService {
                 .collect(Collectors.toList());
     }
 
+    @Override
     @Transactional
-    public Review createReview(ReviewSaveDTO reviewSaveDTO) {
+    public ReviewResponseDTO createReview(ReviewSaveDTO reviewSaveDTO) {
+        // Store 조회
         Store store = storeRepository.findById(reviewSaveDTO.getStoreId())
-                .orElseThrow(() -> new IllegalArgumentException("Store not found with id: " + reviewSaveDTO.getStoreId()));
+                .orElseThrow(() -> new StoreNotFoundException("Store not found with id: " + reviewSaveDTO.getStoreId()));
 
+        // Member 조회
         Member member = memberRepository.findById(reviewSaveDTO.getMemberId())
-                .orElseThrow(() -> new IllegalArgumentException("Member not found with id: " + reviewSaveDTO.getMemberId()));
+                .orElseThrow(() -> new MemberNotFoundException("Member not found with id: " + reviewSaveDTO.getMemberId()));
 
+        // Review 엔티티 생성
         Review review = reviewSaveDTO.toEntity(store, member);
 
-        return reviewRepository.save(review);
+        // 리뷰 저장
+        Review savedReview = reviewRepository.save(review);
+
+        // DTO로 변환하여 반환
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return ReviewResponseDTO.builder()
+                .reviewId(savedReview.getReviewId())
+                .storeId(savedReview.getStore().getStoreId())
+                .memberId(savedReview.getMember().getMemberId())
+                .reviewText(savedReview.getReviewText())
+                .rating(savedReview.getRating())
+                .storeName(savedReview.getStore().getStoreName())
+                .memberNickname(savedReview.getMember().getNickname())
+                .createdAt(formatter.format(savedReview.getCreatedAt()))
+                .updatedAt(savedReview.getUpdatedAt() != null ? formatter.format(savedReview.getUpdatedAt()) : null)
+                .build();
     }
 }
