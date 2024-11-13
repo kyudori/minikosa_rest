@@ -1,7 +1,9 @@
 package com.kosa.mini.api.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import org.springframework.web.ErrorResponse;
 
 import java.time.LocalDateTime;
 
@@ -10,6 +12,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class ContactUs {
 
     @Id
@@ -41,4 +44,7 @@ public class ContactUs {
 
     @Column(name = "views")
     private Integer views;
+
+
+
 }
