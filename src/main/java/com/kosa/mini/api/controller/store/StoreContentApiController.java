@@ -1,6 +1,6 @@
 package com.kosa.mini.api.controller.store;
 
-import com.kosa.mini.api.domain.store.StoreContentDTO;
+import com.kosa.mini.api.dto.store.StoreContentDTO;
 import com.kosa.mini.api.service.store.StoreApiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +16,7 @@ public class StoreContentApiController {
 
 
     @GetMapping("/store/{id}")
-    public StoreContentDTO storeInfo(@PathVariable Long id){
+    public StoreContentDTO storeInfo(@PathVariable Integer id){
         return storeApiService.storeInfo(id);
     }
 }

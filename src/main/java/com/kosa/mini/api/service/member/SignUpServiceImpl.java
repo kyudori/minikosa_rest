@@ -1,7 +1,6 @@
 package com.kosa.mini.api.service.member;
 
-import com.kosa.mini.api.domain.member.SignupDTO;
-
+import com.kosa.mini.api.dto.member.SignupDTO;
 import com.kosa.mini.api.entity.Member;
 import com.kosa.mini.api.entity.Role;
 import com.kosa.mini.api.exception.DuplicateEmailException;
@@ -69,6 +68,7 @@ public class SignUpServiceImpl implements SignUpService {
     public boolean isEmailExists(String email) {
         return memberRepository.existsByEmail(email);
     }
+
     @Override
     public boolean isNicknameExists(String nickname) {
         return memberRepository.existsByNickname(nickname);

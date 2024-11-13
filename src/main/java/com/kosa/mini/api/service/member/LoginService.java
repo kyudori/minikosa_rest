@@ -1,7 +1,7 @@
 package com.kosa.mini.api.service.member;
 
-import com.kosa.mini.api.domain.member.LoginDTO;
-import com.kosa.mini.api.domain.member.TokenResponseDTO;
+import com.kosa.mini.api.dto.member.LoginDTO;
+import com.kosa.mini.api.dto.member.TokenResponseDTO;
 import com.kosa.mini.api.exception.LoginException;
 import io.jsonwebtoken.Claims;
 
