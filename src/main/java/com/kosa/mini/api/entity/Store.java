@@ -1,12 +1,10 @@
 package com.kosa.mini.api.entity;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.Date;
 import java.util.Set;
 
@@ -74,17 +72,12 @@ public class Store {
 
     // 관계 매핑: 가게에 속한 메뉴들
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore // 순환 참조 방지를 위해 무시
     private Set<Menu> menus;
 
     // 관계 매핑: 가게에 속한 리뷰들
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore // 순환 참조 방지를 위해 무시
     private Set<Review> reviews;
 
-    @JsonCreator
-    public Store(@JsonProperty("storeId") Integer storeId) {
-        this.storeId = storeId;
-    }
 }
-
-
-

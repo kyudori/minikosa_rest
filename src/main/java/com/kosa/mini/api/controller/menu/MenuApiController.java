@@ -1,6 +1,5 @@
 package com.kosa.mini.api.controller.menu;
 
-
 import com.kosa.mini.api.dto.store.MenuDTO;
 import com.kosa.mini.api.entity.Menu;
 import com.kosa.mini.api.service.menu.MenuApiService;
@@ -26,6 +25,4 @@ public class MenuApiController {
             List<MenuDTO> menuList = menuService.getMenu(storeId);
         return new ResponseEntity<>(menuList, HttpStatus.OK);
     }
-
-
 }

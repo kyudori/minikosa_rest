@@ -63,7 +63,7 @@ public class ReviewApiController {
         }
     }
 
-    // 리뷰 조회 예시 (필요 시 추가)
+    // 리뷰 조회
     @GetMapping("/reviews/{storeId}")
     public ResponseEntity<?> getReviews(@PathVariable("storeId") Integer storeId,
                                         @AuthenticationPrincipal UserDetails userDetails) {

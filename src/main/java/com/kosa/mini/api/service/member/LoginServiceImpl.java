@@ -63,7 +63,7 @@ public class LoginServiceImpl implements LoginService {
             // Refresh Token 저장
             RefreshToken tokenEntity = new RefreshToken();
             tokenEntity.setToken(refreshToken);
-            tokenEntity.setMemberId(member.getMemberId()); // 이메일 대신 memberId 저장
+            tokenEntity.setMemberId(member.getMemberId());
             tokenEntity.setExpiryDate(LocalDateTime.now().plusSeconds(tokenProvider.getRefreshTokenExpiration() / 1000));
             refreshTokenRepository.save(tokenEntity);
 

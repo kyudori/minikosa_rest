@@ -46,21 +46,16 @@ public class ReviewApiServiceImpl implements ReviewApiService {
     @Override
     @Transactional
     public ReviewResponseDTO createReview(ReviewSaveDTO reviewSaveDTO) {
-        // Store 조회
+
         Store store = storeRepository.findById(reviewSaveDTO.getStoreId())
                 .orElseThrow(() -> new StoreNotFoundException("Store not found with id: " + reviewSaveDTO.getStoreId()));
 
-        // Member 조회
         Member member = memberRepository.findById(reviewSaveDTO.getMemberId())
                 .orElseThrow(() -> new MemberNotFoundException("Member not found with id: " + reviewSaveDTO.getMemberId()));
 
-        // Review 엔티티 생성
         Review review = reviewSaveDTO.toEntity(store, member);
-
-        // 리뷰 저장
         Review savedReview = reviewRepository.save(review);
 
-        // DTO로 변환하여 반환
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return ReviewResponseDTO.builder()
                 .reviewId(savedReview.getReviewId())
