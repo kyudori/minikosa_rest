@@ -51,8 +51,6 @@ public class ReviewApiController {
         reviewSaveDTO.setMemberId(memberId);
         reviewSaveDTO.setStoreId(storeId);
 
-        log.debug("컨트롤러 : " + reviewSaveDTO.toString());
-
         try {
             ReviewResponseDTO created = reviewApiService.createReview(reviewSaveDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(created);
@@ -67,7 +65,22 @@ public class ReviewApiController {
 
     // 리뷰 조회 예시 (필요 시 추가)
     @GetMapping("/reviews/{storeId}")
-    public ResponseEntity<?> getReviews(@PathVariable("storeId") Integer storeId) {
+    public ResponseEntity<?> getReviews(@PathVariable("storeId") Integer storeId,
+                                        @AuthenticationPrincipal UserDetails userDetails) {
+
+        if (userDetails == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        // UserDetails에서 username (memberId) 가져오기
+        String memberIdStr = userDetails.getUsername(); // CustomUserDetailsService에서 username을 memberId로 설정했음
+        Integer memberId;
+        try {
+            memberId = Integer.parseInt(memberIdStr);
+        } catch (NumberFormatException e) {
+            log.error("Invalid memberId format: {}", memberIdStr);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
         try {
             return ResponseEntity.ok(reviewApiService.getReplies(storeId));
         } catch (Exception e) {
