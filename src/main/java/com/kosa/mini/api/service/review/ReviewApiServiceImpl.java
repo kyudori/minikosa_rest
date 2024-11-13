@@ -5,11 +5,14 @@ import com.kosa.mini.api.dto.review.StoreReviewDTO;
 import com.kosa.mini.api.entity.Member;
 import com.kosa.mini.api.entity.Review;
 import com.kosa.mini.api.entity.Store;
+import com.kosa.mini.api.repository.MemberRepository;
 import com.kosa.mini.api.repository.ReviewRepository;
+import com.kosa.mini.api.repository.StoreRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,36 +23,38 @@ public class ReviewApiServiceImpl implements ReviewApiService {
 
     @Autowired
     private ReviewRepository reviewRepository;
+    private StoreRepository storeRepository;
+    private MemberRepository memberRepository;
 
     @PersistenceContext
     private EntityManager entityManager;
 
 
-    @Override
     public List<StoreReviewDTO> getReply(Integer storeId) {
-        List<Review> reviewEntity = reviewRepository.findByStoreStoreId(storeId);
-        List<StoreReviewDTO> reviewList = reviewEntity.stream()
+        List<Review> reviews = reviewRepository.findByStoreStoreId(storeId);
+        return reviews.stream()
                 .map(review -> StoreReviewDTO.builder()
+                        .storeId(review.getStore().getStoreId())
+                        .memberId(review.getMember().getMemberId())
                         .reviewText(review.getReviewText())
                         .rating(review.getRating())
                         .reviewId(review.getReviewId())
                         .storeName(review.getStore().getStoreName())
                         .memberNickname(review.getMember().getNickname())
-                        .build()).collect(Collectors.toList());
-        return reviewList;
-
-
+                        .build())
+                .collect(Collectors.toList());
     }
 
-    @Override
-    public Review createReview(ReviewSaveDTO reviewDTO) {
-        Review reviewEntity = reviewDTO.toEntity();
+    @Transactional
+    public Review createReview(ReviewSaveDTO reviewSaveDTO) {
+        Store store = storeRepository.findById(reviewSaveDTO.getStoreId())
+                .orElseThrow(() -> new IllegalArgumentException("Store not found with id: " + reviewSaveDTO.getStoreId()));
 
-        // 엔티티 매니저로 프록시 객체 생성하여 설정 (DB 조회 없이 ID만으로 객체 생성)
-        reviewEntity.setMember(entityManager.getReference(Member.class, reviewDTO.getMemberId()));
-        reviewEntity.setStore(entityManager.getReference(Store.class, reviewDTO.getStoreId()));
+        Member member = memberRepository.findById(reviewSaveDTO.getMemberId())
+                .orElseThrow(() -> new IllegalArgumentException("Member not found with id: " + reviewSaveDTO.getMemberId()));
 
-        System.out.println("서비스 : " + reviewEntity.toString());
-        return reviewRepository.save(reviewEntity);
+        Review review = reviewSaveDTO.toEntity(store, member);
+
+        return reviewRepository.save(review);
     }
 }

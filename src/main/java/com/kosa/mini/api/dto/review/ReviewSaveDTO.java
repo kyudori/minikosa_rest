@@ -13,18 +13,17 @@ import lombok.NoArgsConstructor;
 @Builder
 @Data
 public class ReviewSaveDTO {
-    private Store storeId;
-    private Member memberId;
+    private Integer storeId;    // 변경: Store -> Integer
+    private Integer memberId;   // 변경: Member -> Integer
     private String reviewText;
     private Integer rating;
     private Integer reviewId;
     private String storeName;
 
-
-    public Review toEntity() {
+    public Review toEntity(Store store, Member member) {
         return Review.builder()
-                .store(storeId)
-                .member(memberId)
+                .store(store)
+                .member(member)
                 .reviewText(reviewText)
                 .rating(rating)
                 .reviewId(reviewId)

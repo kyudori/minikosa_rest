@@ -15,22 +15,18 @@ import java.util.Date;
 @Builder
 @Data
 public class StoreReviewDTO {
-    private Store storeId;
-    private Member memberId;
+    private Integer storeId;
+    private Integer memberId;
     private String reviewText;
     private Integer rating;
     private Integer reviewId;
-
-//    private Date createdAt;
-//    private Date updatedAt;
     private String storeName;
     private String memberNickname;
 
-
-    public Review toEntity(){
+    public Review toEntity(Store store, Member member){
         return Review.builder()
-                .member(memberId)
-                .store(storeId)
+                .member(member)
+                .store(store)
                 .reviewText(reviewText)
                 .rating(rating)
                 .reviewId(reviewId)

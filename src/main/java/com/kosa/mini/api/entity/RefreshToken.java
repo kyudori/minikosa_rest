@@ -16,12 +16,12 @@ public class RefreshToken {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 255)
     private String token;
 
-    @Column(nullable = false)
-    private String email;
+    @Column(name = "member_id", nullable = false)
+    private Integer memberId;
 
-    @Column(nullable = false)
+    @Column(name = "expiry_date", nullable = false)
     private LocalDateTime expiryDate;
 }

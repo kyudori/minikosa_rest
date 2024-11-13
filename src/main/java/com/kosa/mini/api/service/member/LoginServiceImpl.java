@@ -57,13 +57,13 @@ public class LoginServiceImpl implements LoginService {
                     .orElseThrow(() -> new LoginException("사용자를 찾을 수 없습니다."));
 
             // Access Token 및 Refresh Token 생성
-            String accessToken = tokenProvider.generateAccessToken(member.getEmail(), member.getRole().getRoleName());
-            String refreshToken = tokenProvider.generateRefreshToken(member.getEmail());
+            String accessToken = tokenProvider.generateAccessToken(member.getMemberId(), member.getRole().getRoleName());
+            String refreshToken = tokenProvider.generateRefreshToken(member.getMemberId());
 
             // Refresh Token 저장
             RefreshToken tokenEntity = new RefreshToken();
             tokenEntity.setToken(refreshToken);
-            tokenEntity.setEmail(member.getEmail());
+            tokenEntity.setMemberId(member.getMemberId()); // 이메일 대신 memberId 저장
             tokenEntity.setExpiryDate(LocalDateTime.now().plusSeconds(tokenProvider.getRefreshTokenExpiration() / 1000));
             refreshTokenRepository.save(tokenEntity);
 
@@ -89,10 +89,11 @@ public class LoginServiceImpl implements LoginService {
             throw new LoginException("유효하지 않은 Refresh Token입니다.");
         }
 
-        Member member = memberRepository.findByEmail(tokenOpt.get().getEmail())
+        Integer memberId = tokenOpt.get().getMemberId();
+        Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new LoginException("사용자를 찾을 수 없습니다."));
 
-        String newAccessToken = tokenProvider.generateAccessToken(member.getEmail(), member.getRole().getRoleName());
+        String newAccessToken = tokenProvider.generateAccessToken(member.getMemberId(), member.getRole().getRoleName());
 
         return TokenResponseDTO.builder()
                 .memberId(member.getMemberId())
@@ -111,10 +112,10 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public void saveRefreshToken(String refreshToken, String email) {
+    public void saveRefreshToken(String refreshToken, Integer memberId) {
         RefreshToken tokenEntity = new RefreshToken();
         tokenEntity.setToken(refreshToken);
-        tokenEntity.setEmail(email);
+        tokenEntity.setMemberId(memberId);
         tokenEntity.setExpiryDate(LocalDateTime.now().plusSeconds(tokenProvider.getRefreshTokenExpiration() / 1000));
         refreshTokenRepository.save(tokenEntity);
     }
