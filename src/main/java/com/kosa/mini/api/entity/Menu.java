@@ -1,13 +1,17 @@
 package com.kosa.mini.api.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.kosa.mini.api.dto.store.MenuDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
 @Table(name = "menus")
-@Data
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
+@ToString
 public class Menu {
 
     @Id
@@ -15,6 +19,7 @@ public class Menu {
     @Column(name = "menu_id")
     private Integer menuId;
 
+//    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id", nullable = false)
     private Store store;
@@ -27,5 +32,14 @@ public class Menu {
 
     @Column(name = "menu_photo", length = 255)
     private String menuPhoto;
+
+    public Menu toEntity(MenuDTO dto) {
+        return Menu.builder()
+                .menuId(dto.getMenuId())
+                .menuName(dto.getMenuName())
+                .price(dto.getPrice())
+                .menuPhoto(dto.getMenuPhoto())
+                .build();
+    }
 }
 

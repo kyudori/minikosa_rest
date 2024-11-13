@@ -1,11 +1,10 @@
 package com.kosa.mini.api.service.store;
 
-import com.kosa.mini.api.domain.store.StoreContentDTO;
+import com.kosa.mini.api.dto.store.StoreContentDTO;
 import com.kosa.mini.api.repository.StoreRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,7 +16,7 @@ class StoreApiServiceTest {
 
     @Test
     void findStoreWithContent() {
-        Long id = 33L; // 테스트할 storeId를 설정하세요.
+        Integer id = 33; // 테스트할 storeId를 설정하세요.
         StoreContentDTO storeContentDTO = storeRepository.findStoreWithContent(id);
 
         // DTO가 null이 아닌지 확인

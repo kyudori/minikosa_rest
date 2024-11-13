@@ -1,15 +1,15 @@
 package com.kosa.mini.api.repository;
 
-import com.kosa.mini.api.domain.home.StoreDTO;
+import com.kosa.mini.api.dto.home.StoreDTO;
 import com.kosa.mini.api.entity.Store;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface HomeRepository extends JpaRepository<Store, Long> {
+public interface HomeRepository extends JpaRepository<Store, Integer> {
 
-    @Query("select new com.kosa.mini.api.domain.home.StoreDTO(" +
+    @Query("select new com.kosa.mini.api.dto.home.StoreDTO(" +
             "   s.storeId, " +
             "   s.storeName, " +
             "   s.storePhoto, " +

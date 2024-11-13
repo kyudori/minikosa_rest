@@ -1,6 +1,6 @@
 package com.kosa.mini.api.service.member;
 
-import com.kosa.mini.api.domain.member.SignupDTO;
+import com.kosa.mini.api.dto.member.SignupDTO;
 import com.kosa.mini.api.exception.DuplicateEmailException;
 import com.kosa.mini.api.exception.DuplicateNicknameException;
 import com.kosa.mini.api.exception.SignupException;

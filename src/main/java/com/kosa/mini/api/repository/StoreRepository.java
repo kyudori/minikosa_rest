@@ -1,14 +1,13 @@
 package com.kosa.mini.api.repository;
 
-import com.kosa.mini.api.domain.store.StoreContentDTO;
+import com.kosa.mini.api.dto.store.StoreContentDTO;
 import com.kosa.mini.api.entity.Store;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
-public interface StoreRepository extends JpaRepository<Store, Long> {
+public interface StoreRepository extends JpaRepository<Store, Integer> {
 
-    @Query(value = "SELECT new com.kosa.mini.api.domain.store.StoreContentDTO(" +
+    @Query(value = "SELECT new com.kosa.mini.api.dto.store.StoreContentDTO(" +
             "s.storeId, " +
             "s.storeName, " +
             "s.postcode, " +
@@ -26,5 +25,5 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
             "COUNT(r) AS countReview ) " +
             "FROM Store s LEFT JOIN s.reviews r " +
             "WHERE s.storeId = :storeId ")
-    StoreContentDTO findStoreWithContent(Long storeId);
+    StoreContentDTO findStoreWithContent(Integer storeId);
 }
