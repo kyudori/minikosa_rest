@@ -1,4 +1,4 @@
-package com.kosa.mini.api.config;
+package com.kosa.mini.api.security;
 
 
 import org.springframework.beans.factory.annotation.Value;

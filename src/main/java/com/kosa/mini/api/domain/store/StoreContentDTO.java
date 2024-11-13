@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public class StoreContentDTO {
-   private Long storeId;
+   private Integer storeId;
    private String storeName;
    private String postcode;
    private String roadAddress;
@@ -23,7 +23,7 @@ public class StoreContentDTO {
    private Date closingTime;
    private String contactNumber;
    private String storePhoto;
-   private Long ownerId;
+   private Integer ownerId;
    private double ratingAvg;
    private Long countReview;
 //   private List<MenuDTO> menuDTO;
