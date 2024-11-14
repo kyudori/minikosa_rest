@@ -8,8 +8,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -18,4 +16,20 @@ public class ReplySaveDTO {
     private Integer reviewId;
     private Integer ownerId;
     private String replyText;
+
+    public ReplySaveDTO fromEntity(ReviewReply reviewReply) {
+        return new ReplySaveDTO(
+                reviewReply.getReplyId(),
+                reviewReply.getOwner().getMemberId(),
+                reviewReply.getReplyText());
+    }
+
+    public ReviewReply toEntity(Review review, Member member){
+        return ReviewReply.builder()
+                .review(review)
+                .owner(member)
+                .replyText(replyText)
+                .build();
+    }
+
 }

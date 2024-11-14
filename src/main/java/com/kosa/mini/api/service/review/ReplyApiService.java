@@ -5,5 +5,5 @@ import com.kosa.mini.api.entity.ReviewReply;
 
 public interface ReplyApiService {
     boolean deleteReply(Integer replyId);
-    ReviewReply createReview(ReplySaveDTO replySaveDTO);
+    ReplySaveDTO createReview(ReplySaveDTO replySaveDTO, Integer ownerId);
 }

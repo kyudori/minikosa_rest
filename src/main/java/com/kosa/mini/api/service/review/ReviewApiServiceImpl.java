@@ -3,7 +3,6 @@ package com.kosa.mini.api.service.review;
 import com.kosa.mini.api.dto.review.ReviewReplyDTO;
 import com.kosa.mini.api.dto.review.ReviewSaveDTO;
 import com.kosa.mini.api.dto.review.ReviewResponseDTO;
-import com.kosa.mini.api.dto.review.StoreReviewDTO;
 import com.kosa.mini.api.entity.Member;
 import com.kosa.mini.api.entity.Review;
 import com.kosa.mini.api.entity.Store;
@@ -18,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

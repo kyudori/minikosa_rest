@@ -3,6 +3,8 @@ package com.kosa.mini.api.controller.review;
 import com.kosa.mini.api.dto.review.ReplySaveDTO;
 import com.kosa.mini.api.dto.review.ReviewSaveDTO;
 import com.kosa.mini.api.dto.review.ReviewResponseDTO;
+import com.kosa.mini.api.entity.Member;
+import com.kosa.mini.api.entity.Review;
 import com.kosa.mini.api.entity.ReviewReply;
 import com.kosa.mini.api.exception.MemberNotFoundException;
 import com.kosa.mini.api.exception.StoreNotFoundException;
@@ -10,7 +12,6 @@ import com.kosa.mini.api.service.review.ReplyApiService;
 import com.kosa.mini.api.service.review.ReviewApiService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -86,10 +87,9 @@ public class ReviewsReplyApiController {
             log.error("Invalid memberId format: {}", ownerIdStr);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        replySaveDTO.setOwnerId(ownerId);
 
         try {
-            ReviewReply created = replyApiService.createReview(replySaveDTO);
+            ReplySaveDTO created = replyApiService.createReview(replySaveDTO, ownerId);
             return ResponseEntity.status(HttpStatus.CREATED).body(replySaveDTO);
         } catch (StoreNotFoundException | MemberNotFoundException e) {
             log.error("리뷰 생성 실패: {}", e.getMessage());
