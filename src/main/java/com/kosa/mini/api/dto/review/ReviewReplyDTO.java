@@ -1,19 +1,25 @@
 package com.kosa.mini.api.dto.review;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Data
 public class ReviewReplyDTO {
-    private int storeId;
-    private int memberId;
+    private Integer storeId;
+    private Integer memberId;
     private String reviewText;
-    private int rating;
+    private Integer rating;
     private Date createdAt;
-    private int replyId;
-    private int reviewId;
-    private int ownerId;
+    private Integer replyId;
+    private Integer reviewId;
+    private Integer ownerId;
     private String replyText;
     private String nickname;
 }

@@ -1,5 +1,6 @@
 package com.kosa.mini.api.service.review;
 
+import com.kosa.mini.api.dto.review.ReviewReplyDTO;
 import com.kosa.mini.api.dto.review.ReviewSaveDTO;
 import com.kosa.mini.api.dto.review.ReviewResponseDTO;
 import com.kosa.mini.api.dto.review.StoreReviewDTO;
@@ -28,19 +29,9 @@ public class ReviewApiServiceImpl implements ReviewApiService {
     private final MemberRepository memberRepository;
 
     @Override
-    public List<StoreReviewDTO> getReplies(Integer storeId) {
-        List<Review> reviews = reviewRepository.findByStoreStoreId(storeId);
-        return reviews.stream()
-                .map(review -> StoreReviewDTO.builder()
-                        .storeId(review.getStore().getStoreId())
-                        .memberId(review.getMember().getMemberId())
-                        .reviewText(review.getReviewText())
-                        .rating(review.getRating())
-                        .reviewId(review.getReviewId())
-                        .storeName(review.getStore().getStoreName())
-                        .memberNickname(review.getMember().getNickname())
-                        .build())
-                .collect(Collectors.toList());
+    public List<ReviewReplyDTO> getReviews(Integer storeId) {
+        List<ReviewReplyDTO> reviews = reviewRepository.findByStoreStoreId(storeId);
+        return reviews;
     }
 
     @Override
@@ -68,5 +59,16 @@ public class ReviewApiServiceImpl implements ReviewApiService {
                 .createdAt(formatter.format(savedReview.getCreatedAt()))
                 .updatedAt(savedReview.getUpdatedAt() != null ? formatter.format(savedReview.getUpdatedAt()) : null)
                 .build();
+    }
+
+    @Override
+//    @Transactional
+    public Boolean deleteReview(Integer reviewId) {
+        if(reviewRepository.existsById(reviewId)) {
+            reviewRepository.deleteById(reviewId);
+            return true;
+        }else {
+            return false;
+        }
     }
 }
