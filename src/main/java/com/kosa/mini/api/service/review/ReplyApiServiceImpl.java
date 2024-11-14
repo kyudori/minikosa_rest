@@ -1,5 +1,7 @@
 package com.kosa.mini.api.service.review;
 
+import com.kosa.mini.api.dto.review.ReplySaveDTO;
+import com.kosa.mini.api.entity.ReviewReply;
 import com.kosa.mini.api.repository.ReplyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,5 +21,11 @@ public class ReplyApiServiceImpl implements ReplyApiService {
         } else {
             return false;
         }
+    }
+
+    @Override
+    public ReviewReply createReview(ReplySaveDTO replySaveDTO) {
+        ReviewReply reviewReply;
+        return null;
     }
 }

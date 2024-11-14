@@ -1,7 +1,9 @@
 package com.kosa.mini.api.controller.review;
 
+import com.kosa.mini.api.dto.review.ReplySaveDTO;
 import com.kosa.mini.api.dto.review.ReviewSaveDTO;
 import com.kosa.mini.api.dto.review.ReviewResponseDTO;
+import com.kosa.mini.api.entity.ReviewReply;
 import com.kosa.mini.api.exception.MemberNotFoundException;
 import com.kosa.mini.api.exception.StoreNotFoundException;
 import com.kosa.mini.api.service.review.ReplyApiService;
@@ -27,7 +29,8 @@ public class ReviewsReplyApiController {
     private final ReviewApiService reviewApiService;
     private final ReplyApiService replyApiService;
 
-
+    
+    // 리뷰 작성
     @PostMapping("/review/{storeId}")
     public ResponseEntity<ReviewResponseDTO> createReview(
             @PathVariable("storeId") Integer storeId,
@@ -55,6 +58,39 @@ public class ReviewsReplyApiController {
         try {
             ReviewResponseDTO created = reviewApiService.createReview(reviewSaveDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(created);
+        } catch (StoreNotFoundException | MemberNotFoundException e) {
+            log.error("리뷰 생성 실패: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        } catch (Exception e) {
+            log.error("리뷰 생성 중 예상치 못한 오류 발생: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    // 답글 작성
+    @PostMapping("/reply/{reviewId}")
+    public ResponseEntity<ReplySaveDTO> createReviewsReply(@PathVariable Integer reviewId,
+                                                           @RequestBody ReplySaveDTO replySaveDTO,
+                                                           @AuthenticationPrincipal UserDetails userDetails) {
+
+        if (userDetails == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        // UserDetails에서 username (memberId) 가져오기
+        String ownerIdStr = userDetails.getUsername(); // CustomUserDetailsService에서 username을 memberId로 설정했음
+        Integer ownerId;
+        try {
+            ownerId = Integer.parseInt(ownerIdStr);
+        } catch (NumberFormatException e) {
+            log.error("Invalid memberId format: {}", ownerIdStr);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        replySaveDTO.setOwnerId(ownerId);
+
+        try {
+            ReviewReply created = replyApiService.createReview(replySaveDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(replySaveDTO);
         } catch (StoreNotFoundException | MemberNotFoundException e) {
             log.error("리뷰 생성 실패: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -106,6 +142,7 @@ public class ReviewsReplyApiController {
         }
     }
 
+    // 답글 삭제
     @DeleteMapping("/reply/{replyId}")
     public ResponseEntity<String> deleteReply(@PathVariable Integer replyId) {
         try {
