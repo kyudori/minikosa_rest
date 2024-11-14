@@ -1,5 +1,6 @@
 package com.kosa.mini.api.entity;
 
+import com.kosa.mini.api.dto.member.MemberEditProfileDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -58,4 +59,16 @@ public class Member {
     private Set<ContactUs> contactUsList;
 
 
+    public void put(Member member) {
+        if(member.name != null)
+            this.name= member.name;
+        if(member.nickname != null)
+            this.nickname= member.nickname;
+        if(member.phoneNumber != null)
+            this.phoneNumber= member.phoneNumber;
+        if(member.password != null)
+            this.password=member.password;
+        if(member.role != null)
+            this.role=member.role;
+    }
 }

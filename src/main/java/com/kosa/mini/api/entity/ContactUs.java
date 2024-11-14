@@ -23,7 +23,7 @@ public class ContactUs {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
-    @JsonIgnore
+    @JsonIgnore                      //멤버id 나중에 하드코딩 말고 dto로 가져와서 수정해야함!
     private Member member;
 
     @Column(name = "title", nullable = false, length = 255)
