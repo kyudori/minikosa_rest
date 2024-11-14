@@ -12,7 +12,6 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(LoginException.class)
   public ResponseEntity<String> handleLoginException(LoginException ex) {
     return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
-
   }
 
   @ExceptionHandler(SignupException.class)
@@ -49,6 +48,11 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(MemberNotFoundException.class)
   public ResponseEntity<String> handleMemberNotFoundException(MemberNotFoundException ex) {
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+  }
+
+  @ExceptionHandler(ResourceNotFoundException.class)
+  public ResponseEntity<?> handleResourceNotFoundException(ResourceNotFoundException ex) {
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
   }
   // 다른 예외
 }
