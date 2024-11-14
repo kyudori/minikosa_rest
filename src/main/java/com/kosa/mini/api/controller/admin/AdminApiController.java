@@ -36,10 +36,10 @@ public class AdminApiController {
     //@PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/suggestion/list")
     public ResponseEntity<Page<ContactUs>> getListSuggestion(@AuthenticationPrincipal UserDetails userDetails,
-                                  @RequestParam(name = "type", defaultValue = "title") String type,
-                                  @RequestParam(name = "keyword", defaultValue = "") String keyword,
-                                  @RequestParam(value = "page", defaultValue = "0") int page,
-                                  @RequestParam(value = "size", defaultValue = "5") int size) {
+                                                             @RequestParam(name = "type", defaultValue = "title") String type,
+                                                             @RequestParam(name = "keyword", defaultValue = "") String keyword,
+                                                             @RequestParam(value = "page", defaultValue = "0") int page,
+                                                             @RequestParam(value = "size", defaultValue = "5") int size) {
         if (userDetails == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -121,7 +121,7 @@ public class AdminApiController {
     // 사용자 검색 API
     @GetMapping("/search/users")
     public ResponseEntity<List<UserSearchDTO>> searchUsers(@AuthenticationPrincipal UserDetails userDetails,
-                                                    @RequestBody UserExistenceRequest userExistenceRequest) {
+                                                           @RequestBody UserExistenceRequest userExistenceRequest) {
         if (userDetails == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }

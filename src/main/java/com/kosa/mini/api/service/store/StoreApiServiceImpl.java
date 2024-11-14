@@ -108,7 +108,6 @@ public class StoreApiServiceImpl implements StoreApiService {
             throw new IllegalArgumentException("ROLE_ADMIN 권한을 가진 사용자는 사장으로 등록할 수 없습니다.");
         }
 
-
         // 회원의 역할을 ROLE_OWNER로 변경
         member.setRole(ownerRole);
         memberRepository.save(member);
