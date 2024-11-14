@@ -1,8 +1,6 @@
 package com.kosa.mini.api.repository;
 
-import com.kosa.mini.api.dto.member.MemberDTO;
 import com.kosa.mini.api.entity.Member;
-import com.kosa.mini.api.entity.Store;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -22,4 +20,8 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
 
     List<Member> findByEmailContainingIgnoreCase(String email);
     boolean existsByEmailContaining(String email);
+
+    Optional<Member> findByNicknameAndPhoneNumber(String nickname, String phoneNumber);
+
+    Optional<Member> findByNicknameAndPhoneNumberAndEmail(String nickname, String phoneNumber, String email);
 }

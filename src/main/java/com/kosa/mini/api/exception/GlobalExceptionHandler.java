@@ -1,58 +1,125 @@
 package com.kosa.mini.api.exception;
 
+import com.kosa.mini.api.dto.response.ApiError;
 import io.jsonwebtoken.JwtException;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.time.LocalDateTime;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
   @ExceptionHandler(LoginException.class)
-  public ResponseEntity<String> handleLoginException(LoginException ex) {
-    return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+  public ResponseEntity<ApiError> handleLoginException(LoginException ex, HttpServletRequest request) {
+    ApiError apiError = ApiError.builder()
+            .timestamp(LocalDateTime.now())
+            .status(HttpStatus.UNAUTHORIZED.value())
+            .error(HttpStatus.UNAUTHORIZED.getReasonPhrase())
+            .message(ex.getMessage())
+            .path(request.getRequestURI())
+            .build();
+    return new ResponseEntity<>(apiError, HttpStatus.UNAUTHORIZED);
   }
 
   @ExceptionHandler(SignupException.class)
-  public ResponseEntity<String> handleSignupException(SignupException ex) {
-    return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+  public ResponseEntity<ApiError> handleSignupException(SignupException ex, HttpServletRequest request) {
+    ApiError apiError = ApiError.builder()
+            .timestamp(LocalDateTime.now())
+            .status(HttpStatus.BAD_REQUEST.value())
+            .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
+            .message(ex.getMessage())
+            .path(request.getRequestURI())
+            .build();
+    return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler(DuplicateEmailException.class)
-  public ResponseEntity<String> handleDuplicateEmailException(DuplicateEmailException ex) {
-    return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+  public ResponseEntity<ApiError> handleDuplicateEmailException(DuplicateEmailException ex, HttpServletRequest request) {
+    ApiError apiError = ApiError.builder()
+            .timestamp(LocalDateTime.now())
+            .status(HttpStatus.CONFLICT.value())
+            .error(HttpStatus.CONFLICT.getReasonPhrase())
+            .message(ex.getMessage())
+            .path(request.getRequestURI())
+            .build();
+    return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
   }
 
   @ExceptionHandler(DuplicateNicknameException.class)
-  public ResponseEntity<String> handleDuplicateNicknameException(DuplicateNicknameException ex) {
-    return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+  public ResponseEntity<ApiError> handleDuplicateNicknameException(DuplicateNicknameException ex, HttpServletRequest request) {
+    ApiError apiError = ApiError.builder()
+            .timestamp(LocalDateTime.now())
+            .status(HttpStatus.CONFLICT.value())
+            .error(HttpStatus.CONFLICT.getReasonPhrase())
+            .message(ex.getMessage())
+            .path(request.getRequestURI())
+            .build();
+    return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
   }
 
   // JWT 관련 예외 처리
   @ExceptionHandler(JwtException.class)
-  public ResponseEntity<String> handleJwtException(JwtException ex) {
-    return new ResponseEntity<>("유효하지 않은 토큰입니다.", HttpStatus.UNAUTHORIZED);
-  }
-
-  @ExceptionHandler(Exception.class)
-  public ResponseEntity<String> handleGlobalException(Exception ex) {
-    return new ResponseEntity<>("내부 서버 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+  public ResponseEntity<ApiError> handleJwtException(JwtException ex, HttpServletRequest request) {
+    ApiError apiError = ApiError.builder()
+            .timestamp(LocalDateTime.now())
+            .status(HttpStatus.UNAUTHORIZED.value())
+            .error(HttpStatus.UNAUTHORIZED.getReasonPhrase())
+            .message("유효하지 않은 토큰입니다.")
+            .path(request.getRequestURI())
+            .build();
+    return new ResponseEntity<>(apiError, HttpStatus.UNAUTHORIZED);
   }
 
   @ExceptionHandler(StoreNotFoundException.class)
-  public ResponseEntity<String> handleStoreNotFoundException(StoreNotFoundException ex) {
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+  public ResponseEntity<ApiError> handleStoreNotFoundException(StoreNotFoundException ex, HttpServletRequest request) {
+    ApiError apiError = ApiError.builder()
+            .timestamp(LocalDateTime.now())
+            .status(HttpStatus.NOT_FOUND.value())
+            .error(HttpStatus.NOT_FOUND.getReasonPhrase())
+            .message(ex.getMessage())
+            .path(request.getRequestURI())
+            .build();
+    return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
   }
 
   @ExceptionHandler(MemberNotFoundException.class)
-  public ResponseEntity<String> handleMemberNotFoundException(MemberNotFoundException ex) {
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+  public ResponseEntity<ApiError> handleMemberNotFoundException(MemberNotFoundException ex, HttpServletRequest request) {
+    ApiError apiError = ApiError.builder()
+            .timestamp(LocalDateTime.now())
+            .status(HttpStatus.NOT_FOUND.value())
+            .error(HttpStatus.NOT_FOUND.getReasonPhrase())
+            .message(ex.getMessage())
+            .path(request.getRequestURI())
+            .build();
+    return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
   }
 
-  @ExceptionHandler(ResourceNotFoundException.class)
-  public ResponseEntity<?> handleResourceNotFoundException(ResourceNotFoundException ex) {
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+  @ExceptionHandler(InvalidPasswordResetException.class)
+  public ResponseEntity<ApiError> handleInvalidPasswordResetException(InvalidPasswordResetException ex, HttpServletRequest request) {
+    ApiError apiError = ApiError.builder()
+            .timestamp(LocalDateTime.now())
+            .status(HttpStatus.BAD_REQUEST.value())
+            .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
+            .message(String.join(", ", ex.getErrors()))
+            .path(request.getRequestURI())
+            .build();
+    return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
   }
-  // 다른 예외
+
+  // 기타 일반적인 예외 처리
+  @ExceptionHandler(Exception.class)
+  public ResponseEntity<ApiError> handleGlobalException(Exception ex, HttpServletRequest request) {
+    ApiError apiError = ApiError.builder()
+            .timestamp(LocalDateTime.now())
+            .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+            .error(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
+            .message("내부 서버 오류가 발생했습니다.")
+            .path(request.getRequestURI())
+            .build();
+    return new ResponseEntity<>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
+  }
 }
