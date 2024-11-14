@@ -1,8 +1,10 @@
 package com.kosa.mini.api.service.store;
 
 import com.kosa.mini.api.dto.member.MemberDTO;
+import com.kosa.mini.api.dto.member.UserSearchDTO;
 import com.kosa.mini.api.dto.store.StoreContentDTO;
 import com.kosa.mini.api.dto.store.StoreDTO;
+import com.kosa.mini.api.dto.store.StoreSearchDTO;
 import com.kosa.mini.api.entity.Member;
 import com.kosa.mini.api.entity.Store;
 import com.kosa.mini.api.exception.StoreNotFoundException;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class StoreApiServiceImpl implements StoreApiService {
@@ -34,15 +37,31 @@ public class StoreApiServiceImpl implements StoreApiService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<String> searchEmailsByPartialEmail(String email) {
-        return memberRepository.findEmailsByEmailContainingIgnoreCase(email);
+    public List<UserSearchDTO> searchUsersByEmail(String email) {
+        List<Member> members = memberRepository.findByEmailContainingIgnoreCase(email);
+        return members.stream()
+                .map(member -> UserSearchDTO.builder()
+                        .name(member.getName())
+                        .nickname(member.getNickname())
+                        .email(member.getEmail())
+                        .phoneNumber(member.getPhoneNumber())
+                        .build())
+                .collect(Collectors.toList());
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<String> searchStoreNamesByPartialName(String storeName) {
-        return storeRepository.findStoreNamesByStoreNameContainingIgnoreCase(storeName);
+    public List<StoreSearchDTO> searchStoresByName(String storeName) {
+        List<Store> stores = storeRepository.findByStoreNameContainingIgnoreCase(storeName);
+        return stores.stream()
+                .map(store -> StoreSearchDTO.builder()
+                        .storeName(store.getStoreName())
+                        .roadAddress(store.getRoadAddress())
+                        .contactNumber(store.getContactNumber())
+                        .build())
+                .collect(Collectors.toList());
     }
+
 
     @Override
     @Transactional

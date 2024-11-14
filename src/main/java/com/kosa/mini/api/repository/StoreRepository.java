@@ -33,6 +33,6 @@ public interface StoreRepository extends JpaRepository<Store, Integer> {
             "s.openingTime, s.closingTime, s.contactNumber, s.storePhoto, s.owner.memberId")
     StoreContentDTO findStoreWithContent(@Param("storeId") Integer storeId);
 
-    @Query("SELECT s.storeName FROM Store s WHERE LOWER(s.storeName) LIKE LOWER(CONCAT('%', :storeName, '%'))")
-    List<String> findStoreNamesByStoreNameContainingIgnoreCase(@Param("storeName") String storeName);
+    List<Store> findByStoreNameContainingIgnoreCase(String storeName);
+
 }

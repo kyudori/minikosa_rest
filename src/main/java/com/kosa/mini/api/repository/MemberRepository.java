@@ -2,6 +2,7 @@ package com.kosa.mini.api.repository;
 
 import com.kosa.mini.api.dto.member.MemberDTO;
 import com.kosa.mini.api.entity.Member;
+import com.kosa.mini.api.entity.Store;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -19,8 +20,6 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
     boolean existsByNickname(String nickname);
     Member findByEmailAndPassword(String email, String password);
 
-    @Query("SELECT m.email FROM Member m WHERE LOWER(m.email) LIKE LOWER(CONCAT('%', :email, '%'))")
-    List<String> findEmailsByEmailContainingIgnoreCase(@Param("email") String email);
-
+    List<Member> findByEmailContainingIgnoreCase(String email);
     boolean existsByEmailContaining(String email);
 }

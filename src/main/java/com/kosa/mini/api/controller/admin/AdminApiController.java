@@ -1,13 +1,16 @@
 package com.kosa.mini.api.controller.admin;
 
 import com.kosa.mini.api.dto.member.MemberDTO;
+import com.kosa.mini.api.dto.member.UserSearchDTO;
 import com.kosa.mini.api.dto.request.StoreExistenceRequest;
 import com.kosa.mini.api.dto.request.UserExistenceRequest;
 import com.kosa.mini.api.dto.store.StoreDTO;
+import com.kosa.mini.api.dto.store.StoreSearchDTO;
 import com.kosa.mini.api.entity.ContactUs;
 import com.kosa.mini.api.entity.Member;
 import com.kosa.mini.api.entity.Store;
 import com.kosa.mini.api.exception.ResourceNotFoundException;
+import com.kosa.mini.api.exception.StoreNotFoundException;
 import com.kosa.mini.api.service.member.SuggestionService;
 import com.kosa.mini.api.service.store.StoreApiService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,9 +110,19 @@ public class AdminApiController {
         }
     }
 
+    @DeleteMapping("/stores/{id}")
+    public ResponseEntity<Void> deleteStore(@PathVariable Integer id) {
+        try {
+            storeApiService.deleteStore(id);
+            return ResponseEntity.noContent().build(); // 204 No Content
+        } catch (StoreNotFoundException ex) {
+            return ResponseEntity.status(404).build(); // 404 Not Found
+        }
+    }
+
     // 사용자 검색 API
     @GetMapping("/search/users")
-    public ResponseEntity<List<String>> searchUsers(@AuthenticationPrincipal UserDetails userDetails,
+    public ResponseEntity<List<UserSearchDTO>> searchUsers(@AuthenticationPrincipal UserDetails userDetails,
                                                     @RequestBody UserExistenceRequest userExistenceRequest) {
         if (userDetails == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -122,14 +135,14 @@ public class AdminApiController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
-        List<String> users = storeApiService.searchEmailsByPartialEmail(userExistenceRequest.getEmail());
+        List<UserSearchDTO> users = storeApiService.searchUsersByEmail(userExistenceRequest.getEmail());
         return ResponseEntity.ok(users);
     }
 
     // 가게 검색 API
     @GetMapping("/search/stores")
-    public ResponseEntity<List<String>> searchStores(@AuthenticationPrincipal UserDetails userDetails,
-                                                     @RequestBody StoreExistenceRequest storeExistenceRequest) {
+    public ResponseEntity<List<StoreSearchDTO>> searchStores(@AuthenticationPrincipal UserDetails userDetails,
+                                                             @RequestBody StoreExistenceRequest storeExistenceRequest) {
         if (userDetails == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -141,7 +154,7 @@ public class AdminApiController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
-        List<String> stores = storeApiService.searchStoreNamesByPartialName(storeExistenceRequest.getStoreName());
+        List<StoreSearchDTO> stores = storeApiService.searchStoresByName(storeExistenceRequest.getStoreName());
         return ResponseEntity.ok(stores);
     }
 }
