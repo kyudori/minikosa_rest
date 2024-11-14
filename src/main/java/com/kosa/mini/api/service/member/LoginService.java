@@ -9,5 +9,5 @@ public interface LoginService {
     TokenResponseDTO authenticate(LoginDTO loginDTO) throws LoginException;
     TokenResponseDTO refreshToken(String refreshToken) throws LoginException;
     void logout(String refreshToken);
-    void saveRefreshToken(String refreshToken, String email);
+    void saveRefreshToken(String refreshToken, Integer memberId);
 }

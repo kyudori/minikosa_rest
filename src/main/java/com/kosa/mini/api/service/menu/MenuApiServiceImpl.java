@@ -6,6 +6,7 @@ import com.kosa.mini.api.entity.Menu;
 import com.kosa.mini.api.repository.MenuRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,11 +18,13 @@ public class MenuApiServiceImpl implements MenuApiService {
     private MenuRepository menuRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public List<MenuDTO> getMenu(Integer storeId) {
         List<Menu> entity = menuRepository.findByStoreStoreId(storeId);
         List<MenuDTO> list = entity.stream()
                 .map(menu -> MenuDTO.builder()
                         .menuId(menu.getMenuId())
+                        .storeId(menu.getStore().getStoreId())
                         .price(menu.getPrice())
                         .menuName(menu.getMenuName())
                         .menuPhoto(menu.getMenuPhoto())

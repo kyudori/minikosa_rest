@@ -30,48 +30,48 @@ public class JwtTokenProvider {
     }
 
     // Access Token 생성
-    public String generateAccessToken(String email, String role) {
+    public String generateAccessToken(Integer memberId, String role) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + accessTokenExpiration);
 
         return Jwts.builder()
                 .setHeaderParam("typ", "JWT")
-                .setSubject(email)
+                .setSubject(String.valueOf(memberId)) // memberId를 String으로 변환하여 설정
                 .claim("role", role)
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
-                .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                .signWith(SignatureAlgorithm.HS512, getSecretKey())
                 .compact();
     }
 
     // Refresh Token 생성
-    public String generateRefreshToken(String email) {
+    public String generateRefreshToken(Integer memberId) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + refreshTokenExpiration);
 
         return Jwts.builder()
                 .setHeaderParam("typ", "JWT")
-                .setSubject(email)
+                .setSubject(String.valueOf(memberId)) // memberId를 String으로 변환하여 설정
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
-                .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                .signWith(SignatureAlgorithm.HS512, getSecretKey())
                 .compact();
     }
 
-    // JWT 토큰에서 이메일 추출
-    public String getEmailFromJWT(String token) {
+    // JWT 토큰에서 memberId 추출
+    public Integer getMemberIdFromJWT(String token) {
         Claims claims = Jwts.parser()
-                .setSigningKey(jwtSecret)
+                .setSigningKey(getSecretKey())
                 .parseClaimsJws(token)
                 .getBody();
 
-        return claims.getSubject();
+        return Integer.parseInt(claims.getSubject());
     }
 
     // JWT 토큰 검증
     public boolean validateToken(String authToken) {
         try {
-            Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
+            Jwts.parser().setSigningKey(getSecretKey()).parseClaimsJws(authToken);
             return true;
         } catch (SignatureException ex) {
             // 잘못된 JWT 서명

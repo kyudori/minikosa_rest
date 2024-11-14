@@ -111,9 +111,9 @@ public class LoginApiController {
             TokenResponseDTO tokenResponseDTO = loginService.refreshToken(refreshToken);
 
             // 새로운 Refresh Token 생성 및 업데이트
-            String newRefreshToken = tokenProvider.generateRefreshToken(tokenResponseDTO.getEmail());
+            String newRefreshToken = tokenProvider.generateRefreshToken(tokenResponseDTO.getMemberId());
             loginService.logout(refreshToken); // 기존 Refresh Token 삭제
-            loginService.saveRefreshToken(newRefreshToken, tokenResponseDTO.getEmail()); // 새로운 Refresh Token 저장
+            loginService.saveRefreshToken(newRefreshToken, tokenResponseDTO.getMemberId()); // 새로운 Refresh Token 저장
 
             // 새로운 Refresh Token을 HttpOnly 쿠키에 설정 (SameSite 속성 포함)
             ResponseCookie newRefreshCookie = ResponseCookie.from("refresh_token", newRefreshToken)

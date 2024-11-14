@@ -30,18 +30,25 @@ public class GlobalExceptionHandler {
     return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
   }
 
+  // JWT 관련 예외 처리
+  @ExceptionHandler(JwtException.class)
+  public ResponseEntity<String> handleJwtException(JwtException ex) {
+    return new ResponseEntity<>("유효하지 않은 토큰입니다.", HttpStatus.UNAUTHORIZED);
+  }
 
-    // JWT 관련 예외 처리
-    @ExceptionHandler(JwtException.class)
-    public ResponseEntity<String> handleJwtException(JwtException ex) {
-      return new ResponseEntity<>("유효하지 않은 토큰입니다.", HttpStatus.UNAUTHORIZED);
-    }
+  @ExceptionHandler(Exception.class)
+  public ResponseEntity<String> handleGlobalException(Exception ex) {
+    return new ResponseEntity<>("내부 서버 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+  }
 
-    // 기타 예외 처리
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleGlobalException(Exception ex) {
-      return new ResponseEntity<>("내부 서버 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+  @ExceptionHandler(StoreNotFoundException.class)
+  public ResponseEntity<String> handleStoreNotFoundException(StoreNotFoundException ex) {
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+  }
 
+  @ExceptionHandler(MemberNotFoundException.class)
+  public ResponseEntity<String> handleMemberNotFoundException(MemberNotFoundException ex) {
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+  }
   // 다른 예외
 }

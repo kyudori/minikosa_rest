@@ -30,7 +30,7 @@ public class Member {
     @Column(name = "password", nullable = false, length = 255)
     private String password;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
@@ -55,4 +55,6 @@ public class Member {
     // 관계 매핑: 회원이 제출한 제안들
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<ContactUs> contactUsList;
+
+
 }

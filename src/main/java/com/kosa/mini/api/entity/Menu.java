@@ -33,13 +33,13 @@ public class Menu {
     @Column(name = "menu_photo", length = 255)
     private String menuPhoto;
 
-    public Menu toEntity(MenuDTO dto) {
-        return Menu.builder()
-                .menuId(dto.getMenuId())
-                .menuName(dto.getMenuName())
-                .price(dto.getPrice())
-                .menuPhoto(dto.getMenuPhoto())
-                .build();
-    }
+//    public Menu toDto(MenuDTO dto) {
+//        return Menu.builder()
+//                .menuId(dto.getMenuId())
+//                .menuName(dto.getMenuName())
+//                .price(dto.getPrice())
+//                .menuPhoto(dto.getMenuPhoto())
+//                .build();
+//    }
 }
 

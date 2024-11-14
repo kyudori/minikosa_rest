@@ -7,5 +7,4 @@ public interface StoreApiService {
 
     public StoreContentDTO storeInfo(Integer id);
 
-
 }
