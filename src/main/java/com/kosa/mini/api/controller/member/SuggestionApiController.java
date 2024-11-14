@@ -3,7 +3,7 @@ package com.kosa.mini.api.controller.member;
 
 import com.kosa.mini.api.dto.member.ContactUsDTO;
 import com.kosa.mini.api.entity.ContactUs;
-import com.kosa.mini.api.service.member.SuggestionServiceImplApi;
+import com.kosa.mini.api.service.member.SuggestionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1")
 public class SuggestionApiController {
     @Autowired
-    private SuggestionServiceImplApi suggestionService; //서비스 객체 주입
+    private SuggestionService suggestionService; //서비스 객체 주입
 
 //    // POST 생성
 //    @PostMapping("/suggestion")
