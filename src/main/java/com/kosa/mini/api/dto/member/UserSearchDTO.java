@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 @Builder
 public class UserSearchDTO {
+    private Integer memberId;
     private String name;
     private String nickname;
     private String email;

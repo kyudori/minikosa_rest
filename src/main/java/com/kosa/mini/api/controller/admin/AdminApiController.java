@@ -1,14 +1,13 @@
 package com.kosa.mini.api.controller.admin;
 
-import com.kosa.mini.api.dto.member.MemberDTO;
 import com.kosa.mini.api.dto.member.UserSearchDTO;
+import com.kosa.mini.api.dto.request.AssignOwnerRequest;
 import com.kosa.mini.api.dto.request.StoreExistenceRequest;
 import com.kosa.mini.api.dto.request.UserExistenceRequest;
-import com.kosa.mini.api.dto.store.StoreDTO;
+import com.kosa.mini.api.dto.response.AssignOwnerResponse;
+import com.kosa.mini.api.dto.store.StoreContentDTO;
 import com.kosa.mini.api.dto.store.StoreSearchDTO;
 import com.kosa.mini.api.entity.ContactUs;
-import com.kosa.mini.api.entity.Member;
-import com.kosa.mini.api.entity.Store;
 import com.kosa.mini.api.exception.ResourceNotFoundException;
 import com.kosa.mini.api.exception.StoreNotFoundException;
 import com.kosa.mini.api.service.member.SuggestionService;
@@ -100,7 +99,6 @@ public class AdminApiController {
         }
 
         try {
-            // Delete the ContactUs entry
             suggestionService.deleteSuggestion(contactId);
             return ResponseEntity.noContent().build(); // 204 No Content
         } catch (ResourceNotFoundException ex) {
@@ -156,5 +154,33 @@ public class AdminApiController {
 
         List<StoreSearchDTO> stores = storeApiService.searchStoresByName(storeExistenceRequest.getStoreName());
         return ResponseEntity.ok(stores);
+    }
+
+    @PostMapping("/assign/owner")
+    public ResponseEntity<AssignOwnerResponse> assignOwner(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestBody AssignOwnerRequest assignOwnerRequest) {
+
+        if (userDetails == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        Integer adminId;
+        try {
+            adminId = Integer.valueOf(userDetails.getUsername());
+        } catch (NumberFormatException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        try {
+            AssignOwnerResponse response = storeApiService.assignOwnerToStore(assignOwnerRequest);
+            return ResponseEntity.ok(response);
+        } catch (ResourceNotFoundException | StoreNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 }
