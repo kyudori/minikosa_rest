@@ -1,5 +1,6 @@
 package com.kosa.mini.api.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -22,6 +23,7 @@ public class ContactUs {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
+    @JsonIgnore
     private Member member;
 
     @Column(name = "title", nullable = false, length = 255)
@@ -44,7 +46,5 @@ public class ContactUs {
 
     @Column(name = "views")
     private Integer views;
-
-
 
 }

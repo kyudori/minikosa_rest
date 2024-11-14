@@ -2,34 +2,37 @@ package com.kosa.mini.api.dto.member;
 
 
 import com.kosa.mini.api.entity.ContactUs;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import com.kosa.mini.api.entity.Member;
 import lombok.Data;
+
+import java.time.LocalDateTime;
 
 @Data
 public class ContactUsDTO {
-    @NotNull
+    private String title;
+    private String storeName;
+    private String content;
     private Integer memberId;
+    private LocalDateTime createdAt;
+    private Boolean isModified;
+    private Integer views;
 
-    @NotNull
-    @NotBlank(message = "제목은 필수 입력 항목입니다.")
-    private static String title;
+    // DTO -> Entity 변환 메서드
+    public ContactUs toEntity(Member member) {
+        if (content == null || content.trim().isEmpty()) {
+            throw new IllegalArgumentException("Content must not be null or empty");
+        }
 
-    @NotNull
-    @NotBlank(message = "가게이름은 필수 입력 항목입니다.")
-    private static String storeName;
-
-    @NotNull
-    @NotBlank(message = "내용은 필수 입력 항목입니다.")
-    private static String content;
-
-
-    public static ContactUs toEntity(){
         return ContactUs.builder()
                 .title(title)
                 .storeName(storeName)
                 .content(content)
+                .member(member)
+                .createdAt(LocalDateTime.now())
+                .isModified(false)
+                .views(0)
                 .build();
     }
 
 }
+

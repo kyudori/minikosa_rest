@@ -20,14 +20,42 @@ public class SuggestionApiController {
     @Autowired
     private SuggestionServiceImplApi suggestionService; //서비스 객체 주입
 
-   // POST 생성
-  @PostMapping("/suggestion")
-    public ResponseEntity<ContactUs> create(@RequestBody ContactUsDTO dto) {
-      log.info("컨트롤러 dto: "+ dto.toString());
-      ContactUs created = suggestionService.create(dto);
-      return (created != null) ?
-              ResponseEntity.status(HttpStatus.OK).body(created) :
-              ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-  }
+//    // POST 생성
+//    @PostMapping("/suggestion")
+//    public ResponseEntity<ContactUs> create(@RequestBody ContactUsDTO dto) {
+//        Integer memberId = 1;
+//        dto.setMemberId(memberId);
+//        log.info("받은 DTO: " + dto.toString() + "memberId(임시)" + memberId);  // DTO에 들어온 데이터 확인
+//        if (dto.getContent() == null || dto.getContent().trim().isEmpty()) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);  // content가 없으면 BadRequest 응답
+//        }
+//        try {
+//            ContactUs created = suggestionService.create(dto);
+//            return ResponseEntity.status(HttpStatus.OK).body(created);
+//        } catch (IllegalArgumentException e) {
+//            log.error("Error creating contact us entry: {}", e.getMessage());
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+//        }
+//    }
+
+    // POST 생성
+    @PostMapping("/suggestion")
+    public ResponseEntity<ContactUsDTO> create(@RequestBody ContactUsDTO dto) {
+        Integer memberId = 1;
+        dto.setMemberId(memberId);
+        log.info("받은 DTO: " + dto.toString() + "memberId(임시)" + memberId);  // DTO에 들어온 데이터 확인
+        if (dto.getContent() == null || dto.getContent().trim().isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(dto);  // content가 없으면 BadRequest 응답
+        }
+        try {
+            ContactUs contactUs = suggestionService.create(dto);
+            dto.setCreatedAt(contactUs.getCreatedAt());
+            dto.setViews(contactUs.getViews());
+            dto.setIsModified(contactUs.getIsModified());
+            return ResponseEntity.status(HttpStatus.OK).body(dto);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(dto);
+        }
+    }
 
 }
