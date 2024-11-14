@@ -49,7 +49,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                     return new UsernameNotFoundException("User not found with memberId: " + memberId);
                 });
 
-        log.debug("User found: {}", member.getEmail());
+        log.debug("User found: {}", member.getMemberId());
 
         return new org.springframework.security.core.userdetails.User(
                 String.valueOf(member.getMemberId()), // memberId를 username으로 사용
