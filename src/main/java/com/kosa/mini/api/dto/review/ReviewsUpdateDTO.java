@@ -41,12 +41,5 @@ public class ReviewsUpdateDTO {
                 .member(member)
                 .build();
     }
-/*
-    @Update("update " +
-            "   reviews " +
-            "set " +
-            "   review_text = #{reviewText}, rating = #{rating} " +
-            "where " +
-            "   review_id = #{reviewId} and member_id = #{memberId}")
-*/
+
 }
