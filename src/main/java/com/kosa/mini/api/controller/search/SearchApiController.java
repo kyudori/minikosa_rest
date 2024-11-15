@@ -2,6 +2,7 @@ package com.kosa.mini.api.controller.search;
 
 import com.kosa.mini.api.dto.search.SearchDTO;
 import com.kosa.mini.api.dto.search.SearchResultDTO;
+import com.kosa.mini.api.dto.search.SearchStoreResultDTO;
 import com.kosa.mini.api.service.search.SearchApiService;
 import com.kosa.mini.mvc.service.search.SearchService;
 import lombok.AllArgsConstructor;
@@ -38,8 +39,8 @@ public class SearchApiController {
 
     @GetMapping("/search")
     public ResponseEntity<?> searchStore(@RequestBody SearchDTO searchDTO) {
-        SearchResultDTO searchResultDTO = searchApiService.searchStore(searchDTO);
+        SearchStoreResultDTO searchResultDTO = searchApiService.searchStore(searchDTO);
 
-        return null;
+        return ResponseEntity.ok(searchResultDTO);
     }
 }

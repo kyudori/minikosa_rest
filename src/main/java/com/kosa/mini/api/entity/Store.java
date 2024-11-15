@@ -1,6 +1,7 @@
 package com.kosa.mini.api.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.kosa.mini.api.dto.search.SearchStoreDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -8,13 +9,14 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Set;
 
+
+
 @Entity
 @Table(name = "stores")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Store {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "store_id")
@@ -79,5 +81,6 @@ public class Store {
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore // 순환 참조 방지를 위해 무시
     private Set<Review> reviews;
+
 
 }
