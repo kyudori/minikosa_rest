@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface StoreRepository extends JpaRepository<Store, Integer> {
 
     @Query("SELECT new com.kosa.mini.api.dto.store.StoreContentDTO(" +
@@ -30,4 +32,7 @@ public interface StoreRepository extends JpaRepository<Store, Integer> {
             "s.detailAddress, s.extraAddress, s.storeDescription, s.websiteInfo, " +
             "s.openingTime, s.closingTime, s.contactNumber, s.storePhoto, s.owner.memberId")
     StoreContentDTO findStoreWithContent(@Param("storeId") Integer storeId);
+
+    List<Store> findByStoreNameContainingIgnoreCase(String storeName);
+
 }

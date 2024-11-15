@@ -1,12 +1,14 @@
 package com.kosa.mini.api.dto.member;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Data
-public class UserSessionDTO {
+@Builder
+public class UserSearchDTO {
     private Integer memberId;
     private String name;
-    private String email;
     private String nickname;
-    private Integer roleId;
+    private String email;
+    private String phoneNumber;
 }
