@@ -22,7 +22,7 @@ public class EditProfileController {
 
     @Autowired
     private StoreService storeService;
-    
+
     // GET 요청 처리: 내 정보 수정 페이지 표시
     @GetMapping("/editprofile")
     public String editProfile(Model model, HttpSession session) {
