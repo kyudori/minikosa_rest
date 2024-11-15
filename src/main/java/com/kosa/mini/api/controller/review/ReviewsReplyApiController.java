@@ -119,9 +119,7 @@ public class ReviewsReplyApiController {
         String memberIdStr = userDetails.getUsername();
         Integer memberId;
         memberId = Integer.parseInt(memberIdStr);
-        System.out.println("컨트롤러 : " + memberId + "========" + reviewsUpdateDTO.toString());
         reviewsUpdateDTO = reviewApiService.updateReviews(reviewsUpdateDTO, memberId, storeId);
-        System.out.println("컨트롤러2 : " + reviewsUpdateDTO.toString());
         if(reviewsUpdateDTO == null) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }else {
@@ -171,9 +169,7 @@ public class ReviewsReplyApiController {
         String ownerIdStr = userDetails.getUsername();
         Integer ownerId;
         ownerId = Integer.parseInt(ownerIdStr);
-        System.out.println("컨트롤러 : " + ownerId + "========" + replyUpdateDTO.toString());
         replyUpdateDTO = replyApiService.updateReply(replyUpdateDTO, ownerId, reviewId);
-        System.out.println("컨트롤러2 : " + replyUpdateDTO.toString());
         if(replyUpdateDTO == null) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }else {

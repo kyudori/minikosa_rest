@@ -1,11 +1,10 @@
 package com.kosa.mini.api.service.search;
 
-import com.kosa.mini.api.dto.search.SearchDTO;
-import com.kosa.mini.api.dto.search.SearchStoreDTO;
-import com.kosa.mini.api.dto.search.SearchStoreInterfaceDTO;
-import com.kosa.mini.api.dto.search.SearchStoreResultDTO;
+import com.kosa.mini.api.dto.review.StoreReviewDTO;
+import com.kosa.mini.api.dto.search.*;
 import com.kosa.mini.api.entity.Review;
 import com.kosa.mini.api.repository.HomeRepository;
+import com.kosa.mini.api.repository.ReviewRepository;
 import com.kosa.mini.api.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
@@ -18,7 +17,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class SearchApiServiceImpl implements SearchApiService {
     private final StoreRepository storeRepository;
-    private final HomeRepository homeRepository;
+    private final ReviewRepository reviewRepository;
 
     @Override
     public SearchStoreResultDTO searchStore(SearchDTO searchDTO) {
@@ -44,5 +43,35 @@ public class SearchApiServiceImpl implements SearchApiService {
         storeResultDTO.setStoreResults(storeList);
         storeResultDTO.setStoreCount(storeList.size());
         return storeResultDTO;
+    }
+
+    @Override
+    public SearchReviewResultDTO searchReviews(SearchDTO searchDTO) {
+        SearchReviewResultDTO reviewResultDTO = new SearchReviewResultDTO();
+        reviewResultDTO.setQuery(searchDTO.getQuery());
+
+        String reviewSort = "rv.updated_at DESC";
+
+        // "rating"일 경우, "ratingAvg"로 정렬
+        if ("rating".equals(searchDTO.getSort())) {
+            reviewSort = "rv.rating DESC";
+        }
+
+        List<SearchReviewInterfaceDTO> reviewInterfaceList = reviewRepository.findByReviewSearch(searchDTO.getQuery(), reviewSort);
+        List<StoreReviewDTO> reviewList = reviewInterfaceList.stream()
+                .map(reviewInterface -> new StoreReviewDTO(
+                        reviewInterface.getStoreId(),
+                        reviewInterface.getMemberId(),
+                        reviewInterface.getReviewId(),
+                        reviewInterface.getStoreName(),
+                        reviewInterface.getMemberNickname(),
+                        reviewInterface.getReviewText(),
+                        reviewInterface.getRating(),
+                        reviewInterface.getCreatedAt(),
+                        reviewInterface.getUpdatedAt()))
+                .collect(Collectors.toList());
+        reviewResultDTO.setReviewResults(reviewList);
+        reviewResultDTO.setReviewCount(reviewList.size());
+        return reviewResultDTO;
     }
 }

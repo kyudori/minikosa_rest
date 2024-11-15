@@ -1,12 +1,8 @@
 package com.kosa.mini.api.repository;
 
-import com.kosa.mini.api.dto.search.SearchStoreDTO;
 import com.kosa.mini.api.dto.search.SearchStoreInterfaceDTO;
 import com.kosa.mini.api.dto.store.StoreContentDTO;
 import com.kosa.mini.api.entity.Store;
-import jakarta.persistence.ColumnResult;
-import jakarta.persistence.ConstructorResult;
-import jakarta.persistence.SqlResultSetMapping;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
