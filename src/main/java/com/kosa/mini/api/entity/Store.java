@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.Set;
 
@@ -50,10 +51,10 @@ public class Store {
     private Member owner;
 
     @Column(name = "opening_time")
-    private Date openingTime;
+    private LocalTime openingTime;
 
     @Column(name = "closing_time")
-    private Date closingTime;
+    private LocalTime closingTime;
 
     @Column(name = "website_info", length = 255)
     private String websiteInfo;

@@ -110,6 +110,18 @@ public class GlobalExceptionHandler {
     return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
   }
 
+  @ExceptionHandler(FileStorageException.class)
+  public ResponseEntity<ApiError> handleFileStorageException(FileStorageException ex, HttpServletRequest request) {
+    ApiError apiError = ApiError.builder()
+            .timestamp(LocalDateTime.now())
+            .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+            .error(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
+            .message(ex.getMessage())
+            .path(request.getRequestURI())
+            .build();
+    return new ResponseEntity<>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
+  }
+
   // 기타 일반적인 예외 처리
   @ExceptionHandler(Exception.class)
   public ResponseEntity<ApiError> handleGlobalException(Exception ex, HttpServletRequest request) {

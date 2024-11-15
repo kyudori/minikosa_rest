@@ -4,18 +4,21 @@ import com.kosa.mini.api.dto.member.UserSearchDTO;
 import com.kosa.mini.api.dto.request.AssignOwnerRequest;
 import com.kosa.mini.api.dto.response.AssignOwnerResponse;
 import com.kosa.mini.api.dto.store.StoreContentDTO;
+import com.kosa.mini.api.dto.store.StoreDTO;
 import com.kosa.mini.api.dto.store.StoreSearchDTO;
-import com.kosa.mini.api.entity.Member;
-import com.kosa.mini.api.entity.Role;
-import com.kosa.mini.api.entity.Store;
+import com.kosa.mini.api.entity.*;
+import com.kosa.mini.api.exception.FileStorageException;
 import com.kosa.mini.api.exception.ResourceNotFoundException;
 import com.kosa.mini.api.exception.StoreNotFoundException;
+import com.kosa.mini.api.repository.CategoryRepository;
 import com.kosa.mini.api.repository.MemberRepository;
 import com.kosa.mini.api.repository.RoleRepository;
 import com.kosa.mini.api.repository.StoreRepository;
+import com.kosa.mini.api.service.file.FileStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,6 +32,10 @@ public class StoreApiServiceImpl implements StoreApiService {
     MemberRepository memberRepository;
     @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
+    @Autowired
+    private FileStorageService fileStorageService;
 
     @Override
     @Transactional(readOnly = true) // 읽기 전용 트랜잭션 설정
@@ -126,5 +133,155 @@ public class StoreApiServiceImpl implements StoreApiService {
                 .build();
 
         return response;
+    }
+
+    @Override
+    @Transactional
+    public StoreDTO createStore(StoreDTO storeDTO) throws Exception {
+        // 가게 정보 저장
+        Store store = new Store();
+        store.setStoreName(storeDTO.getStoreName());
+        store.setPostcode(storeDTO.getPostcode());
+        store.setRoadAddress(storeDTO.getRoadAddress());
+        store.setDetailAddress(storeDTO.getDetailAddress());
+        store.setExtraAddress(storeDTO.getExtraAddress());
+        store.setStoreDescription(storeDTO.getStoreDescription());
+        store.setWebsiteInfo(storeDTO.getWebsiteInfo());
+        store.setContactNumber(storeDTO.getContactNumber());
+
+        // 카테고리 설정
+        Category category = categoryRepository.findById(storeDTO.getCategoryId())
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + storeDTO.getCategoryId()));
+        store.setCategory(category);
+
+        // 영업 시간 설정
+        store.setOpeningTime(storeDTO.getOpeningTime());
+        store.setClosingTime(storeDTO.getClosingTime());
+
+        // 가게 사진 저장
+        MultipartFile storePhoto = storeDTO.getStorePhoto();
+        if (storePhoto != null && !storePhoto.isEmpty()) {
+            try {
+                String storePhotoName = fileStorageService.storeFile(storePhoto, "store");
+                store.setStorePhoto(storePhotoName);
+            } catch (Exception e) {
+                throw new FileStorageException("가게 사진 저장 실패: " + e.getMessage(), e);
+            }
+        }
+
+        // 소유자 설정 (초기에는 null 또는 특정 관리자)
+        // 예시: store.setOwner(adminMember);
+        // 여기서는 null로 설정
+        store.setOwner(null);
+
+        // 저장 시간 설정
+        store.setCreatedAt(java.time.LocalDateTime.now());
+        store.setUpdatedAt(java.time.LocalDateTime.now());
+        store.setIsModified(false);
+
+        // 저장
+        Store savedStore = storeRepository.save(store);
+
+        // 메뉴 정보 저장
+        if (storeDTO.getMenuUploadDTOS() != null) {
+            List<Menu> menus = storeDTO.getMenuUploadDTOS().stream().map(menuDTO -> {
+                Menu menu = new Menu();
+                menu.setMenuName(menuDTO.getMenuName());
+                menu.setPrice(menuDTO.getPrice());
+                menu.setStore(savedStore);
+
+                MultipartFile menuPhoto = menuDTO.getMenuPhoto();
+                if (menuPhoto != null && !menuPhoto.isEmpty()) {
+                    try {
+                        String menuPhotoName = fileStorageService.storeFile(menuPhoto, "menu");
+                        menu.setMenuPhoto(menuPhotoName);
+                    } catch (Exception e) {
+                        // 파일 저장 실패 시 롤백
+                        throw new RuntimeException("메뉴 사진 저장 실패: " + e.getMessage());
+                    }
+                }
+
+                return menu;
+            }).collect(Collectors.toList());
+
+            savedStore.setMenus(menus.stream().collect(Collectors.toSet()));
+            storeRepository.save(savedStore);
+        }
+
+        return storeDTO;
+    }
+
+    @Override
+    @Transactional
+    public StoreDTO updateStore(Integer storeId, StoreDTO storeDTO) throws Exception {
+        // 기존 가게 조회
+        Store store = storeRepository.findById(storeId)
+                .orElseThrow(() -> new StoreNotFoundException("Store not found with id: " + storeId));
+
+        // 가게 정보 업데이트
+        store.setStoreName(storeDTO.getStoreName());
+        store.setPostcode(storeDTO.getPostcode());
+        store.setRoadAddress(storeDTO.getRoadAddress());
+        store.setDetailAddress(storeDTO.getDetailAddress());
+        store.setExtraAddress(storeDTO.getExtraAddress());
+        store.setStoreDescription(storeDTO.getStoreDescription());
+        store.setWebsiteInfo(storeDTO.getWebsiteInfo());
+        store.setContactNumber(storeDTO.getContactNumber());
+
+        // 카테고리 업데이트
+        Category category = categoryRepository.findById(storeDTO.getCategoryId())
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + storeDTO.getCategoryId()));
+        store.setCategory(category);
+
+        // 영업 시간 업데이트
+        store.setOpeningTime(storeDTO.getOpeningTime());
+        store.setClosingTime(storeDTO.getClosingTime());
+
+        // 가게 사진 업데이트
+        MultipartFile storePhoto = storeDTO.getStorePhoto();
+        if (storePhoto != null && !storePhoto.isEmpty()) {
+            try {
+                String storePhotoName = fileStorageService.storeFile(storePhoto, "store");
+                store.setStorePhoto(storePhotoName);
+            } catch (Exception e) {
+                throw new FileStorageException("가게 사진 저장 실패: " + e.getMessage(), e);
+            }
+        }
+
+        // 업데이트 시간 설정
+        store.setUpdatedAt(java.time.LocalDateTime.now());
+        store.setIsModified(true);
+
+        // 메뉴 업데이트
+        // 기존 메뉴를 삭제하고 새로 추가하는 방식
+        store.getMenus().clear();
+
+        if (storeDTO.getMenuUploadDTOS() != null) {
+            List<Menu> menus = storeDTO.getMenuUploadDTOS().stream().map(menuDTO -> {
+                Menu menu = new Menu();
+                menu.setMenuName(menuDTO.getMenuName());
+                menu.setPrice(menuDTO.getPrice());
+                menu.setStore(store);
+
+                MultipartFile menuPhoto = menuDTO.getMenuPhoto();
+                if (menuPhoto != null && !menuPhoto.isEmpty()) {
+                    try {
+                        String menuPhotoName = fileStorageService.storeFile(menuPhoto, "menu");
+                        menu.setMenuPhoto(menuPhotoName);
+                    } catch (Exception e) {
+                        throw new RuntimeException("메뉴 사진 저장 실패: " + e.getMessage());
+                    }
+                }
+
+                return menu;
+            }).collect(Collectors.toList());
+
+            store.setMenus(menus.stream().collect(Collectors.toSet()));
+        }
+
+        // 저장
+        Store updatedStore = storeRepository.save(store);
+
+        return storeDTO;
     }
 }
