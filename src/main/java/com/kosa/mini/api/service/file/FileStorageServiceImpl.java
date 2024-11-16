@@ -1,18 +1,23 @@
 package com.kosa.mini.api.service.file;
 
 import com.kosa.mini.api.exception.FileStorageException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.UUID;
 
+
 @Service
 public class FileStorageServiceImpl implements FileStorageService {
 
+    private static final Logger log = LoggerFactory.getLogger(FileStorageServiceImpl.class);
     private final Path storePhotoLocation;
     private final Path menuPhotoLocation;
 
@@ -57,6 +62,24 @@ public class FileStorageServiceImpl implements FileStorageService {
             return uniqueFileName;
         } catch (IOException ex) {
             throw new FileStorageException("파일을 저장할 수 없습니다: " + fileName, ex);
+        }
+    }
+
+    public String findByFile(String oldDBPath, MultipartFile menuPhoto, String directory) throws Exception {
+        String targetLocation = String.valueOf(this.menuPhotoLocation.resolve(oldDBPath));
+        File directoryFile = new File(targetLocation);
+
+        String newFileName = "";
+        log.info("디렉토리 파일 위치 : {}", directoryFile.toURI());
+        if(directoryFile.exists()) {
+            directoryFile.delete();
+            newFileName = storeFile(menuPhoto, directory);
+            log.info("기존 파일 존재_O, 파일 삭제 진행 : {}",directoryFile.toURI());
+            return newFileName;
+        }else {
+            newFileName = storeFile(menuPhoto, directory);
+            log.info("기존 파일 존재 X ");
+            return newFileName;
         }
     }
 }

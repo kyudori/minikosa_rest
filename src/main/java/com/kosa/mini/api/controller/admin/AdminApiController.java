@@ -5,14 +5,13 @@ import com.kosa.mini.api.dto.request.AssignOwnerRequest;
 import com.kosa.mini.api.dto.request.StoreExistenceRequest;
 import com.kosa.mini.api.dto.request.UserExistenceRequest;
 import com.kosa.mini.api.dto.response.AssignOwnerResponse;
-import com.kosa.mini.api.dto.store.StoreContentDTO;
-import com.kosa.mini.api.dto.store.StoreDTO;
-import com.kosa.mini.api.dto.store.StoreSearchDTO;
+import com.kosa.mini.api.dto.store.*;
 import com.kosa.mini.api.entity.ContactUs;
 import com.kosa.mini.api.exception.FileStorageException;
 import com.kosa.mini.api.exception.ResourceNotFoundException;
 import com.kosa.mini.api.exception.StoreNotFoundException;
 import com.kosa.mini.api.service.member.SuggestionService;
+import com.kosa.mini.api.service.menu.MenuApiService;
 import com.kosa.mini.api.service.store.StoreApiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,7 +22,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RequestMapping("/api/v1/admin")
@@ -34,6 +35,8 @@ public class AdminApiController {
     private SuggestionService suggestionService;
     @Autowired
     private StoreApiService storeApiService;
+    @Autowired
+    private MenuApiService menuService;
 
     //@PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/suggestion/list")
@@ -191,7 +194,7 @@ public class AdminApiController {
     @PostMapping("/stores")
     public ResponseEntity<?> createStore(
             @AuthenticationPrincipal UserDetails userDetails,
-            @ModelAttribute StoreDTO storeDTO) {
+            @ModelAttribute StoreCreateDTO storeDTO) {
         if (userDetails == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -204,7 +207,7 @@ public class AdminApiController {
         }
 
         try {
-            StoreDTO createdStore = storeApiService.createStore(storeDTO);
+            StoreCreateDTO createdStore = storeApiService.createStore(storeDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdStore);
         } catch (StoreNotFoundException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
@@ -221,7 +224,7 @@ public class AdminApiController {
     public ResponseEntity<?> updateStore(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable Integer storeId,
-            @ModelAttribute StoreDTO storeDTO) {
+            @ModelAttribute StoreCreateDTO storeDTO) {
         if (userDetails == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -234,7 +237,7 @@ public class AdminApiController {
         }
 
         try {
-            StoreDTO updatedStore = storeApiService.updateStore(storeId, storeDTO);
+            StoreCreateDTO updatedStore = storeApiService.updateStore(storeId, storeDTO);
             return ResponseEntity.ok(updatedStore);
         } catch (StoreNotFoundException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
@@ -243,5 +246,26 @@ public class AdminApiController {
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("가게 수정에 실패했습니다.");
         }
+    }
+
+    @PostMapping("/menu/{storeId}")
+    public ResponseEntity<?> createMenu(@PathVariable Integer storeId,
+                                        @RequestBody MenuCreateDTO menuCreateDTO) {
+
+        System.out.println("======================  " + menuCreateDTO.toString());
+        menuCreateDTO = menuService.createMenu(menuCreateDTO, storeId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(menuCreateDTO);
+    }
+
+
+
+    @PostMapping("/menu/{menuId}/images")
+    public ResponseEntity<String> getStoreMenusImage(@PathVariable Integer menuId,
+                                                      @RequestPart MultipartFile menuPhoto) throws Exception {
+        System.out.println("=====================" + menuPhoto.getName());
+        String result = menuService.getMenusImages(menuPhoto, menuId);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

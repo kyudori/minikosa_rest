@@ -4,7 +4,7 @@ import com.kosa.mini.api.dto.member.UserSearchDTO;
 import com.kosa.mini.api.dto.request.AssignOwnerRequest;
 import com.kosa.mini.api.dto.response.AssignOwnerResponse;
 import com.kosa.mini.api.dto.store.StoreContentDTO;
-import com.kosa.mini.api.dto.store.StoreDTO;
+import com.kosa.mini.api.dto.store.StoreCreateDTO;
 import com.kosa.mini.api.dto.store.StoreSearchDTO;
 import com.kosa.mini.api.entity.*;
 import com.kosa.mini.api.exception.FileStorageException;
@@ -137,7 +137,7 @@ public class StoreApiServiceImpl implements StoreApiService {
 
     @Override
     @Transactional
-    public StoreDTO createStore(StoreDTO storeDTO) throws Exception {
+    public StoreCreateDTO createStore(StoreCreateDTO storeDTO) throws Exception {
         // 가게 정보 저장
         Store store = new Store();
         store.setStoreName(storeDTO.getStoreName());
@@ -182,38 +182,37 @@ public class StoreApiServiceImpl implements StoreApiService {
         // 저장
         Store savedStore = storeRepository.save(store);
 
-        // 메뉴 정보 저장
-        if (storeDTO.getMenuUploadDTOS() != null) {
-            List<Menu> menus = storeDTO.getMenuUploadDTOS().stream().map(menuDTO -> {
-                Menu menu = new Menu();
-                menu.setMenuName(menuDTO.getMenuName());
-                menu.setPrice(menuDTO.getPrice());
-                menu.setStore(savedStore);
-
-                MultipartFile menuPhoto = menuDTO.getMenuPhoto();
-                if (menuPhoto != null && !menuPhoto.isEmpty()) {
-                    try {
-                        String menuPhotoName = fileStorageService.storeFile(menuPhoto, "menu");
-                        menu.setMenuPhoto(menuPhotoName);
-                    } catch (Exception e) {
-                        // 파일 저장 실패 시 롤백
-                        throw new RuntimeException("메뉴 사진 저장 실패: " + e.getMessage());
-                    }
-                }
-
-                return menu;
-            }).collect(Collectors.toList());
-
-            savedStore.setMenus(menus.stream().collect(Collectors.toSet()));
-            storeRepository.save(savedStore);
-        }
+//        // 메뉴 정보 저장
+//        if (storeDTO.getMenuUploadDTOS() != null) {
+//            List<Menu> menus = storeDTO.getMenuUploadDTOS().stream().map(menuDTO -> {
+//                Menu menu = new Menu();
+//                menu.setMenuName(menuDTO.getMenuName());
+//                menu.setPrice(menuDTO.getPrice());
+//                menu.setStore(savedStore);
+//
+//                MultipartFile menuPhoto = menuDTO.getMenuPhoto();
+//                if (menuPhoto != null && !menuPhoto.isEmpty()) {
+//                    try {
+//                        String menuPhotoName = fileStorageService.storeFile(menuPhoto, "menu");
+//                        menu.setMenuPhoto(menuPhotoName);
+//                    } catch (Exception e) {
+//                        // 파일 저장 실패 시 롤백
+//                        throw new RuntimeException("메뉴 사진 저장 실패: " + e.getMessage());
+//                    }
+//                }
+//                return menu;
+//            }).collect(Collectors.toList());
+//
+//            savedStore.setMenus(menus.stream().collect(Collectors.toSet()));
+//            storeRepository.save(savedStore);
+//        }
 
         return storeDTO;
     }
 
     @Override
     @Transactional
-    public StoreDTO updateStore(Integer storeId, StoreDTO storeDTO) throws Exception {
+    public StoreCreateDTO updateStore(Integer storeId, StoreCreateDTO storeDTO) throws Exception {
         // 기존 가게 조회
         Store store = storeRepository.findById(storeId)
                 .orElseThrow(() -> new StoreNotFoundException("Store not found with id: " + storeId));
@@ -254,30 +253,30 @@ public class StoreApiServiceImpl implements StoreApiService {
 
         // 메뉴 업데이트
         // 기존 메뉴를 삭제하고 새로 추가하는 방식
-        store.getMenus().clear();
-
-        if (storeDTO.getMenuUploadDTOS() != null) {
-            List<Menu> menus = storeDTO.getMenuUploadDTOS().stream().map(menuDTO -> {
-                Menu menu = new Menu();
-                menu.setMenuName(menuDTO.getMenuName());
-                menu.setPrice(menuDTO.getPrice());
-                menu.setStore(store);
-
-                MultipartFile menuPhoto = menuDTO.getMenuPhoto();
-                if (menuPhoto != null && !menuPhoto.isEmpty()) {
-                    try {
-                        String menuPhotoName = fileStorageService.storeFile(menuPhoto, "menu");
-                        menu.setMenuPhoto(menuPhotoName);
-                    } catch (Exception e) {
-                        throw new RuntimeException("메뉴 사진 저장 실패: " + e.getMessage());
-                    }
-                }
-
-                return menu;
-            }).collect(Collectors.toList());
-
-            store.setMenus(menus.stream().collect(Collectors.toSet()));
-        }
+//        store.getMenus().clear();
+//
+//        if (storeDTO.getMenuUploadDTOS() != null) {
+//            List<Menu> menus = storeDTO.getMenuUploadDTOS().stream().map(menuDTO -> {
+//                Menu menu = new Menu();
+//                menu.setMenuName(menuDTO.getMenuName());
+//                menu.setPrice(menuDTO.getPrice());
+//                menu.setStore(store);
+//
+//                MultipartFile menuPhoto = menuDTO.getMenuPhoto();
+//                if (menuPhoto != null && !menuPhoto.isEmpty()) {
+//                    try {
+//                        String menuPhotoName = fileStorageService.storeFile(menuPhoto, "menu");
+//                        menu.setMenuPhoto(menuPhotoName);
+//                    } catch (Exception e) {
+//                        throw new RuntimeException("메뉴 사진 저장 실패: " + e.getMessage());
+//                    }
+//                }
+//
+//                return menu;
+//            }).collect(Collectors.toList());
+//
+//            store.setMenus(menus.stream().collect(Collectors.toSet()));
+//        }
 
         // 저장
         Store updatedStore = storeRepository.save(store);

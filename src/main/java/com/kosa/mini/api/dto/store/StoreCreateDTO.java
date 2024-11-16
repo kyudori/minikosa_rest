@@ -1,14 +1,18 @@
 package com.kosa.mini.api.dto.store;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalTime;
 import java.util.List;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
-public class StoreDTO {
+public class StoreCreateDTO {
     private Integer storeId;
     private String storeName;
     private String postcode;
@@ -31,5 +35,5 @@ public class StoreDTO {
     private String contactNumber;
 
     // 메뉴 리스트
-    private List<MenuUploadDTO> menuUploadDTOS;
+//    private List<MenuUploadDTO> menuUploadDTOS;
 }
