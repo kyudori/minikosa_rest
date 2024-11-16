@@ -43,8 +43,6 @@ public class MenuApiServiceImpl implements MenuApiService {
 
     @Override
     public String getMenusImages(MultipartFile menuPhoto, Integer menuId) throws Exception {
-//        store 찾는 것
-//        String oldPath = storeRepository.getStorePhoto(storeId);
         String oldPath = menuRepository.getMenuPhoto(menuId);
         String directoryName = "menu";
         Menu menu;
@@ -64,9 +62,12 @@ public class MenuApiServiceImpl implements MenuApiService {
     }
 
     @Override
-    public MenuCreateDTO createMenu(MenuCreateDTO menuCreateDTO, Integer storeId) {
+    public MenuCreateDTO createMenu(Integer storeId, MultipartFile menuPhoto, MenuCreateDTO menuCreateDTO) throws Exception {
+        String directoryName = "menu";
+        String newPhotoName = fileStorageService.storeFile(menuPhoto, directoryName);
         Store store = new Store();
         store.setStoreId(storeId);
+        menuCreateDTO.setMenuPhoto(newPhotoName);
         Menu menu = menuCreateDTO.toEntity(store);
         menuRepository.save(menu);
         menuCreateDTO.fromEntity(menu);

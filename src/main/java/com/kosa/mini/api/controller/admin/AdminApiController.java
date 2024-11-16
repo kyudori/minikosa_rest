@@ -255,20 +255,12 @@ public class AdminApiController {
 
     @PostMapping("/menu/{storeId}")
     public ResponseEntity<?> createMenu(@PathVariable Integer storeId,
-                                        @RequestBody MenuCreateDTO menuCreateDTO) {
-        menuCreateDTO = menuService.createMenu(menuCreateDTO, storeId);
+                                        @RequestPart MultipartFile menuPhoto,
+                                        @RequestPart MenuCreateDTO menuCreateDTO) throws Exception {
+        menuCreateDTO = menuService.createMenu(storeId, menuPhoto, menuCreateDTO);
         return ResponseEntity.status(HttpStatus.OK).body(menuCreateDTO);
     }
-
-
-
-    @PostMapping("/menu/{menuId}/images")
-    public ResponseEntity<String> getStoreMenusImage(@PathVariable Integer menuId,
-                                                      @RequestPart MultipartFile menuPhoto) throws Exception {
-        String result = menuService.getMenusImages(menuPhoto, menuId);
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-
+    
     @PatchMapping("/menu/{menuId}/images")
     public ResponseEntity<String> UpdateStoreMenusImage(@PathVariable Integer menuId,
                                                       @RequestPart MultipartFile menuPhoto) throws Exception {
