@@ -260,7 +260,7 @@ public class AdminApiController {
         menuCreateDTO = menuService.createMenu(storeId, menuPhoto, menuCreateDTO);
         return ResponseEntity.status(HttpStatus.OK).body(menuCreateDTO);
     }
-    
+
     @PatchMapping("/menu/{menuId}/images")
     public ResponseEntity<String> UpdateStoreMenusImage(@PathVariable Integer menuId,
                                                       @RequestPart MultipartFile menuPhoto) throws Exception {
