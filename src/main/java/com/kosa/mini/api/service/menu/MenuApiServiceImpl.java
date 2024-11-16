@@ -97,17 +97,14 @@ public class MenuApiServiceImpl implements MenuApiService {
 
         Menu menu = menuRepository.findById(menuId).get();
         String getMenuPhoto = menu.getMenuPhoto();
+        boolean result;
         if (getMenuPhoto != null) {
-            boolean result = fileStorageService.deleteImage(getMenuPhoto, DIRECTORY_NAME);
-            if (result) {
-                menuRepository.deleteById(menuId);
+            result = fileStorageService.deleteImage(getMenuPhoto, DIRECTORY_NAME);
+            if(result == false) {
+                return result;
             }
         }
-
-        if (menuRepository.existsById(menuId)) {
-            return true;
-        } else {
-            return false;
-        }
+        menuRepository.deleteById(menuId);
+        return true;
     }
 }

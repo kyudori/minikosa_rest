@@ -271,9 +271,9 @@ public class AdminApiController {
     public ResponseEntity<?> deleteStoreMenus(@PathVariable Integer menuId) {
         boolean result = menuService.deleteStoreMenus(menuId);
         if(result){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        } else {
             return ResponseEntity.status(HttpStatus.OK).body("메뉴가 정상적으로 삭제되었습니다.");
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
 }
