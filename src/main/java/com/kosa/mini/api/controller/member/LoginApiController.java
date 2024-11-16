@@ -46,7 +46,7 @@ public class LoginApiController {
             ResponseCookie refreshCookie = ResponseCookie.from("refresh_token", tokenResponseDTO.getRefreshToken())
                     .httpOnly(true)
                     .secure(false) // 개발 환경에서는 false, 배포 시 true
-                    .path("/api")
+                    .path("/")
                     .maxAge(tokenProvider.getRefreshTokenExpiration() / 1000)
                     .sameSite("Lax")
                     .build();
@@ -130,9 +130,9 @@ public class LoginApiController {
             ResponseCookie newRefreshCookie = ResponseCookie.from("refresh_token", newRefreshToken)
                     .httpOnly(true)
                     .secure(false) // HTTPS 사용 시 true, 현재는 HTTP 사용
-                    .path("/api/v1/refresh-token")
+                    .path("/")
                     .maxAge(tokenProvider.getRefreshTokenExpiration() / 1000)
-                    .sameSite("Strict")
+                    .sameSite("SameSite=Lax")
                     .build();
             response.addHeader("Set-Cookie", newRefreshCookie.toString());
 
