@@ -13,6 +13,7 @@ import com.kosa.mini.api.exception.StoreNotFoundException;
 import com.kosa.mini.api.service.member.SuggestionService;
 import com.kosa.mini.api.service.menu.MenuApiService;
 import com.kosa.mini.api.service.store.StoreApiService;
+import org.hibernate.annotations.Fetch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -194,7 +195,10 @@ public class AdminApiController {
     @PostMapping("/stores")
     public ResponseEntity<?> createStore(
             @AuthenticationPrincipal UserDetails userDetails,
-            @ModelAttribute StoreCreateDTO storeDTO) {
+            @RequestPart MultipartFile storePhoto,
+            @RequestPart StoreCreateDTO store) {
+        System.out.println("===================" + storePhoto.getName());
+
         if (userDetails == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -207,7 +211,7 @@ public class AdminApiController {
         }
 
         try {
-            StoreCreateDTO createdStore = storeApiService.createStore(storeDTO);
+            StoreCreateDTO createdStore = storeApiService.createStore(store, storePhoto);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdStore);
         } catch (StoreNotFoundException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
@@ -224,7 +228,8 @@ public class AdminApiController {
     public ResponseEntity<?> updateStore(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable Integer storeId,
-            @ModelAttribute StoreCreateDTO storeDTO) {
+            @RequestPart MultipartFile storePhoto,
+            @RequestPart StoreCreateDTO store) {
         if (userDetails == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -237,7 +242,7 @@ public class AdminApiController {
         }
 
         try {
-            StoreCreateDTO updatedStore = storeApiService.updateStore(storeId, storeDTO);
+            StoreCreateDTO updatedStore = storeApiService.updateStore(storeId, store, storePhoto);
             return ResponseEntity.ok(updatedStore);
         } catch (StoreNotFoundException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
@@ -251,10 +256,7 @@ public class AdminApiController {
     @PostMapping("/menu/{storeId}")
     public ResponseEntity<?> createMenu(@PathVariable Integer storeId,
                                         @RequestBody MenuCreateDTO menuCreateDTO) {
-
-        System.out.println("======================  " + menuCreateDTO.toString());
         menuCreateDTO = menuService.createMenu(menuCreateDTO, storeId);
-
         return ResponseEntity.status(HttpStatus.OK).body(menuCreateDTO);
     }
 
@@ -263,9 +265,14 @@ public class AdminApiController {
     @PostMapping("/menu/{menuId}/images")
     public ResponseEntity<String> getStoreMenusImage(@PathVariable Integer menuId,
                                                       @RequestPart MultipartFile menuPhoto) throws Exception {
-        System.out.println("=====================" + menuPhoto.getName());
         String result = menuService.getMenusImages(menuPhoto, menuId);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 
+    @PatchMapping("/menu/{menuId}/images")
+    public ResponseEntity<String> UpdateStoreMenusImage(@PathVariable Integer menuId,
+                                                      @RequestPart MultipartFile menuPhoto) throws Exception {
+        String result = menuService.getMenusImages(menuPhoto, menuId);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

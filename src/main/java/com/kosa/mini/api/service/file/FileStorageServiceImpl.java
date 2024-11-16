@@ -65,19 +65,24 @@ public class FileStorageServiceImpl implements FileStorageService {
         }
     }
 
-    public String findByFile(String oldDBPath, MultipartFile menuPhoto, String directory) throws Exception {
-        String targetLocation = String.valueOf(this.menuPhotoLocation.resolve(oldDBPath));
-        File directoryFile = new File(targetLocation);
-
+    public String findByFile(String oldDBPath, MultipartFile photo, String directoryName) throws Exception {
+        String targetLocation = "";
+        File directory;
+        if(directoryName.equals("store")) {
+            targetLocation = String.valueOf(this.storePhotoLocation.resolve(oldDBPath));
+        }else {
+            targetLocation = String.valueOf(this.menuPhotoLocation.resolve(oldDBPath));
+        }
+        directory = new File(targetLocation);
         String newFileName = "";
-        log.info("디렉토리 파일 위치 : {}", directoryFile.toURI());
-        if(directoryFile.exists()) {
-            directoryFile.delete();
-            newFileName = storeFile(menuPhoto, directory);
-            log.info("기존 파일 존재_O, 파일 삭제 진행 : {}",directoryFile.toURI());
+        log.info("디렉토리 파일 위치 : {}", directory.toURI());
+        if(directory.exists()) {
+            directory.delete();
+            newFileName = storeFile(photo, directoryName);
+            log.info("기존 파일 존재_O, 파일 삭제 진행 : {}",directory.toURI());
             return newFileName;
         }else {
-            newFileName = storeFile(menuPhoto, directory);
+            newFileName = storeFile(photo, directoryName);
             log.info("기존 파일 존재 X ");
             return newFileName;
         }

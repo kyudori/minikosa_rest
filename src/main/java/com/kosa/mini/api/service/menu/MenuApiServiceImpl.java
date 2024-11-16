@@ -46,19 +46,16 @@ public class MenuApiServiceImpl implements MenuApiService {
 //        store 찾는 것
 //        String oldPath = storeRepository.getStorePhoto(storeId);
         String oldPath = menuRepository.getMenuPhoto(menuId);
-        System.out.println("================ oldPath : " + oldPath);
         String directoryName = "menu";
         Menu menu;
         if (oldPath != null) {
             String newFileName = fileStorageService.findByFile(oldPath, menuPhoto, directoryName);
-            System.out.println("================ newFileName : " + newFileName);
             menu = menuRepository.findById(menuId).get();
             menu.setMenuPhoto(newFileName);
             menuRepository.save(menu);
             return newFileName;
         } else {
             String newPath = fileStorageService.storeFile(menuPhoto, directoryName);
-            System.out.println("================ newPath : " + newPath);
             menu = menuRepository.findById(menuId).get();
             menu.setMenuPhoto(menuPhoto.getName());
             menuRepository.save(menu);

@@ -137,7 +137,7 @@ public class StoreApiServiceImpl implements StoreApiService {
 
     @Override
     @Transactional
-    public StoreCreateDTO createStore(StoreCreateDTO storeDTO) throws Exception {
+    public StoreCreateDTO createStore(StoreCreateDTO storeDTO, MultipartFile storePhoto) throws Exception {
         // 가게 정보 저장
         Store store = new Store();
         store.setStoreName(storeDTO.getStoreName());
@@ -159,7 +159,7 @@ public class StoreApiServiceImpl implements StoreApiService {
         store.setClosingTime(storeDTO.getClosingTime());
 
         // 가게 사진 저장
-        MultipartFile storePhoto = storeDTO.getStorePhoto();
+//        MultipartFile photo = storePhoto.getName().getStorePhoto();
         if (storePhoto != null && !storePhoto.isEmpty()) {
             try {
                 String storePhotoName = fileStorageService.storeFile(storePhoto, "store");
@@ -212,7 +212,7 @@ public class StoreApiServiceImpl implements StoreApiService {
 
     @Override
     @Transactional
-    public StoreCreateDTO updateStore(Integer storeId, StoreCreateDTO storeDTO) throws Exception {
+    public StoreCreateDTO updateStore(Integer storeId, StoreCreateDTO storeDTO, MultipartFile storePhoto) throws Exception {
         // 기존 가게 조회
         Store store = storeRepository.findById(storeId)
                 .orElseThrow(() -> new StoreNotFoundException("Store not found with id: " + storeId));
@@ -237,10 +237,10 @@ public class StoreApiServiceImpl implements StoreApiService {
         store.setClosingTime(storeDTO.getClosingTime());
 
         // 가게 사진 업데이트
-        MultipartFile storePhoto = storeDTO.getStorePhoto();
         if (storePhoto != null && !storePhoto.isEmpty()) {
             try {
-                String storePhotoName = fileStorageService.storeFile(storePhoto, "store");
+                String dbImage = storeRepository.getStorePhoto(storeId);
+                String storePhotoName = fileStorageService.findByFile(dbImage, storePhoto, "store");
                 store.setStorePhoto(storePhotoName);
             } catch (Exception e) {
                 throw new FileStorageException("가게 사진 저장 실패: " + e.getMessage(), e);

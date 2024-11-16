@@ -20,7 +20,7 @@ public class StoreCreateDTO {
     private String detailAddress;
     private String extraAddress;
     private Integer categoryId;
-    private MultipartFile storePhoto; // 가게 사진 업로드
+//    private MultipartFile storePhoto; // 가게 사진 업로드
     private String storePhotoPath; // 가게 사진 이름
     private String storeDescription;
     private Integer ownerId;

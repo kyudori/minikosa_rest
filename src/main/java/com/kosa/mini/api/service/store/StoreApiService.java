@@ -8,6 +8,7 @@ import com.kosa.mini.api.dto.store.StoreCreateDTO;
 import com.kosa.mini.api.dto.store.StoreSearchDTO;
 import com.kosa.mini.api.exception.StoreNotFoundException;
 import com.kosa.mini.api.exception.ResourceNotFoundException;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -22,7 +23,7 @@ public interface StoreApiService {
 
     AssignOwnerResponse assignOwnerToStore(AssignOwnerRequest request) throws ResourceNotFoundException, IllegalArgumentException;
 
-    StoreCreateDTO createStore(StoreCreateDTO storeDTO) throws Exception;
-    StoreCreateDTO updateStore(Integer storeId, StoreCreateDTO storeDTO) throws Exception;
+    StoreCreateDTO createStore(StoreCreateDTO storeDTO, MultipartFile storePhoto) throws Exception;
+    StoreCreateDTO updateStore(Integer storeId, StoreCreateDTO storeDTO, MultipartFile storePhoto) throws Exception;
 
 }
