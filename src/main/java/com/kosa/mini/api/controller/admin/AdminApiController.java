@@ -5,9 +5,7 @@ import com.kosa.mini.api.dto.request.AssignOwnerRequest;
 import com.kosa.mini.api.dto.request.StoreExistenceRequest;
 import com.kosa.mini.api.dto.request.UserExistenceRequest;
 import com.kosa.mini.api.dto.response.AssignOwnerResponse;
-import com.kosa.mini.api.dto.store.StoreContentDTO;
-import com.kosa.mini.api.dto.store.StoreDTO;
-import com.kosa.mini.api.dto.store.StoreSearchDTO;
+import com.kosa.mini.api.dto.store.*;
 import com.kosa.mini.api.entity.ContactUs;
 import com.kosa.mini.api.exception.FileStorageException;
 import com.kosa.mini.api.exception.ResourceNotFoundException;
@@ -23,7 +21,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RequestMapping("/api/v1/admin")
@@ -186,62 +186,36 @@ public class AdminApiController {
         }
     }
 
-    // 가게 생성 API
-    //@PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/stores")
-    public ResponseEntity<?> createStore(
-            @AuthenticationPrincipal UserDetails userDetails,
-            @ModelAttribute StoreDTO storeDTO) {
-        if (userDetails == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
-        Integer adminId;
+    // 가게 등록
+    @PostMapping("stores")
+    //@PreAuthorize("hasRole('ADMIN')") // ADMIN 권한이 있는 사용자만 접근 가능
+    public ResponseEntity<StoreCreateDTO> createStore(
+            @RequestPart("store") StoreCreateDTO storeCreateDTO,
+            @RequestPart("storePhoto")MultipartFile storePhoto) {
         try {
-            adminId = Integer.valueOf(userDetails.getUsername());
-        } catch (NumberFormatException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-
-        try {
-            StoreDTO createdStore = storeApiService.createStore(storeDTO);
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdStore);
-        } catch (StoreNotFoundException ex) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
-        } catch (FileStorageException ex) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
-        } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("가게 생성에 실패했습니다.");
+            storeCreateDTO.setStorePhoto(storePhoto);
+            // Store 생성 로직
+            StoreCreateDTO createdStore = storeApiService.createStore(storeCreateDTO);
+            return new ResponseEntity<>(createdStore, HttpStatus.CREATED);
+        } catch (Exception e) {
+            // 예외는 GlobalExceptionHandler에서 처리
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    // 가게 수정 API
+    // 가게 수정
+    @PutMapping("/stores/{id}")
     //@PreAuthorize("hasRole('ADMIN')")
-    @PutMapping("/stores/{storeId}")
-    public ResponseEntity<?> updateStore(
-            @AuthenticationPrincipal UserDetails userDetails,
-            @PathVariable Integer storeId,
-            @ModelAttribute StoreDTO storeDTO) {
-        if (userDetails == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
-        Integer adminId;
+    public ResponseEntity<StoreCreateDTO> editStore(
+            @PathVariable("id") Integer storeId,
+            @RequestPart("store") StoreCreateDTO storeCreateDTO) {
         try {
-            adminId = Integer.valueOf(userDetails.getUsername());
-        } catch (NumberFormatException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-
-        try {
-            StoreDTO updatedStore = storeApiService.updateStore(storeId, storeDTO);
-            return ResponseEntity.ok(updatedStore);
-        } catch (StoreNotFoundException ex) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
-        } catch (FileStorageException ex) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
-        } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("가게 수정에 실패했습니다.");
+            StoreCreateDTO updatedStore = storeApiService.editStore(storeId, storeCreateDTO);
+            return new ResponseEntity<>(updatedStore, HttpStatus.OK);
+        } catch (Exception e) {
+            // 예외는 GlobalExceptionHandler에서 처리
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 }
