@@ -1,5 +1,7 @@
 package com.kosa.mini.api.service.member;
 
+import com.kosa.mini.api.dto.member.AccessTokenDTO;
+import com.kosa.mini.api.dto.member.MemberInfoDTO;
 import com.kosa.mini.api.dto.member.TokenResponseDTO;
 import com.kosa.mini.api.dto.member.LoginDTO;
 import com.kosa.mini.api.entity.Member;
@@ -7,6 +9,7 @@ import com.kosa.mini.api.entity.RefreshTokenRedis;
 import com.kosa.mini.api.exception.LoginException;
 import com.kosa.mini.api.repository.MemberRepository;
 import com.kosa.mini.api.repository.RefreshTokenRepository;
+import com.kosa.mini.api.repository.RoleRepository;
 import com.kosa.mini.api.security.JwtTokenProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,19 +31,38 @@ public class LoginServiceImpl implements LoginService {
     private final JwtTokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
     private final MemberRepository memberRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final RoleRepository roleRepository;
 
     @Autowired
     public LoginServiceImpl(AuthenticationManager authenticationManager,
                             JwtTokenProvider tokenProvider,
                             RefreshTokenRepository refreshTokenRepository,
                             MemberRepository memberRepository,
-                            PasswordEncoder passwordEncoder) {
+                            RoleRepository roleRepository) {
         this.authenticationManager = authenticationManager;
         this.tokenProvider = tokenProvider;
         this.refreshTokenRepository = refreshTokenRepository;
         this.memberRepository = memberRepository;
-        this.passwordEncoder = passwordEncoder;
+        this.roleRepository = roleRepository;
+    }
+
+    @Override
+    public MemberInfoDTO userInfo(AccessTokenDTO accessToken) {
+        Integer memberId = tokenProvider.getMemberIdFromJWT(accessToken.getAccessToken());
+        MemberInfoDTO userInfoDTO = new MemberInfoDTO();
+        userInfoDTO.setMemberId(memberId);
+
+        // Optional 처리
+        Optional<Member> optionalMember = memberRepository.findById(memberId);
+        if (optionalMember.isPresent()) {
+            Member member = optionalMember.get();
+            Integer roleId = member.getRole() != null ? member.getRole().getRoleId() : null;
+            userInfoDTO.setRoleId(roleId);
+        } else {
+            throw new IllegalArgumentException("Member not found with id: " + memberId);
+        }
+
+        return userInfoDTO;
     }
 
     @Override

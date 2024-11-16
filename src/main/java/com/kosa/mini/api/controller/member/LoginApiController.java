@@ -1,6 +1,8 @@
 package com.kosa.mini.api.controller.member;
 
+import com.kosa.mini.api.dto.member.AccessTokenDTO;
 import com.kosa.mini.api.dto.member.LoginDTO;
+import com.kosa.mini.api.dto.member.MemberInfoDTO;
 import com.kosa.mini.api.dto.member.TokenResponseDTO;
 import com.kosa.mini.api.exception.LoginException;
 import com.kosa.mini.api.service.member.LoginService;
@@ -29,6 +31,12 @@ public class LoginApiController {
         this.tokenProvider = tokenProvider;
     }
 
+    @GetMapping("/info")
+    public ResponseEntity<MemberInfoDTO> userInfo(@RequestBody AccessTokenDTO accessTokenDTO, HttpServletRequest request) {
+        MemberInfoDTO memberInfoDTO = loginService.userInfo(accessTokenDTO);
+        return new ResponseEntity<>(memberInfoDTO, HttpStatus.OK);
+    }
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginDTO loginDTO, HttpServletResponse response) {
         try{
@@ -38,9 +46,9 @@ public class LoginApiController {
             ResponseCookie refreshCookie = ResponseCookie.from("refresh_token", tokenResponseDTO.getRefreshToken())
                     .httpOnly(true)
                     .secure(false) // 개발 환경에서는 false, 배포 시 true
-                    .path("/api/v1/refresh-token")
+                    .path("/api")
                     .maxAge(tokenProvider.getRefreshTokenExpiration() / 1000)
-                    .sameSite("Strict")
+                    .sameSite("Lax")
                     .build();
             response.addHeader("Set-Cookie", refreshCookie.toString());
 

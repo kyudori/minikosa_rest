@@ -1,6 +1,8 @@
 package com.kosa.mini.api.service.member;
 
+import com.kosa.mini.api.dto.member.AccessTokenDTO;
 import com.kosa.mini.api.dto.member.LoginDTO;
+import com.kosa.mini.api.dto.member.MemberInfoDTO;
 import com.kosa.mini.api.dto.member.TokenResponseDTO;
 import com.kosa.mini.api.exception.LoginException;
 import io.jsonwebtoken.Claims;
@@ -10,4 +12,6 @@ public interface LoginService {
     TokenResponseDTO refreshToken(String refreshToken) throws LoginException;
     void logout(String refreshToken);
     void saveRefreshToken(String refreshToken, Integer memberId);
+
+    MemberInfoDTO userInfo(AccessTokenDTO accessToken);
 }
