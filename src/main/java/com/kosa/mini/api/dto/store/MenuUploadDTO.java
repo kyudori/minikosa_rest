@@ -9,5 +9,5 @@ public class MenuUploadDTO {
         private Integer storeId;
         private String menuName;
         private int price;
-        private MultipartFile storePhoto;
+        private MultipartFile menuPhoto;
 }

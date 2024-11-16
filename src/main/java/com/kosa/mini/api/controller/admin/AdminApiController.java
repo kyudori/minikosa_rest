@@ -6,8 +6,10 @@ import com.kosa.mini.api.dto.request.StoreExistenceRequest;
 import com.kosa.mini.api.dto.request.UserExistenceRequest;
 import com.kosa.mini.api.dto.response.AssignOwnerResponse;
 import com.kosa.mini.api.dto.store.StoreContentDTO;
+import com.kosa.mini.api.dto.store.StoreDTO;
 import com.kosa.mini.api.dto.store.StoreSearchDTO;
 import com.kosa.mini.api.entity.ContactUs;
+import com.kosa.mini.api.exception.FileStorageException;
 import com.kosa.mini.api.exception.ResourceNotFoundException;
 import com.kosa.mini.api.exception.StoreNotFoundException;
 import com.kosa.mini.api.service.member.SuggestionService;
@@ -181,6 +183,65 @@ public class AdminApiController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    // 가게 생성 API
+    //@PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/stores")
+    public ResponseEntity<?> createStore(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @ModelAttribute StoreDTO storeDTO) {
+        if (userDetails == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        Integer adminId;
+        try {
+            adminId = Integer.valueOf(userDetails.getUsername());
+        } catch (NumberFormatException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        try {
+            StoreDTO createdStore = storeApiService.createStore(storeDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdStore);
+        } catch (StoreNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        } catch (FileStorageException ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("가게 생성에 실패했습니다.");
+        }
+    }
+
+    // 가게 수정 API
+    //@PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/stores/{storeId}")
+    public ResponseEntity<?> updateStore(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable Integer storeId,
+            @ModelAttribute StoreDTO storeDTO) {
+        if (userDetails == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        Integer adminId;
+        try {
+            adminId = Integer.valueOf(userDetails.getUsername());
+        } catch (NumberFormatException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        try {
+            StoreDTO updatedStore = storeApiService.updateStore(storeId, storeDTO);
+            return ResponseEntity.ok(updatedStore);
+        } catch (StoreNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        } catch (FileStorageException ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("가게 수정에 실패했습니다.");
         }
     }
 }
