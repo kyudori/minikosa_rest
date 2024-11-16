@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -12,9 +14,11 @@ import lombok.NoArgsConstructor;
 public class StoreReviewDTO {
     private Integer storeId;
     private Integer memberId;
-    private String reviewText;
-    private Integer rating;
     private Integer reviewId;
     private String storeName;
     private String memberNickname;
+    private String reviewText;
+    private Integer rating;
+    private Date createdAt;
+    private Date updatedAt;
 }

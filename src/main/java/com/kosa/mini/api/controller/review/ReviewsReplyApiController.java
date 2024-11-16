@@ -13,12 +13,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
+
+import java.security.Security;
 
 @Slf4j
 @RestController
@@ -96,7 +101,13 @@ public class ReviewsReplyApiController {
     // 리뷰 삭제
     @Transactional
     @DeleteMapping("/reviews/{storeId}/{reviewId}")
-    public ResponseEntity<String> deleteReview(@PathVariable Integer reviewId, @PathVariable Integer storeId) {
+    public ResponseEntity<String> deleteReview(@PathVariable Integer reviewId, @PathVariable Integer storeId,
+                                               @AuthenticationPrincipal UserDetails userDetails) {
+        // 관리자의 삭제 : role_id의 권한 번호에 따라 v-show 등으로 삭제 버튼이 보이도록 하면 되지 않을까?
+        if (userDetails == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         try {
             boolean reviewDelete = reviewApiService.deleteReview(reviewId);
             if (reviewDelete) {
@@ -119,13 +130,15 @@ public class ReviewsReplyApiController {
         String memberIdStr = userDetails.getUsername();
         Integer memberId;
         memberId = Integer.parseInt(memberIdStr);
-        System.out.println("컨트롤러 : " + memberId + "========" + reviewsUpdateDTO.toString());
-        reviewsUpdateDTO = reviewApiService.updateReviews(reviewsUpdateDTO, memberId, storeId);
-        System.out.println("컨트롤러2 : " + reviewsUpdateDTO.toString());
-        if(reviewsUpdateDTO == null) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        }else {
-            return ResponseEntity.status(HttpStatus.OK).body(reviewsUpdateDTO);
+        try {
+            reviewsUpdateDTO = reviewApiService.updateReviews(reviewsUpdateDTO, memberId, storeId);
+            if (reviewsUpdateDTO == null) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            } else {
+                return ResponseEntity.status(HttpStatus.OK).body(reviewsUpdateDTO);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
 
@@ -171,13 +184,16 @@ public class ReviewsReplyApiController {
         String ownerIdStr = userDetails.getUsername();
         Integer ownerId;
         ownerId = Integer.parseInt(ownerIdStr);
-        System.out.println("컨트롤러 : " + ownerId + "========" + replyUpdateDTO.toString());
-        replyUpdateDTO = replyApiService.updateReply(replyUpdateDTO, ownerId, reviewId);
-        System.out.println("컨트롤러2 : " + replyUpdateDTO.toString());
-        if(replyUpdateDTO == null) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        }else {
-            return ResponseEntity.status(HttpStatus.OK).body(replyUpdateDTO);
+        try{
+            replyUpdateDTO = replyApiService.updateReply(replyUpdateDTO, ownerId, reviewId);
+
+            if(replyUpdateDTO == null) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            }else {
+                return ResponseEntity.status(HttpStatus.OK).body(replyUpdateDTO);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
 
