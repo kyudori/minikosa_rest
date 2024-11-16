@@ -14,12 +14,14 @@ public class MenuCreateDTO {
         private Integer storeId;
         private String menuName;
         private int price;
+        private String menuPhoto;
 
         public Menu toEntity(Store store) {
                 return Menu.builder()
                         .store(store)
                         .menuName(menuName)
                         .price(price)
+                        .menuPhoto(menuPhoto)
                         .build();
         }
 
@@ -27,6 +29,7 @@ public class MenuCreateDTO {
                 return new MenuCreateDTO(
                         menu.getStore().getStoreId(),
                         menu.getMenuName(),
-                        menu.getPrice());
+                        menu.getPrice(),
+                        menu.getMenuPhoto());
         }
 }

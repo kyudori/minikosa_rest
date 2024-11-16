@@ -9,5 +9,5 @@ import java.util.List;
 public interface MenuApiService {
     List<MenuDTO> getMenu(Integer storeId);
     String getMenusImages(MultipartFile menuPhoto, Integer storeId) throws Exception;
-    MenuCreateDTO createMenu(MenuCreateDTO menuCreateDTO, Integer storeId);
+    MenuCreateDTO createMenu(Integer storeId, MultipartFile menuPhoto, MenuCreateDTO menuCreateDTO) throws Exception;
 }
