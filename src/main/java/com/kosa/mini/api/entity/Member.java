@@ -58,6 +58,9 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<ContactUs> contactUsList;
 
+    public Integer getRoleId() {
+        return this.role != null ? this.role.getRoleId() : null;
+    }
 
     public void put(Member member) {
         if(member.name != null)

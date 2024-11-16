@@ -8,6 +8,8 @@ import FindEmail from '../views/FindEmail.vue'
 import ResetPassword from '../views/ResetPassword.vue'
 // 다른 뷰를 추가로 임포트
 
+import { useAuthStore } from '../stores/auth'
+
 const routes = [
   {
     path: '/login',
@@ -22,7 +24,8 @@ const routes = [
   {
     path: '/intro',
     name: 'Intro',
-    component: Intro
+    component: Intro,
+    meta: { requiresAuth: true }
   },
   {
     path: '/findemail',
@@ -37,7 +40,8 @@ const routes = [
   {
     path: '/suggestion',
     name: 'Suggestion',
-    component: Suggestion
+    component: Suggestion,
+    meta: { requiresAuth: true }
   },
   {
     path: '/',
@@ -50,6 +54,20 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes
+})
+
+// 라우터 가드 설정
+router.beforeEach((to, from, next) => {
+  const authStore = useAuthStore()
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (!authStore.accessToken) {
+      next({ name: 'Login' })
+    } else {
+      next()
+    }
+  } else {
+    next()
+  }
 })
 
 export default router

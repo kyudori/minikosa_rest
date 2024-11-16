@@ -42,7 +42,6 @@ public class SignUpServiceImpl implements SignUpService {
                 if (memberRepository.existsByNickname(dto.getNickname())) {
         throw new DuplicateNicknameException("이미 사용 중인 닉네임입니다.");
     }
-
     Role userRole = roleRepository.findByRoleName("ROLE_USER")
             .orElseThrow(() -> new SignupException("사용자 역할을 찾을 수 없습니다."));
 
