@@ -19,6 +19,7 @@ public class Role {
     @Column(name = "role_id")
     private Integer roleId;
 
+    //ROLE_USER, ROLE_ADMIN, ROLE_OWNER
     @Column(name = "role_name", nullable = false, unique = true, length = 50)
     private String roleName;
 

@@ -25,16 +25,14 @@ public interface StoreRepository extends JpaRepository<Store, Integer> {
             "s.contactNumber, " +
             "s.storePhoto, " +
             "s.owner.memberId, " +
-            "COALESCE(AVG(r.rating), 0) AS ratingAvg, " +
-            "COUNT(r) AS countReview ) " +
+            "COALESCE(AVG(r.rating), 0), " +
+            "COUNT(r)) " +
             "FROM Store s LEFT JOIN s.reviews r " +
             "WHERE s.storeId = :storeId " +
             "GROUP BY s.storeId, s.storeName, s.postcode, s.roadAddress, " +
             "s.detailAddress, s.extraAddress, s.storeDescription, s.websiteInfo, " +
             "s.openingTime, s.closingTime, s.contactNumber, s.storePhoto, s.owner.memberId")
     StoreContentDTO findStoreWithContent(@Param("storeId") Integer storeId);
-
-    List<Store> findByStoreNameContainingIgnoreCase(String storeName);
 
     @Query(value = "SELECT s.store_id AS storeId, s.store_name AS storeName,  " +
             " s.store_photo AS storePhoto, s.store_description AS storeDescription,  " +
@@ -47,4 +45,7 @@ public interface StoreRepository extends JpaRepository<Store, Integer> {
             "ORDER BY :sort ",
             nativeQuery = true)
     List<SearchStoreInterfaceDTO> findByStoreSearch(String query, String sort);
+
+    List<Store> findByStoreNameContainingIgnoreCase(String storeName);
+
 }

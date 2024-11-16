@@ -8,6 +8,7 @@ import lombok.*;
 @Entity
 @Table(name = "menus")
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

@@ -1,8 +1,10 @@
 package com.kosa.mini.api.dto.store;
 
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalTime;
 import java.util.List;
 
 @Data
@@ -18,8 +20,13 @@ public class StoreDTO {
     private String storePhotoPath; // 가게 사진 이름
     private String storeDescription;
     private Integer ownerId;
-    private String openingTime;
-    private String closingTime;
+
+    @DateTimeFormat(pattern = "H:mm")
+    private LocalTime openingTime;
+
+    @DateTimeFormat(pattern = "H:mm")
+    private LocalTime closingTime;
+
     private String websiteInfo;
     private String contactNumber;
 
