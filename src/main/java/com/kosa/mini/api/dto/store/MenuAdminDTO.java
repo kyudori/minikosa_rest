@@ -5,12 +5,11 @@ import com.kosa.mini.api.entity.Store;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class MenuCreateDTO {
+public class MenuAdminDTO {
         private Integer storeId;
         private String menuName;
         private int price;
@@ -25,8 +24,8 @@ public class MenuCreateDTO {
                         .build();
         }
 
-        public MenuCreateDTO fromEntity(Menu menu) {
-                return new MenuCreateDTO(
+        public MenuAdminDTO fromEntity(Menu menu) {
+                return new MenuAdminDTO(
                         menu.getStore().getStoreId(),
                         menu.getMenuName(),
                         menu.getPrice(),

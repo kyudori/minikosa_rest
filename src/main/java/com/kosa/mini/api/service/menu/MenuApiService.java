@@ -1,6 +1,6 @@
 package com.kosa.mini.api.service.menu;
 
-import com.kosa.mini.api.dto.store.MenuCreateDTO;
+import com.kosa.mini.api.dto.store.MenuAdminDTO;
 import com.kosa.mini.api.dto.store.MenuDTO;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface MenuApiService {
     List<MenuDTO> getMenu(Integer storeId);
-    String getMenusImages(MultipartFile menuPhoto, Integer storeId) throws Exception;
-    MenuCreateDTO createMenu(Integer storeId, MultipartFile menuPhoto, MenuCreateDTO menuCreateDTO) throws Exception;
+    String getMenusImages(MultipartFile menuPhoto, Integer menuId) throws Exception;
+    MenuAdminDTO createMenu(Integer storeId, MultipartFile menuPhoto, MenuAdminDTO menuCreateDTO) throws Exception;
+    MenuAdminDTO UpdateStoreMenus(Integer menuId, MultipartFile menuPhoto, MenuAdminDTO menuAdminDTO) throws Exception;
 }

@@ -13,7 +13,6 @@ import com.kosa.mini.api.exception.StoreNotFoundException;
 import com.kosa.mini.api.service.member.SuggestionService;
 import com.kosa.mini.api.service.menu.MenuApiService;
 import com.kosa.mini.api.service.store.StoreApiService;
-import org.hibernate.annotations.Fetch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,7 +24,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 
 @RequestMapping("/api/v1/admin")
@@ -256,15 +254,16 @@ public class AdminApiController {
     @PostMapping("/menu/{storeId}")
     public ResponseEntity<?> createMenu(@PathVariable Integer storeId,
                                         @RequestPart MultipartFile menuPhoto,
-                                        @RequestPart MenuCreateDTO menuCreateDTO) throws Exception {
-        menuCreateDTO = menuService.createMenu(storeId, menuPhoto, menuCreateDTO);
-        return ResponseEntity.status(HttpStatus.OK).body(menuCreateDTO);
+                                        @RequestPart MenuAdminDTO menuAdminDTO) throws Exception {
+        menuAdminDTO = menuService.createMenu(storeId, menuPhoto, menuAdminDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(menuAdminDTO);
     }
 
-    @PatchMapping("/menu/{menuId}/images")
-    public ResponseEntity<String> UpdateStoreMenusImage(@PathVariable Integer menuId,
-                                                      @RequestPart MultipartFile menuPhoto) throws Exception {
-        String result = menuService.getMenusImages(menuPhoto, menuId);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+    @PatchMapping("/menu/{menuId}")
+    public ResponseEntity<?> UpdateStoreMenus(@PathVariable Integer menuId,
+                                        @RequestPart MultipartFile menuPhoto,
+                                        @RequestPart MenuAdminDTO menuAdminDTO) throws Exception {
+        menuAdminDTO = menuService.UpdateStoreMenus(menuId, menuPhoto, menuAdminDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(menuAdminDTO);
     }
 }

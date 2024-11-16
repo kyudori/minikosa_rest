@@ -1,7 +1,7 @@
 package com.kosa.mini.api.service.menu;
 
 
-import com.kosa.mini.api.dto.store.MenuCreateDTO;
+import com.kosa.mini.api.dto.store.MenuAdminDTO;
 import com.kosa.mini.api.dto.store.MenuDTO;
 import com.kosa.mini.api.entity.Menu;
 import com.kosa.mini.api.entity.Store;
@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 @Service
 public class MenuApiServiceImpl implements MenuApiService {
     private final int NO_IMAGE = 400;
+    private final String DIRECTORY_NAME = "menu";
 
     private final StoreRepository storeRepository;
     private final MenuRepository menuRepository;
@@ -44,27 +45,27 @@ public class MenuApiServiceImpl implements MenuApiService {
     @Override
     public String getMenusImages(MultipartFile menuPhoto, Integer menuId) throws Exception {
         String oldPath = menuRepository.getMenuPhoto(menuId);
-        String directoryName = "menu";
         Menu menu;
         if (oldPath != null) {
-            String newFileName = fileStorageService.findByFile(oldPath, menuPhoto, directoryName);
+            String newFileName = fileStorageService.findByFile(oldPath, menuPhoto, DIRECTORY_NAME);
             menu = menuRepository.findById(menuId).get();
             menu.setMenuPhoto(newFileName);
             menuRepository.save(menu);
             return newFileName;
         } else {
-            String newPath = fileStorageService.storeFile(menuPhoto, directoryName);
+            String newPath = fileStorageService.storeFile(menuPhoto, DIRECTORY_NAME);
             menu = menuRepository.findById(menuId).get();
             menu.setMenuPhoto(menuPhoto.getName());
             menuRepository.save(menu);
-            return "DB에 처음 이미지 저장";
+            return newPath;
         }
     }
 
     @Override
-    public MenuCreateDTO createMenu(Integer storeId, MultipartFile menuPhoto, MenuCreateDTO menuCreateDTO) throws Exception {
-        String directoryName = "menu";
-        String newPhotoName = fileStorageService.storeFile(menuPhoto, directoryName);
+    public MenuAdminDTO createMenu(Integer storeId,
+                                   MultipartFile menuPhoto,
+                                   MenuAdminDTO menuCreateDTO) throws Exception {
+        String newPhotoName = fileStorageService.storeFile(menuPhoto, DIRECTORY_NAME);
         Store store = new Store();
         store.setStoreId(storeId);
         menuCreateDTO.setMenuPhoto(newPhotoName);
@@ -73,5 +74,21 @@ public class MenuApiServiceImpl implements MenuApiService {
         menuCreateDTO.fromEntity(menu);
 
         return menuCreateDTO;
+    }
+
+    @Override
+    public MenuAdminDTO UpdateStoreMenus(Integer menuId,
+                                         MultipartFile menuPhoto,
+                                         MenuAdminDTO menuAdminDTO) throws Exception {
+
+        String newPhotoName = getMenusImages(menuPhoto, menuId);
+        menuAdminDTO.setMenuPhoto(newPhotoName);
+        Menu menu = menuRepository.findById(menuId).get();
+        Store store = menu.getStore();
+        menu = menuAdminDTO.toEntity(store);
+        menuRepository.save(menu);
+        menuAdminDTO.fromEntity(menu);
+
+        return menuAdminDTO;
     }
 }
