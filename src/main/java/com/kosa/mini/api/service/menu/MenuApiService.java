@@ -10,5 +10,6 @@ public interface MenuApiService {
     List<MenuDTO> getMenu(Integer storeId);
     String getMenusImages(MultipartFile menuPhoto, Integer menuId) throws Exception;
     MenuAdminDTO createMenu(Integer storeId, MultipartFile menuPhoto, MenuAdminDTO menuCreateDTO) throws Exception;
-    MenuAdminDTO UpdateStoreMenus(Integer menuId, MultipartFile menuPhoto, MenuAdminDTO menuAdminDTO) throws Exception;
+    MenuAdminDTO updateStoreMenus(Integer menuId, MultipartFile menuPhoto, MenuAdminDTO menuAdminDTO) throws Exception;
+    Boolean deleteStoreMenus(Integer menuId);
 }

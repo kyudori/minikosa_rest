@@ -65,6 +65,7 @@ public class FileStorageServiceImpl implements FileStorageService {
         }
     }
 
+    @Override
     public String findByFile(String oldDBPath, MultipartFile photo, String directoryName) throws Exception {
         String targetLocation = "";
         File directory;
@@ -85,6 +86,28 @@ public class FileStorageServiceImpl implements FileStorageService {
             newFileName = storeFile(photo, directoryName);
             log.info("기존 파일 존재 X ");
             return newFileName;
+        }
+    }
+
+    @Override
+    public boolean deleteImage(String getPhoto, String directoryName) {
+        String targetLocation = "";
+        File directory;
+        if(directoryName.equals("store")) {
+            targetLocation = String.valueOf(this.storePhotoLocation.resolve(getPhoto));
+        }else {
+            targetLocation = String.valueOf(this.menuPhotoLocation.resolve(getPhoto));
+        }
+        directory = new File(targetLocation);
+        String newFileName = "";
+        log.info("디렉토리 파일 위치 : {}", directory.toURI());
+        if(directory.exists()) {
+            directory.delete();
+            log.info("기존 파일 존재_O, 파일 삭제 진행 : {}",directory.toURI());
+            return true;
+        } else {
+            log.info("기존 파일 존재 X ");
+            return false;
         }
     }
 }

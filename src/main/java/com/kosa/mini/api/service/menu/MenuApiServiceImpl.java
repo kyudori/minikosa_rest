@@ -77,7 +77,7 @@ public class MenuApiServiceImpl implements MenuApiService {
     }
 
     @Override
-    public MenuAdminDTO UpdateStoreMenus(Integer menuId,
+    public MenuAdminDTO updateStoreMenus(Integer menuId,
                                          MultipartFile menuPhoto,
                                          MenuAdminDTO menuAdminDTO) throws Exception {
 
@@ -90,5 +90,24 @@ public class MenuApiServiceImpl implements MenuApiService {
         menuAdminDTO.fromEntity(menu);
 
         return menuAdminDTO;
+    }
+
+    @Override
+    public Boolean deleteStoreMenus(Integer menuId) {
+
+        Menu menu = menuRepository.findById(menuId).get();
+        String getMenuPhoto = menu.getMenuPhoto();
+        if (getMenuPhoto != null) {
+            boolean result = fileStorageService.deleteImage(getMenuPhoto, DIRECTORY_NAME);
+            if (result) {
+                menuRepository.deleteById(menuId);
+            }
+        }
+
+        if (menuRepository.existsById(menuId)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

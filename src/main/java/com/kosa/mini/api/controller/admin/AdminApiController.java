@@ -260,10 +260,20 @@ public class AdminApiController {
     }
 
     @PatchMapping("/menu/{menuId}")
-    public ResponseEntity<?> UpdateStoreMenus(@PathVariable Integer menuId,
+    public ResponseEntity<?> updateStoreMenus(@PathVariable Integer menuId,
                                         @RequestPart MultipartFile menuPhoto,
                                         @RequestPart MenuAdminDTO menuAdminDTO) throws Exception {
-        menuAdminDTO = menuService.UpdateStoreMenus(menuId, menuPhoto, menuAdminDTO);
+        menuAdminDTO = menuService.updateStoreMenus(menuId, menuPhoto, menuAdminDTO);
         return ResponseEntity.status(HttpStatus.OK).body(menuAdminDTO);
+    }
+
+    @DeleteMapping("/menu/{menuId}")
+    public ResponseEntity<?> deleteStoreMenus(@PathVariable Integer menuId) {
+        boolean result = menuService.deleteStoreMenus(menuId);
+        if(result){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body("메뉴가 정상적으로 삭제되었습니다.");
+        }
     }
 }
