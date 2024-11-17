@@ -6,6 +6,9 @@ import Intro from '../views/Intro.vue'
 import Suggestion from '../views/Suggestion.vue'
 import FindEmail from '../views/FindEmail.vue'
 import ResetPassword from '../views/ResetPassword.vue'
+import EditProfile from '../views/EditProfile.vue'
+import AdminSuggestionList from '../views/admin/AdminSuggestionList.vue'
+import AdminSuggestionView from '../views/admin/AdminSuggestionView.vue'
 // 다른 뷰를 추가로 임포트
 
 import { useAuthStore } from '../stores/auth'
@@ -44,11 +47,30 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
+    path: '/editprofile',
+    name: 'EditProfile',
+    component: EditProfile,
+    meta: { requiresAuth: true }
+  },
+  // Admin Routes
+  {
+    path: '/admin/suggestion/list',
+    name: 'AdminSuggestionList',
+    component: AdminSuggestionList,
+    meta: { requiresAuth: true, requiresAdmin: true }
+  },
+  {
+    path: '/admin/suggestion/:id',
+    name: 'AdminSuggestionView',
+    component: AdminSuggestionView,
+    meta: { requiresAuth: true, requiresAdmin: true }
+  },
+  // 기타 라우트
+  {
     path: '/',
     name: 'Home',
     redirect: '/login'
   },
-  // 추가적인 라우트 설정
 ]
 
 const router = createRouter({
@@ -62,6 +84,9 @@ router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (!authStore.accessToken) {
       next({ name: 'Login' })
+    } else if (to.matched.some(record => record.meta.requiresAdmin) && authStore.user.roleId !== 2) {
+      // 관리자 권한 확인 (예: roleId === 2이 ADMIN)
+      next({ name: 'Intro' })
     } else {
       next()
     }
