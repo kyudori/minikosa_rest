@@ -12,7 +12,7 @@ export const useAuthStore = defineStore('auth', {
   actions: {
     async login(email, password) {
       try {
-        const response = await axios.post('/login', { email, password })
+        const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/login`, { email, password })
         
         // Access Token 저장
         this.accessToken = response.data.accessToken
@@ -39,7 +39,7 @@ export const useAuthStore = defineStore('auth', {
     },
     async logout() {
       try {
-        await axios.post('/logout')
+        await axios.post(`${import.meta.env.VITE_BACKEND_URL}/logout`)
         this.accessToken = null
         this.user = null
         router.push('/login')
@@ -49,7 +49,7 @@ export const useAuthStore = defineStore('auth', {
     },
     async refreshAccessToken() {
       try {
-        const response = await axios.post('/refresh-token')
+        const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/refresh-token`)
         this.accessToken = response.data.accessToken
       } catch (error) {
         console.error('Access Token 갱신 실패:', error)
