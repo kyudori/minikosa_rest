@@ -6,6 +6,7 @@ import Intro from '../views/Intro.vue'
 import Suggestion from '../views/Suggestion.vue'
 import FindEmail from '../views/FindEmail.vue'
 import ResetPassword from '../views/ResetPassword.vue'
+import EditProfile from '../views/EditProfile.vue' // EditProfile 컴포넌트 임포트
 // 다른 뷰를 추가로 임포트
 
 import { useAuthStore } from '../stores/auth'
@@ -41,6 +42,12 @@ const routes = [
     path: '/suggestion',
     name: 'Suggestion',
     component: Suggestion,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/editprofile',
+    name: 'EditProfile',
+    component: EditProfile,
     meta: { requiresAuth: true }
   },
   {

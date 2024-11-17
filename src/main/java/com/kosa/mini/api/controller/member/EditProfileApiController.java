@@ -51,8 +51,8 @@ public class EditProfileApiController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
-            memberEditProfileRepository.findById(memberId); //멤버 리퍼지토리로 findId 조회     //멤버 리퍼지토리로 findId 조회
-            return ResponseEntity.ok(memberIdStr);   // 멤버아이디에 반환값 ResponseEntity에 200상태코드 부여
+            //memberEditProfileRepository.findById(memberId); //멤버 리퍼지토리로 findId 조회     //멤버 리퍼지토리로 findId 조회
+            return ResponseEntity.ok(memberEditProfileRepository.findById(memberId));   // 멤버아이디에 반환값 ResponseEntity에 200상태코드 부여
     }
 
     @PutMapping("/editprofile")
