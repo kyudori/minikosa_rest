@@ -50,6 +50,7 @@
 <script>
 import { ref, computed } from 'vue'
 import { useAuthStore } from '../stores/auth'
+import api from '../axios'
 
 export default {
   name: 'Header',
@@ -72,6 +73,19 @@ export default {
         console.error('로그아웃 실패:', error)
       }
     }
+
+    // 추가적으로 사용자 정보를 가져와야 한다면 아래 주석을 해제하고 구현
+    /*
+    if (!authStore.user) {
+      try {
+        const response = await api.get('/info')
+        authStore.user = response.data
+        localStorage.setItem('user', JSON.stringify(authStore.user))
+      } catch (error) {
+        console.error('사용자 정보 가져오기 실패:', error)
+      }
+    }
+    */
 
     return {
       showUserMenu,
