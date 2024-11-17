@@ -45,7 +45,9 @@ export const useAdminStore = defineStore('admin', {
     async fetchSuggestion(id) {
       this.isLoading = true
       try {
+        console.log(`Fetching suggestion with ID: ${id}`) // 디버깅용 로그 추가
         const response = await api.get(`/admin/suggestion/${id}`)
+        console.log('Response:', response) // 디버깅용 로그 추가
         this.currentSuggestion = response.data
         this.errorMessage = ''
       } catch (error) {
