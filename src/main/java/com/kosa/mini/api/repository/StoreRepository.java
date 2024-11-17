@@ -48,4 +48,6 @@ public interface StoreRepository extends JpaRepository<Store, Integer> {
 
     List<Store> findByStoreNameContainingIgnoreCase(String storeName);
 
+    @Query("SELECT s.storePhoto FROM Store s WHERE s.storeId = :storeId")
+    String getStorePhoto(Integer storeId);
 }

@@ -5,14 +5,13 @@ import com.kosa.mini.api.dto.request.AssignOwnerRequest;
 import com.kosa.mini.api.dto.request.StoreExistenceRequest;
 import com.kosa.mini.api.dto.request.UserExistenceRequest;
 import com.kosa.mini.api.dto.response.AssignOwnerResponse;
-import com.kosa.mini.api.dto.store.StoreContentDTO;
-import com.kosa.mini.api.dto.store.StoreDTO;
-import com.kosa.mini.api.dto.store.StoreSearchDTO;
+import com.kosa.mini.api.dto.store.*;
 import com.kosa.mini.api.entity.ContactUs;
 import com.kosa.mini.api.exception.FileStorageException;
 import com.kosa.mini.api.exception.ResourceNotFoundException;
 import com.kosa.mini.api.exception.StoreNotFoundException;
 import com.kosa.mini.api.service.member.SuggestionService;
+import com.kosa.mini.api.service.menu.MenuApiService;
 import com.kosa.mini.api.service.store.StoreApiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -34,6 +34,8 @@ public class AdminApiController {
     private SuggestionService suggestionService;
     @Autowired
     private StoreApiService storeApiService;
+    @Autowired
+    private MenuApiService menuService;
 
     //@PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/suggestion/list")
@@ -191,7 +193,10 @@ public class AdminApiController {
     @PostMapping("/stores")
     public ResponseEntity<?> createStore(
             @AuthenticationPrincipal UserDetails userDetails,
-            @ModelAttribute StoreDTO storeDTO) {
+            @RequestPart MultipartFile storePhoto,
+            @RequestPart StoreCreateDTO store) {
+        System.out.println("===================" + storePhoto.getName());
+
         if (userDetails == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -204,7 +209,7 @@ public class AdminApiController {
         }
 
         try {
-            StoreDTO createdStore = storeApiService.createStore(storeDTO);
+            StoreCreateDTO createdStore = storeApiService.createStore(store, storePhoto);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdStore);
         } catch (StoreNotFoundException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
@@ -221,7 +226,8 @@ public class AdminApiController {
     public ResponseEntity<?> updateStore(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable Integer storeId,
-            @ModelAttribute StoreDTO storeDTO) {
+            @RequestPart MultipartFile storePhoto,
+            @RequestPart StoreCreateDTO store) {
         if (userDetails == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -234,7 +240,7 @@ public class AdminApiController {
         }
 
         try {
-            StoreDTO updatedStore = storeApiService.updateStore(storeId, storeDTO);
+            StoreCreateDTO updatedStore = storeApiService.updateStore(storeId, store, storePhoto);
             return ResponseEntity.ok(updatedStore);
         } catch (StoreNotFoundException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
@@ -242,6 +248,32 @@ public class AdminApiController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("가게 수정에 실패했습니다.");
+        }
+    }
+
+    @PostMapping("/menu/{storeId}")
+    public ResponseEntity<?> createMenu(@PathVariable Integer storeId,
+                                        @RequestPart MultipartFile menuPhoto,
+                                        @RequestPart MenuAdminDTO menuAdminDTO) throws Exception {
+        menuAdminDTO = menuService.createMenu(storeId, menuPhoto, menuAdminDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(menuAdminDTO);
+    }
+
+    @PatchMapping("/menu/{menuId}")
+    public ResponseEntity<?> updateStoreMenus(@PathVariable Integer menuId,
+                                        @RequestPart MultipartFile menuPhoto,
+                                        @RequestPart MenuAdminDTO menuAdminDTO) throws Exception {
+        menuAdminDTO = menuService.updateStoreMenus(menuId, menuPhoto, menuAdminDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(menuAdminDTO);
+    }
+
+    @DeleteMapping("/menu/{menuId}")
+    public ResponseEntity<?> deleteStoreMenus(@PathVariable Integer menuId) {
+        boolean result = menuService.deleteStoreMenus(menuId);
+        if(result){
+            return ResponseEntity.status(HttpStatus.OK).body("메뉴가 정상적으로 삭제되었습니다.");
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
 }
