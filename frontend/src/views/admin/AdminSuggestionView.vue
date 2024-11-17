@@ -3,10 +3,10 @@
   <div class="container">
     <div id="viewPostWrapper">
       <div class="subtitle" v-if="adminStore.currentSuggestion">
-        <img src="/images/main_logo.png" alt="Main Logo" />
-        <p class="description">사용자가 서비스 개선을 위해 제안한 내용입니다.</p>
         <!-- 게시글 제목 -->
         <h2>{{ adminStore.currentSuggestion.title }}</h2>
+        <img src="/images/main_logo.png" alt="Main Logo" />
+        <p class="description">사용자가 서비스 개선을 위해 제안한 내용입니다.</p>
       </div>
 
       <!-- 오류 메시지 표시 -->
