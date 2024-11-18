@@ -29,7 +29,7 @@ export const useAuthStore = defineStore('auth', {
         localStorage.setItem('user', JSON.stringify(this.user))
 
         // 로그인 성공 시 리디렉션
-        router.push('/intro') // 원하는 페이지로 변경 가능
+        router.push('/home') // 원하는 페이지로 변경 가능
       } catch (error) {
         if (error.response && error.response.data) {
           this.errorMessage = error.response.data
