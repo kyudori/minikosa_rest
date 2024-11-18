@@ -7,6 +7,7 @@ import Suggestion from '../views/Suggestion.vue'
 import FindEmail from '../views/FindEmail.vue'
 import ResetPassword from '../views/ResetPassword.vue'
 import EditProfile from '../views/EditProfile.vue'
+import StoreContent from '../views/StoreContent.vue'
 import AdminSuggestionList from '../views/admin/AdminSuggestionList.vue'
 import AdminSuggestionView from '../views/admin/AdminSuggestionView.vue'
 import RegisterOwner from '../views/admin/RegisterOwner.vue'
@@ -24,6 +25,13 @@ const routes = [
     path: '/signup',
     name: 'Signup',
     component: Signup
+  },
+  {
+    path: '/store/:id', 
+    name: 'StoreContent',
+    component: StoreContent,
+    meta: { requiresAuth: true },
+    props: true
   },
   {
     path: '/intro',
@@ -92,7 +100,7 @@ router.beforeEach((to, from, next) => {
     if (!authStore.accessToken) {
       next({ name: 'Login' })
     } else if (to.matched.some(record => record.meta.requiresAdmin) && authStore.user.roleId !== 2) {
-      // 관리자 권한 확인 (예: roleId === 2이 ADMIN)
+      // 관리자 권한 확인 (roleId === 2이 ADMIN)
       next({ name: 'Intro' })
     } else {
       next()
