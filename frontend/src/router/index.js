@@ -12,9 +12,7 @@ import AdminSuggestionList from '../views/admin/AdminSuggestionList.vue'
 import AdminSuggestionView from '../views/admin/AdminSuggestionView.vue'
 import RegisterOwner from '../views/admin/RegisterOwner.vue'
 import Search from '../views/Search.vue'
-
 import Home from '../views/Home.vue'
-
 import StoreRegister from '../views/admin/StoreRegister.vue'
 import StoreMenu from '../views/admin/StoreMenu.vue'
 
@@ -23,6 +21,12 @@ import StoreMenu from '../views/admin/StoreMenu.vue'
 import { useAuthStore } from '../stores/auth'
 
 const routes = [
+  // **루트 경로를 /home으로 리디렉션하는 라우트 추가**
+  {
+    path: '/',
+    redirect: '/home'
+  },
+  
   {
     path: '/login',
     name: 'Login',
@@ -112,6 +116,11 @@ const routes = [
     component: Home,
     // redirect: '/login'
   },
+  // **추가: 모든 비정의된 경로를 /home으로 리디렉션 (선택 사항)**
+  // {
+  //   path: '/:pathMatch(.*)*',
+  //   redirect: '/home'
+  // }
 ]
 
 const router = createRouter({
