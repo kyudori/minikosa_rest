@@ -63,7 +63,7 @@ const routes = [
     path: '/admin/suggestion/:id',
     name: 'AdminSuggestionView',
     component: AdminSuggestionView,
-    meta: { requiresAuth: true, requiresAdmin: true }
+    meta: { requiresAuth: true, requiresAdmin: true },
   },
   // 기타 라우트
   {
