@@ -36,6 +36,20 @@ public class FindApiController {
     }
 
     /**
+     * 회원 조회
+     */
+    @PostMapping("/find/member")
+    public ResponseEntity<?> findEmail(@Valid @RequestBody FindMemberRequest request) {
+        try {
+            return ResponseEntity.ok(findApiService.findMemberByNicknameAndPhoneAndEmail(request.getNickname(), request.getPhoneNumber(), request.getEmail()));
+        } catch (MemberNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    /**
      * 비밀번호 초기화
      */
     @PostMapping("/reset/password")

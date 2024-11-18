@@ -36,21 +36,23 @@ public class FindApiServiceImpl implements FindApiService {
 
     @Override
     @Transactional
+    public boolean findMemberByNicknameAndPhoneAndEmail(String nickname, String phoneNumber, String email) throws MemberNotFoundException {
+        // 닉네임, 연락처, 이메일로 회원 찾기
+        Optional<Member> member = memberRepository.findByNicknameAndPhoneNumberAndEmail(nickname, phoneNumber, email);
+        return member.isPresent();
+    }
+
+    @Override
+    @Transactional
     public PasswordResetResponse resetPassword(PasswordResetRequest request)
             throws MemberNotFoundException, PasswordMismatchException, InvalidPasswordResetException {
 
         List<String> errors = new ArrayList<>();
 
         // 닉네임으로 회원 찾기
-        Optional<Member> memberOpt = memberRepository.findByNicknameAndPhoneNumber(request.getNickname(), request.getPhoneNumber());
-        if (!memberOpt.isPresent()) {
-            errors.add("닉네임과 연락처가 일치하는 회원을 찾을 수 없습니다.");
-        } else {
-            Member member = memberOpt.get();
-            // 이메일 일치 확인
-            if (!member.getEmail().equalsIgnoreCase(request.getEmail())) {
-                errors.add("이메일이 일치하지 않습니다.");
-            }
+        Optional<Member> memberOpt = memberRepository.findByNicknameAndPhoneNumberAndEmail(request.getNickname(), request.getPhoneNumber(), request.getEmail());
+        if (memberOpt.isEmpty()) {
+            errors.add("일치하는 회원을 찾을 수 없습니다.");
         }
 
         if (!errors.isEmpty()) {
