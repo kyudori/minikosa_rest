@@ -125,7 +125,7 @@ public class AdminApiController {
     // 사용자 검색 API
     @GetMapping("/search/users")
     public ResponseEntity<List<UserSearchDTO>> searchUsers(@AuthenticationPrincipal UserDetails userDetails,
-                                                           @RequestBody UserExistenceRequest userExistenceRequest) {
+                                                           @RequestParam String email) {
         if (userDetails == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -137,14 +137,14 @@ public class AdminApiController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
-        List<UserSearchDTO> users = storeApiService.searchUsersByEmail(userExistenceRequest.getEmail());
+        List<UserSearchDTO> users = storeApiService.searchUsersByEmail(email);
         return ResponseEntity.ok(users);
     }
 
     // 가게 검색 API
     @GetMapping("/search/stores")
     public ResponseEntity<List<StoreSearchDTO>> searchStores(@AuthenticationPrincipal UserDetails userDetails,
-                                                             @RequestBody StoreExistenceRequest storeExistenceRequest) {
+                                                             @RequestParam String storeName) {
         if (userDetails == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -156,7 +156,7 @@ public class AdminApiController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
-        List<StoreSearchDTO> stores = storeApiService.searchStoresByName(storeExistenceRequest.getStoreName());
+        List<StoreSearchDTO> stores = storeApiService.searchStoresByName(storeName);
         return ResponseEntity.ok(stores);
     }
 
