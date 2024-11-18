@@ -11,6 +11,8 @@ import StoreContent from '../views/StoreContent.vue'
 import AdminSuggestionList from '../views/admin/AdminSuggestionList.vue'
 import AdminSuggestionView from '../views/admin/AdminSuggestionView.vue'
 import RegisterOwner from '../views/admin/RegisterOwner.vue'
+import Home from '../views/Home.vue'
+
 // 다른 뷰를 추가로 임포트
 
 import { useAuthStore } from '../stores/auth'
@@ -82,9 +84,10 @@ const routes = [
   },
   // 기타 라우트
   {
-    path: '/',
+    path: '/home',
     name: 'Home',
-    redirect: '/login'
+    component: Home,
+    // redirect: '/login'
   },
 ]
 
