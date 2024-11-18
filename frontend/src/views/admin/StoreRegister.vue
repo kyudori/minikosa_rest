@@ -9,7 +9,7 @@
     <!-- 성공 메시지 표시 -->
     <div v-if="successMessage" class="description success">{{ successMessage }}</div>
     
-    <form @submit.prevent="submitForm" enctype="multipart/form-data">
+    <form @submit.prevent="submitForm">
       <!-- 가게 이름 -->
       <div class="form-group">
         <label for="storeName">가게 이름</label>
@@ -318,12 +318,12 @@ export default {
       errorMessage,
       successMessage,
       categories,
-      storePhotoInput, // 반드시 반환하여 템플릿에서 접근 가능하게 함
+      storePhotoInput,
       triggerStorePhoto,
       handleStorePhoto,
       submitForm,
       cancel,
-      openPostcode // 템플릿에서 접근 가능하도록 반환
+      openPostcode
     }
   }
 }

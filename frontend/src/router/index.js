@@ -11,6 +11,7 @@ import StoreContent from '../views/StoreContent.vue'
 import AdminSuggestionList from '../views/admin/AdminSuggestionList.vue'
 import AdminSuggestionView from '../views/admin/AdminSuggestionView.vue'
 import RegisterOwner from '../views/admin/RegisterOwner.vue'
+import Search from '../views/Search.vue'
 
 import Home from '../views/Home.vue'
 
@@ -66,6 +67,11 @@ const routes = [
     name: 'EditProfile',
     component: EditProfile,
     meta: { requiresAuth: true }
+  },
+  {
+    path: '/search',
+    name: 'Search',
+    component: Search
   },
   // Admin Routes
   {

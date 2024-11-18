@@ -130,19 +130,17 @@ export const useAdminStore = defineStore('admin', {
       }
     },
     
-    // 가게 생성 (StoreRegister.vue에서 사용)
+    // 가게 생성 액션
     async createStore(storeData, storePhoto) {
       this.isLoading = true
       try {
         const formData = new FormData()
-        formData.append('store', JSON.stringify(storeData))
+        formData.append('store', new Blob([JSON.stringify(storeData)], { type: 'application/json' }))
         formData.append('storePhoto', storePhoto)
         
-        const response = await api.post('/admin/stores', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        })
+        // 'Content-Type' 헤더 제거
+        const response = await api.post('/admin/stores', formData)
+        
         this.createdStore = response.data
         this.successMessage = '가게가 성공적으로 생성되었습니다.'
         this.errorMessage = ''
@@ -156,19 +154,16 @@ export const useAdminStore = defineStore('admin', {
       }
     },
     
-    // 가게 수정
+    // 가게 수정 액션
     async updateStore(storeId, storeData, storePhoto) {
       this.isLoading = true
       try {
         const formData = new FormData()
-        formData.append('store', JSON.stringify(storeData))
+        formData.append('store', new Blob([JSON.stringify(storeData)], { type: 'application/json' }))
         formData.append('storePhoto', storePhoto)
         
-        const response = await api.put(`/admin/stores/${storeId}`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        })
+        const response = await api.put(`/admin/stores/${storeId}`, formData)
+        
         this.updatedStore = response.data
         this.successMessage = '가게가 성공적으로 수정되었습니다.'
         this.errorMessage = ''
@@ -197,19 +192,15 @@ export const useAdminStore = defineStore('admin', {
       }
     },
 
-    // 메뉴 생성
+    // 메뉴 생성 액션
     async createMenu(storeId, menuData, menuPhoto) {
       this.isLoading = true
       try {
         const formData = new FormData()
-        formData.append('menuAdminDTO', JSON.stringify(menuData))
+        formData.append('menuAdminDTO', new Blob([JSON.stringify(menuData)], { type: 'application/json' }))
         formData.append('menuPhoto', menuPhoto)
         
-        const response = await api.post(`/admin/menu/${storeId}`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        })
+        const response = await api.post(`/admin/menu/${storeId}`, formData)
         this.successMessage = '메뉴가 성공적으로 추가되었습니다.'
         this.errorMessage = ''
         return response.data
@@ -222,22 +213,19 @@ export const useAdminStore = defineStore('admin', {
       }
     },
     
-    // 메뉴 수정
+    // 메뉴 수정 액션
     async updateMenu(menuId, menuData, menuPhoto) {
       this.isLoading = true
       try {
         const formData = new FormData()
-        formData.append('menuAdminDTO', JSON.stringify(menuData))
+        formData.append('menuAdminDTO', new Blob([JSON.stringify(menuData)], { type: 'application/json' }))
         formData.append('menuPhoto', menuPhoto)
         
-        const response = await api.patch(`/admin/menu/${menuId}`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        })
+        const response = await api.patch(`/admin/menu/${menuId}`, formData)
         return response.data
       } catch (error) {
         console.error('메뉴 수정 실패:', error)
+        this.errorMessage = error.response?.data || '메뉴 수정에 실패했습니다.'
         throw error
       } finally {
         this.isLoading = false

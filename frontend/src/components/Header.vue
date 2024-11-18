@@ -8,9 +8,16 @@
         </router-link>
       </div>
       <nav class="nav" id="mainNav">
-        <form method="get" action="/search" class="search-form d-inline-block">
+        <form @submit.prevent="handleSearch" class="search-form d-inline-block">
           <div class="d-flex">
-            <input type="text" name="q" class="form-control" placeholder="Search..." maxlength="20">
+            <input
+              type="text"
+              v-model="searchQuery"
+              class="form-control"
+              placeholder="Search..."
+              maxlength="20"
+              @keyup.enter="handleSearch"
+            />
             <button type="submit" class="btn btn-search">
               <img width="32" height="32" src="/images/icon_search2.png" alt="검색하기" />
               <span class="icon-search"></span>
@@ -50,13 +57,15 @@
 <script>
 import { ref, computed } from 'vue'
 import { useAuthStore } from '../stores/auth'
-import api from '../axios'
+import { useRouter } from 'vue-router'
 
 export default {
   name: 'Header',
   setup() {
     const authStore = useAuthStore()
+    const router = useRouter()
     const showUserMenu = ref(false)
+    const searchQuery = ref('')
 
     const isLoggedIn = computed(() => !!authStore.accessToken)
     const userRoleId = computed(() => authStore.user?.roleId || null)
@@ -69,37 +78,33 @@ export default {
       try {
         await authStore.logout()
         showUserMenu.value = false
+        router.push('/home') // 로그아웃 후 홈으로 이동
       } catch (error) {
         console.error('로그아웃 실패:', error)
       }
     }
 
-    // 추가적으로 사용자 정보를 가져와야 한다면 아래 주석을 해제하고 구현
-    /*
-    if (!authStore.user) {
-      try {
-        const response = await api.get('/info')
-        authStore.user = response.data
-        localStorage.setItem('user', JSON.stringify(authStore.user))
-      } catch (error) {
-        console.error('사용자 정보 가져오기 실패:', error)
+    const handleSearch = () => {
+      if (searchQuery.value.trim() !== '') {
+        router.push({ name: 'Search', query: { q: searchQuery.value.trim() } })
       }
     }
-    */
 
     return {
       showUserMenu,
       toggleUserMenu,
       isLoggedIn,
       userRoleId,
-      handleLogout
+      handleLogout,
+      searchQuery,
+      handleSearch
     }
   }
 }
 </script>
 
 <style scoped>
-/* 필요한 스타일을 추가하세요 */
+/* 기존 스타일 유지 */
 .header {
   background-color: #fff;
   border-bottom: 1px solid #ddd;
