@@ -124,7 +124,7 @@
           value="가입하기"
           :disabled="isSubmitting || !isNicknameChecked || !isEmailChecked || passwordMismatch"
         >
-        <button type="button" class="cancel-button" @click="resetForm">취소</button>
+        <button type="button" class="cancel-button" @click="goToLogin">취소</button>
       </div>
     </form>
   </div>
@@ -159,6 +159,9 @@ export default {
     }
   },
   methods: {
+    /**
+     * 회원가입 처리
+     */
     async handleRegister() {
       this.errorMessage = ''
       this.successMessage = ''
@@ -215,6 +218,18 @@ export default {
         this.isSubmitting = false
       }
     },
+    
+    /**
+     * 로그인 페이지로 이동
+     */
+    goToLogin() {
+      this.$router.push('/login')
+    },
+    
+    /**
+     * 폼 초기화
+     * @param {boolean} keepSuccess - 성공 메시지를 유지할지 여부
+     */
     resetForm(keepSuccess = false) {
       this.form = {
         name: '',
@@ -239,6 +254,10 @@ export default {
       // 리디렉션: 로그인 페이지로 이동 (필요 시 수정)
       // this.$router.push('/login')
     },
+    
+    /**
+     * 닉네임 중복 확인
+     */
     async checkNickname() {
       const nickname = this.form.nickname.trim()
       if (nickname === '') {
@@ -270,6 +289,10 @@ export default {
         console.error('닉네임 중복 확인 오류:', error)
       }
     },
+    
+    /**
+     * 이메일 중복 확인
+     */
     async checkEmail() {
       const email = this.form.email.trim()
       if (email === '') {
@@ -301,6 +324,10 @@ export default {
         console.error('이메일 중복 확인 오류:', error)
       }
     },
+    
+    /**
+     * 닉네임 입력 시 중복 확인 상태 리셋
+     */
     resetNicknameCheck() {
       if (this.isNicknameChecked) {
         this.isNicknameChecked = false
@@ -308,6 +335,10 @@ export default {
         this.feedbackNicknameClass = 'feedback-message warning'
       }
     },
+    
+    /**
+     * 이메일 입력 시 중복 확인 상태 리셋
+     */
     resetEmailCheck() {
       if (this.isEmailChecked) {
         this.isEmailChecked = false
@@ -315,6 +346,10 @@ export default {
         this.feedbackEmailClass = 'feedback-message warning'
       }
     },
+    
+    /**
+     * 비밀번호 일치 여부 확인
+     */
     checkPasswordMatch() {
       if (this.form.password !== this.form.confirm_password) {
         this.passwordMismatch = true
