@@ -10,5 +10,5 @@ public interface SearchStoreInterfaceDTO {
     String getStoreName();
     String getStorePhoto();
     String getStoreDescription();
-    double getRatingAvg();
+    Double getRatingAvg();
 }

@@ -46,6 +46,55 @@ public interface StoreRepository extends JpaRepository<Store, Integer> {
             nativeQuery = true)
     List<SearchStoreInterfaceDTO> findByStoreSearch(String query, String sort);
 
+    // 검색어가 있을 때 사용하는 메서드 (최신순)
+    @Query(value = "SELECT s.store_id AS storeId, s.store_name AS storeName, " +
+            "s.store_photo AS storePhoto, s.store_description AS storeDescription, " +
+            "ROUND(AVG(r.rating), 1) AS ratingAvg " +
+            "FROM stores s " +
+            "LEFT JOIN reviews r ON s.store_id = r.store_id " +
+            "WHERE s.store_name LIKE CONCAT('%', :query, '%') " +
+            "OR s.store_description LIKE CONCAT('%', :query, '%') " +
+            "GROUP BY s.store_id, s.store_name, s.store_photo, s.store_description " +
+            "ORDER BY s.updated_at DESC",
+            nativeQuery = true)
+    List<SearchStoreInterfaceDTO> findByStoreSearchOrderByUpdatedAt(@Param("query") String query);
+
+    // 검색어가 없을 때 사용하는 메서드 (최신순)
+    @Query(value = "SELECT s.store_id AS storeId, s.store_name AS storeName, " +
+            "s.store_photo AS storePhoto, s.store_description AS storeDescription, " +
+            "ROUND(AVG(r.rating), 1) AS ratingAvg " +
+            "FROM stores s " +
+            "LEFT JOIN reviews r ON s.store_id = r.store_id " +
+            "GROUP BY s.store_id, s.store_name, s.store_photo, s.store_description " +
+            "ORDER BY s.updated_at DESC",
+            nativeQuery = true)
+    List<SearchStoreInterfaceDTO> findAllStoresOrderByUpdatedAt();
+
+    // 검색어가 있을 때 사용하는 메서드 (평점순)
+    @Query(value = "SELECT s.store_id AS storeId, s.store_name AS storeName, " +
+            "s.store_photo AS storePhoto, s.store_description AS storeDescription, " +
+            "ROUND(AVG(r.rating), 1) AS ratingAvg " +
+            "FROM stores s " +
+            "LEFT JOIN reviews r ON s.store_id = r.store_id " +
+            "WHERE s.store_name LIKE CONCAT('%', :query, '%') " +
+            "OR s.store_description LIKE CONCAT('%', :query, '%') " +
+            "GROUP BY s.store_id, s.store_name, s.store_photo, s.store_description " +
+            "ORDER BY ratingAvg DESC",
+            nativeQuery = true)
+    List<SearchStoreInterfaceDTO> findByStoreSearchOrderByRating(@Param("query") String query);
+
+    // 검색어가 없을 때 사용하는 메서드 (평점순)
+    @Query(value = "SELECT s.store_id AS storeId, s.store_name AS storeName, " +
+            "s.store_photo AS storePhoto, s.store_description AS storeDescription, " +
+            "ROUND(AVG(r.rating), 1) AS ratingAvg " +
+            "FROM stores s " +
+            "LEFT JOIN reviews r ON s.store_id = r.store_id " +
+            "GROUP BY s.store_id, s.store_name, s.store_photo, s.store_description " +
+            "ORDER BY ratingAvg DESC",
+            nativeQuery = true)
+    List<SearchStoreInterfaceDTO> findAllStoresOrderByRating();
+
+
     List<Store> findByStoreNameContainingIgnoreCase(String storeName);
 
     @Query("SELECT s.storePhoto FROM Store s WHERE s.storeId = :storeId")

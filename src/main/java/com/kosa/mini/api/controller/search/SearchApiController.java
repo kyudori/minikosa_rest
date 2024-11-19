@@ -35,10 +35,12 @@ public class SearchApiController {
                 SearchReviewResultDTO searchResultDTO = searchApiService.searchReviews(q, sort);
                 return ResponseEntity.status(HttpStatus.OK).body(searchResultDTO);
             } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid type parameter. Allowed values are 'store' or 'review'.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("Invalid type parameter. Allowed values are 'store' or 'review'.");
             }
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            e.printStackTrace(); // 예외를 로그에 출력
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다.");
         }
     }
 }

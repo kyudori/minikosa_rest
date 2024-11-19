@@ -78,20 +78,25 @@
                           <div class="detail-desc-info">
                             <p>{{ store.storeDescription }}</p>
                             <div class="detail-rate">
-                              <ul>
-                                <li>
-                                  <img
-                                    width="48"
-                                    height="48"
-                                    src="https://img.icons8.com/color/48/filled-star--v1.png"
-                                    alt="filled-star--v1"
-                                    class="icon_star"
-                                  />
-                                </li>
-                                <li>
-                                  <span class="rate_num">{{ store.ratingAvg }}</span>
-                                </li>
-                              </ul>
+                                <ul>
+                                    <template v-if="store.ratingAvg !== null">
+                                    <li>
+                                        <img
+                                        width="48"
+                                        height="48"
+                                        src="https://img.icons8.com/color/48/filled-star--v1.png"
+                                        alt="filled-star--v1"
+                                        class="icon_star"
+                                        />
+                                    </li>
+                                    <li>
+                                        <span class="rate_num">{{ store.ratingAvg }}</span>
+                                    </li>
+                                    </template>
+                                    <li v-else>
+                                    <span class="rate_num">아직 후기가 없습니다</span>
+                                    </li>
+                                </ul>
                             </div>
                           </div>
                         </div>
@@ -229,7 +234,7 @@ export default {
 
         const response = await api.get('/search', {
           params: {
-            q: query.value,
+            q: query.value || '',
             sort: sort.value,
             type: type.value
           }
@@ -244,8 +249,6 @@ export default {
         console.error(error)
         if (error.response && error.response.status === 401) {
           alert('로그인이 필요합니다.')
-        } else {
-          alert('검색 중 오류가 발생했습니다.')
         }
       }
     }
