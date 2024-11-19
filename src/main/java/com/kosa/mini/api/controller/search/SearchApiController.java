@@ -19,32 +19,26 @@ public class SearchApiController {
     private final SearchApiService searchApiService;
 
     @GetMapping("/search")
-    public ResponseEntity<?> searchStore(@RequestBody SearchDTO searchDTO,
-                                         @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<?> search(@RequestParam(name = "q", defaultValue = "") String q,
+                                    @RequestParam(name = "sort", defaultValue = "latest") String sort,
+                                    @RequestParam(name = "type", defaultValue = "store") String type,
+                                    @AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        SearchStoreResultDTO searchResultDTO;
+
         try {
-            searchResultDTO = searchApiService.searchStore(searchDTO);
+            if ("store".equalsIgnoreCase(type)) {
+                SearchStoreResultDTO searchResultDTO = searchApiService.searchStore(q, sort);
+                return ResponseEntity.status(HttpStatus.OK).body(searchResultDTO);
+            } else if ("review".equalsIgnoreCase(type)) {
+                SearchReviewResultDTO searchResultDTO = searchApiService.searchReviews(q, sort);
+                return ResponseEntity.status(HttpStatus.OK).body(searchResultDTO);
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid type parameter. Allowed values are 'store' or 'review'.");
+            }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        return ResponseEntity.status(HttpStatus.OK).body(searchResultDTO);
-    }
-
-    @GetMapping("/search/reviews")
-    public ResponseEntity<?> searchReviews(@RequestBody SearchDTO searchDTO,
-                                           @AuthenticationPrincipal UserDetails userDetails) {
-        if (userDetails == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-        SearchReviewResultDTO searchResultDTO;
-        try{
-            searchResultDTO = searchApiService.searchReviews(searchDTO);
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(searchResultDTO);
     }
 }

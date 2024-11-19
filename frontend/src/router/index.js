@@ -1,5 +1,6 @@
 // src/router/index.js
 import { createRouter, createWebHistory } from 'vue-router'
+import AccessDenied from '../views/AccessDenied.vue'
 import Login from '../views/Login.vue'
 import Signup from '../views/Signup.vue'
 import Intro from '../views/Intro.vue'
@@ -11,9 +12,8 @@ import StoreContent from '../views/StoreContent.vue'
 import AdminSuggestionList from '../views/admin/AdminSuggestionList.vue'
 import AdminSuggestionView from '../views/admin/AdminSuggestionView.vue'
 import RegisterOwner from '../views/admin/RegisterOwner.vue'
-
+import Search from '../views/Search.vue'
 import Home from '../views/Home.vue'
-
 import StoreRegister from '../views/admin/StoreRegister.vue'
 import StoreMenu from '../views/admin/StoreMenu.vue'
 
@@ -22,10 +22,20 @@ import StoreMenu from '../views/admin/StoreMenu.vue'
 import { useAuthStore } from '../stores/auth'
 
 const routes = [
+  // **루트 경로를 /home으로 리디렉션하는 라우트 추가**
+  {
+    path: '/',
+    redirect: '/home'
+  },
   {
     path: '/login',
     name: 'Login',
     component: Login
+  },
+  {
+    path: '/error',
+    name: 'Error',
+    component: AccessDenied
   },
   {
     path: '/signup',
@@ -43,7 +53,6 @@ const routes = [
     path: '/intro',
     name: 'Intro',
     component: Intro,
-    meta: { requiresAuth: true }
   },
   {
     path: '/findemail',
@@ -66,6 +75,11 @@ const routes = [
     name: 'EditProfile',
     component: EditProfile,
     meta: { requiresAuth: true }
+  },
+  {
+    path: '/search',
+    name: 'Search',
+    component: Search
   },
   // Admin Routes
   {
@@ -104,8 +118,12 @@ const routes = [
     path: '/home',
     name: 'Home',
     component: Home,
-    // redirect: '/login'
   },
+  // 모든 비정의된 경로를 /error로 리디렉션**
+  {
+    path: '/:pathMatch(.*)*',
+    redirect: '/error'
+  }
 ]
 
 const router = createRouter({

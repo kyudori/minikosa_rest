@@ -5,6 +5,6 @@ import com.kosa.mini.api.dto.search.SearchReviewResultDTO;
 import com.kosa.mini.api.dto.search.SearchStoreResultDTO;
 
 public interface SearchApiService {
-    SearchStoreResultDTO searchStore(SearchDTO searchDTO);
-    SearchReviewResultDTO searchReviews(SearchDTO searchDTO);
+    SearchStoreResultDTO searchStore(String q, String sort);
+    SearchReviewResultDTO searchReviews(String q, String sort);
 }

@@ -20,18 +20,18 @@ public class SearchApiServiceImpl implements SearchApiService {
     private final ReviewRepository reviewRepository;
 
     @Override
-    public SearchStoreResultDTO searchStore(SearchDTO searchDTO) {
+    public SearchStoreResultDTO searchStore(String q, String sort) {
         SearchStoreResultDTO storeResultDTO = new SearchStoreResultDTO();
-        storeResultDTO.setQuery(searchDTO.getQuery());
+        storeResultDTO.setQuery(q);
 
         String storeSort = "s.updated_at DESC";  // 기본 정렬 기준
 
         // "rating"일 경우, "ratingAvg"로 정렬
-        if ("rating".equals(searchDTO.getSort())) {
+        if ("rating".equals(sort)) {
             storeSort = "ratingAvg DESC";  // 정렬 기준을 ratingAvg로 설정
         }
 
-        List<SearchStoreInterfaceDTO> storeInterfaceList = storeRepository.findByStoreSearch(searchDTO.getQuery(), storeSort);
+        List<SearchStoreInterfaceDTO> storeInterfaceList = storeRepository.findByStoreSearch(q, storeSort);
         List<SearchStoreDTO> storeList = storeInterfaceList.stream()
                 .map(storeInterface -> new SearchStoreDTO(
                         storeInterface.getStoreId(),
@@ -46,18 +46,18 @@ public class SearchApiServiceImpl implements SearchApiService {
     }
 
     @Override
-    public SearchReviewResultDTO searchReviews(SearchDTO searchDTO) {
+    public SearchReviewResultDTO searchReviews(String q, String sort) {
         SearchReviewResultDTO reviewResultDTO = new SearchReviewResultDTO();
-        reviewResultDTO.setQuery(searchDTO.getQuery());
+        reviewResultDTO.setQuery(q);
 
         String reviewSort = "rv.updated_at DESC";
 
         // "rating"일 경우, "ratingAvg"로 정렬
-        if ("rating".equals(searchDTO.getSort())) {
+        if ("rating".equals(sort)) {
             reviewSort = "rv.rating DESC";
         }
 
-        List<SearchReviewInterfaceDTO> reviewInterfaceList = reviewRepository.findByReviewSearch(searchDTO.getQuery(), reviewSort);
+        List<SearchReviewInterfaceDTO> reviewInterfaceList = reviewRepository.findByReviewSearch(q, reviewSort);
         List<StoreReviewDTO> reviewList = reviewInterfaceList.stream()
                 .map(reviewInterface -> new StoreReviewDTO(
                         reviewInterface.getStoreId(),

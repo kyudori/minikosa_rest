@@ -21,11 +21,11 @@ export default {
   computed: {
     showHeader() {
       // 특정 URL 경로에서만 Header 표시
-      return !['/', '/home'].includes(this.$route.path);
+      return !['/home'].includes(this.$route.path);
     },
     showFooter() {
       // 특정 URL 경로에서만 Footer 표시
-      return !['/', '/home'].includes(this.$route.path);
+      return !['/home'].includes(this.$route.path);
     },
   },
   watch: {
