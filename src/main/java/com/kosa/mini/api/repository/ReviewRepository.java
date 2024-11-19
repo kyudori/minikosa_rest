@@ -50,4 +50,44 @@ public interface ReviewRepository extends JpaRepository<Review, Integer> {
             "ORDER BY :reviewSort ",
             nativeQuery = true)
     List<SearchReviewInterfaceDTO> findByReviewSearch(String query, String reviewSort);
+
+    @Query(value = "SELECT " +
+            "rv.store_id AS storeId, " +
+            "rv.member_id AS memberId, " +
+            "rv.review_id AS reviewId, " +
+            "s.store_name AS storeName, " +
+            "m.nickname AS memberNickname, " +
+            "rv.review_text AS reviewText, " +
+            "rv.rating, " +
+            "rv.created_at AS createdAt, " +
+            "rv.updated_at AS updatedAt " +
+            "FROM reviews rv " +
+            "JOIN members m ON rv.member_id = m.member_id " +
+            "JOIN stores s ON rv.store_id = s.store_id " +
+            "WHERE rv.review_text LIKE CONCAT('%', :query, '%') " +
+            "OR m.nickname LIKE CONCAT('%', :query, '%') " +
+            "GROUP BY rv.store_id, rv.member_id, rv.review_id, s.store_name, m.nickname, rv.review_text, rv.rating, rv.created_at, rv.updated_at " +
+            "ORDER BY rv.updated_at DESC ",
+            nativeQuery = true)
+    List<SearchReviewInterfaceDTO> findByReviewSearchOrderByUpdatedAt(@Param("query") String query);
+
+    @Query(value = "SELECT " +
+            "rv.store_id AS storeId, " +
+            "rv.member_id AS memberId, " +
+            "rv.review_id AS reviewId, " +
+            "s.store_name AS storeName, " +
+            "m.nickname AS memberNickname, " +
+            "rv.review_text AS reviewText, " +
+            "rv.rating, " +
+            "rv.created_at AS createdAt, " +
+            "rv.updated_at AS updatedAt " +
+            "FROM reviews rv " +
+            "JOIN members m ON rv.member_id = m.member_id " +
+            "JOIN stores s ON rv.store_id = s.store_id " +
+            "WHERE rv.review_text LIKE CONCAT('%', :query, '%') " +
+            "OR m.nickname LIKE CONCAT('%', :query, '%') " +
+            "GROUP BY rv.store_id, rv.member_id, rv.review_id, s.store_name, m.nickname, rv.review_text, rv.rating, rv.created_at, rv.updated_at " +
+            "ORDER BY rv.rating DESC ",
+            nativeQuery = true)
+    List<SearchReviewInterfaceDTO> findByReviewSearchOrderByRating(@Param("query") String query);
 }

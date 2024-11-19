@@ -1,316 +1,327 @@
 <!-- src/views/Search.vue -->
 <template>
-  <div id="wrapHome" class="search_wrap">
-    <hr class="hide">
-    <div class="wrap_search_header">
-      <div class="wrap_search">
-        <h2 class="screen_out">검색 키워드 입력 창</h2>
-        <div class="search_form">
-          <form @submit.prevent="performSearch">
-            <input
-              type="text"
-              v-model="query"
-              class="txt_search"
-              id="txt_search"
-              title="검색어입력"
-              placeholder="검색어를 입력해 주세요."
-              maxlength="20"
-            />
-            <input type="hidden" value="latest" name="sort" id="sortInput">
-            <input type="hidden" value="store" name="type" id="typeInput">
-            <button type="submit" class="btn btn-search">검색</button>
-          </form>
-        </div>
-      </div>
-    </div>
-
-    <div id="searchWrap">
-      <div class="search_header">
-        <div class="tab_search">
-          <ul id="contentsTab" class="inner_tab">
-            <li :class="{ on: activeTab === 'store' }">
-              <a href="#" @click.prevent="switchTab('store')" class="articleTab link_tab">식당</a>
-            </li>
-            <li :class="{ on: activeTab === 'review' }">
-              <a href="#" @click.prevent="switchTab('review')" class="magazineTab link_tab">리뷰</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- 식당 검색 결과 -->
-      <div id="mArticle" v-show="activeTab === 'store'">
-        <div id="resultArticle" class="search_result" style="margin-top: 0px;">
-          <div class="result_search">
-            <div class="search-result">
-              <span>가게 검색 결과 : </span>
-              <span>{{ storeResults.storeCount }}</span>
-              <span> 건</span>
-            </div>
-            <div class="result-sort">
-              <a href="#" @click.prevent="updateSort('latest', 'store')"><span :style="sortStyle('latest', 'store')">최신순</span></a>
-              <a href="#" @click.prevent="updateSort('rating', 'store')"><span :style="sortStyle('rating', 'store')">평점순</span></a>
-            </div>
+    <div id="wrapHome" class="search_wrap">
+      <hr class="hide">
+      <div class="wrap_search_header">
+        <div class="wrap_search">
+          <h2 class="screen_out">검색 키워드 입력 창</h2>
+          <div class="search_form">
+            <form @submit.prevent="performSearch">
+              <input
+                type="text"
+                v-model="query"
+                class="txt_search"
+                id="txt_search"
+                title="검색어입력"
+                placeholder="검색어를 입력해 주세요."
+                maxlength="20"
+              />
+              <input type="hidden" value="latest" name="sort" id="sortInput">
+              <input type="hidden" value="store" name="type" id="typeInput">
+              <button type="submit" class="btn btn-search">검색</button>
+            </form>
           </div>
-
-          <!-- 가게 검색 결과가 있을 때 -->
-          <section class="food_section layout_padding-bottom" v-if="storeResults.storeCount > 0">
-            <div class="container">
-              <!-- 가게 검색 결과 -->
-              <div class="filters-content">
-                <div class="row grid">
-                  <div
-                    v-for="store in storeResults.storeResults"
-                    :key="store.storeId"
-                    :class="'col-sm-6 col-lg-4 all ' + store.categoryName"
-                  >
-                    <div class="box">
-                      <router-link :to="'/store/' + store.storeId">
-                        <div class="img-box">
-                          <img
-                            :src="store.storePhoto"
-                            alt="가게 사진"
-                            @error="onImageError($event)"
-                          />
-                        </div>
-                        <div class="detail-box">
-                          <h5>{{ store.storeName }}</h5>
-                          <div class="detail-desc-info">
-                            <p>{{ store.storeDescription }}</p>
-                            <div class="detail-rate">
-                              <ul>
-                                <li>
-                                  <img
-                                    width="48"
-                                    height="48"
-                                    src="https://img.icons8.com/color/48/filled-star--v1.png"
-                                    alt="filled-star--v1"
-                                    class="icon_star"
-                                  />
-                                </li>
-                                <li>
-                                  <span class="rate_num">{{ store.ratingAvg }}</span>
-                                </li>
-                              </ul>
+        </div>
+      </div>
+  
+      <div id="searchWrap">
+        <div class="search_header">
+          <div class="tab_search">
+            <ul id="contentsTab" class="inner_tab">
+              <li :class="{ on: activeTab === 'store' }">
+                <a href="#" @click.prevent="switchTab('store')" class="articleTab link_tab">식당</a>
+              </li>
+              <li :class="{ on: activeTab === 'review' }">
+                <a href="#" @click.prevent="switchTab('review')" class="magazineTab link_tab">리뷰</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+  
+        <!-- 식당 검색 결과 -->
+        <div id="mArticle" v-show="activeTab === 'store'">
+          <div id="resultArticle" class="search_result" style="margin-top: 0px;">
+            <div class="result_search">
+              <div class="search-result">
+                <span>가게 검색 결과 : </span>
+                <span>{{ storeResults.storeCount }}</span>
+                <span> 건</span>
+              </div>
+              <div class="result-sort">
+                <a href="#" @click.prevent="updateSort('latest', 'store')"><span :style="sortStyle('latest', 'store')">최신순</span></a>
+                <a href="#" @click.prevent="updateSort('rating', 'store')"><span :style="sortStyle('rating', 'store')">평점순</span></a>
+              </div>
+            </div>
+  
+            <!-- 가게 검색 결과가 있을 때 -->
+            <section class="food_section layout_padding-bottom" v-if="storeResults.storeCount > 0">
+              <div class="container">
+                <!-- 가게 검색 결과 -->
+                <div class="filters-content">
+                  <div class="row grid">
+                    <div
+                      v-for="store in storeResults.storeResults"
+                      :key="store.storeId"
+                      :class="'col-sm-6 col-lg-4 all ' + store.categoryName"
+                    >
+                      <div class="box">
+                        <router-link :to="'/store/' + store.storeId">
+                          <div class="img-box">
+                            <img
+                              :src="getImageUrl(store.storePhoto)"
+                              alt="가게 사진"
+                              @error="onImageError($event)"
+                            />
+                          </div>
+                          <div class="detail-box">
+                            <h5>{{ store.storeName }}</h5>
+                            <div class="detail-desc-info">
+                              <p>{{ store.storeDescription }}</p>
+                              <div class="detail-rate">
+                                <ul>
+                                  <template v-if="store.ratingAvg !== null">
+                                    <li>
+                                      <img
+                                        width="48"
+                                        height="48"
+                                        src="https://img.icons8.com/color/48/filled-star--v1.png"
+                                        alt="filled-star--v1"
+                                        class="icon_star"
+                                      />
+                                    </li>
+                                    <li>
+                                      <span class="rate_num">{{ store.ratingAvg }}</span>
+                                    </li>
+                                  </template>
+                                  <li v-else>
+                                    <span class="rate_num">아직 후기가 없습니다</span>
+                                  </li>
+                                </ul>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      </router-link>
+                        </router-link>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
+            </section>
+  
+            <!-- 가게 검색 결과가 없을 때 -->
+            <div class="no-results" v-else>
+              <p>가게 검색 결과가 없습니다.</p>
             </div>
-          </section>
-
-          <!-- 가게 검색 결과가 없을 때 -->
-          <div class="no-results" v-else>
-            <p>가게 검색 결과가 없습니다.</p>
           </div>
         </div>
-      </div>
-
-      <!-- 리뷰 검색 결과 -->
-      <div id="mReview" v-show="activeTab === 'review'">
-        <div id="resultReview" class="search_result" style="margin-top: 0px;">
-          <div class="result_search">
-            <div class="search-result">
-              <span>리뷰 검색 결과 : </span>
-              <span>{{ reviewResults.reviewCount }}</span>
-              <span> 건</span>
+  
+        <!-- 리뷰 검색 결과 -->
+        <div id="mReview" v-show="activeTab === 'review'">
+          <div id="resultReview" class="search_result" style="margin-top: 0px;">
+            <div class="result_search">
+              <div class="search-result">
+                <span>리뷰 검색 결과 : </span>
+                <span>{{ reviewResults.reviewCount }}</span>
+                <span> 건</span>
+              </div>
+              <div class="result-sort">
+                <a href="#" @click.prevent="updateSort('latest', 'review')"><span :style="sortStyle('latest', 'review')">최신순</span></a>
+                <a href="#" @click.prevent="updateSort('rating', 'review')"><span :style="sortStyle('rating', 'review')">평점순</span></a>
+              </div>
             </div>
-            <div class="result-sort">
-              <a href="#" @click.prevent="updateSort('latest', 'review')"><span :style="sortStyle('latest', 'review')">최신순</span></a>
-              <a href="#" @click.prevent="updateSort('rating', 'review')"><span :style="sortStyle('rating', 'review')">평점순</span></a>
-            </div>
-          </div>
-
-          <!-- 리뷰 검색 결과가 있을 때 -->
-          <div v-if="reviewResults.reviewCount > 0">
-            <div v-for="review in reviewResults.reviewResults" :key="review.reviewId" class="review-box">
-              <div class="review-header">
-                <div class="review-info">
-                  <router-link :to="'/store/' + review.storeId" class="search_store_name">
-                    {{ review.storeName }}
-                  </router-link>
-                  <div class="grade_star">
-                    <img
-                      width="48"
-                      height="48"
-                      src="https://img.icons8.com/color/48/filled-star--v1.png"
-                      alt="filled-star--v1"
-                      class="icon_star"
-                    />
-                    <em class="num_rate">{{ review.rating }}</em>
-                    <span class="text_score">점</span>
+  
+            <!-- 리뷰 검색 결과가 있을 때 -->
+            <div v-if="reviewResults.reviewCount > 0">
+              <div v-for="review in reviewResults.reviewResults" :key="review.reviewId" class="review-box">
+                <div class="review-header">
+                  <div class="review-info">
+                    <router-link :to="'/store/' + review.storeId" class="search_store_name">
+                      {{ review.storeName }}
+                    </router-link>
+                    <div class="grade_star">
+                      <img
+                        width="48"
+                        height="48"
+                        src="https://img.icons8.com/color/48/filled-star--v1.png"
+                        alt="filled-star--v1"
+                        class="icon_star"
+                      />
+                      <em class="num_rate">{{ review.rating }}</em>
+                      <span class="text_score">점</span>
+                    </div>
+                  </div>
+                  <div class="review-actions">
+                    <button v-if="isAdmin" @click="deleteReview(review.reviewId, review.memberId)" class="comment_user_button">삭제</button>
+                    <router-link :to="'/store/' + review.storeId" class="comment_user_button">리뷰 보러가기</router-link>
                   </div>
                 </div>
-                <div class="review-actions">
-                  <button v-if="isAdmin" @click="deleteReview(review.reviewId, review.memberId)" class="comment_user_button">삭제</button>
-                  <router-link :to="'/store/' + review.storeId" class="comment_user_button">리뷰 보러가기</router-link>
+                <div class="comment_info">
+                  <p class="text_comment">
+                    <span>{{ review.reviewText }}</span>
+                  </p>
+                </div>
+                <div class="unit_info">
+                  <span class="text_item">작성자(닉네임) : </span>
+                  <span class="text_username">{{ review.memberNickname }}</span>
+                  <span class="bar"></span>
+                  <span class="text_item">별점 : </span>
+                  <span class="text_desc">{{ review.rating }}</span>
+                  <span class="bar"></span>
+                  <span class="text_item">작성일 : </span>
+                  <span class="time_write">{{ formatDate(review.createdAt) }}</span>
                 </div>
               </div>
-              <div class="comment_info">
-                <p class="text_comment">
-                  <span>{{ review.reviewText }}</span>
-                </p>
-              </div>
-              <div class="unit_info">
-                <span class="text_item">작성자(닉네임) : </span>
-                <span class="text_username">{{ review.memberNickname }}</span>
-                <span class="bar"></span>
-                <span class="text_item">별점 : </span>
-                <span class="text_desc">{{ review.rating }}</span>
-                <span class="bar"></span>
-                <span class="text_item">작성일 : </span>
-                <span class="time_write">{{ formatDate(review.createdAt) }}</span>
-              </div>
             </div>
-          </div>
-
-          <!-- 리뷰 검색 결과가 없을 때 -->
-          <div class="no-results" v-else>
-            <p>리뷰 검색 결과가 없습니다.</p>
+  
+            <!-- 리뷰 검색 결과가 없을 때 -->
+            <div class="no-results" v-else>
+              <p>리뷰 검색 결과가 없습니다.</p>
+            </div>
           </div>
         </div>
       </div>
+  
+      <!-- JavaScript -->
+      <!-- 필요한 스크립트는 Vue 컴포넌트 내부에서 처리 -->
     </div>
-
-    <!-- JavaScript -->
-    <!-- 필요한 스크립트는 Vue 컴포넌트 내부에서 처리 -->
-  </div>
-</template>
-
-<script>
-import api from '../axios.js'
-import { ref, reactive, onMounted } from 'vue'
-import { useAuthStore } from '../stores/auth'
-
-export default {
-  name: 'Search',
-  setup() {
-    const query = ref('')
-    const sort = ref('latest')
-    const type = ref('store')
-    const activeTab = ref('store')
-    const storeResults = reactive({
-      query: '',
-      storeResults: [],
-      storeCount: 0
-    })
-    const reviewResults = reactive({
-      query: '',
-      reviewResults: [],
-      reviewCount: 0
-    })
-    const authStore = useAuthStore()
-    const isAdmin = ref(false)
-
-    onMounted(() => {
-      // URL에서 파라미터 가져오기
-      const urlParams = new URLSearchParams(window.location.search)
-      query.value = urlParams.get('q') || ''
-      sort.value = urlParams.get('sort') || 'latest'
-      type.value = urlParams.get('type') || 'store'
-      activeTab.value = type.value
-      performSearch()
-      if (authStore.user && authStore.user.roleId === 2) {
-        isAdmin.value = true
-      }
-    })
-
-    const performSearch = async () => {
-      try {
-        if (!authStore.accessToken) {
-          // 로그인되지 않은 경우 처리
-          alert('로그인이 필요합니다.')
-          return
+  </template>
+  
+  <script>
+  import api from '../axios.js'
+  import { ref, reactive, onMounted } from 'vue'
+  import { useAuthStore } from '../stores/auth'
+  
+  export default {
+    name: 'Search',
+    setup() {
+      const query = ref('')
+      const sort = ref('latest')
+      const type = ref('store')
+      const activeTab = ref('store')
+      const storeResults = reactive({
+        query: '',
+        storeResults: [],
+        storeCount: 0
+      })
+      const reviewResults = reactive({
+        query: '',
+        reviewResults: [],
+        reviewCount: 0
+      })
+      const authStore = useAuthStore()
+      const isAdmin = ref(false)
+  
+      onMounted(() => {
+        // URL에서 파라미터 가져오기
+        const urlParams = new URLSearchParams(window.location.search)
+        query.value = urlParams.get('q') || ''
+        sort.value = urlParams.get('sort') || 'latest'
+        type.value = urlParams.get('type') || 'store'
+        activeTab.value = type.value
+        performSearch()
+        if (authStore.user && authStore.user.roleId === 2) {
+          isAdmin.value = true
         }
-
-        const response = await api.get('/search', {
-          params: {
-            q: query.value,
-            sort: sort.value,
-            type: type.value
-          }
-        })
-
-        if (type.value === 'store') {
-          Object.assign(storeResults, response.data)
-        } else if (type.value === 'review') {
-          Object.assign(reviewResults, response.data)
-        }
-      } catch (error) {
-        console.error(error)
-        if (error.response && error.response.status === 401) {
-          alert('로그인이 필요합니다.')
-        } else {
-          alert('검색 중 오류가 발생했습니다.')
-        }
-      }
-    }
-
-    const switchTab = (tab) => {
-      activeTab.value = tab
-      type.value = tab
-      performSearch()
-    }
-
-    const updateSort = (newSort, newType) => {
-      sort.value = newSort
-      type.value = newType
-      performSearch()
-    }
-
-    const sortStyle = (currentSort, currentType) => {
-      return {
-        fontWeight: sort.value === currentSort && type.value === currentType ? 'bold' : 'normal',
-        color: sort.value === currentSort && type.value === currentType ? '#000000' : ''
-      }
-    }
-
-    const onImageError = (event) => {
-      event.target.onerror = null
-      event.target.src = '/images/main_logo.png'
-    }
-
-    const formatDate = (dateString) => {
-      const options = { year: 'numeric', month: '2-digit', day: '2-digit' }
-      return new Date(dateString).toLocaleDateString('ko-KR', options)
-    }
-
-    const deleteReview = async (reviewId, memberId) => {
-      if (confirm('해당 리뷰를 삭제하시겠습니까?')) {
+      })
+  
+      const performSearch = async () => {
         try {
-          await api.delete(`/store/${memberId}/review/${reviewId}`)
-          alert('리뷰가 삭제되었습니다.')
-          performSearch()
+          if (!authStore.accessToken) {
+            // 로그인되지 않은 경우 처리
+            alert('로그인이 필요합니다.')
+            return
+          }
+  
+          const response = await api.get('/search', {
+            params: {
+              q: query.value || '',
+              sort: sort.value,
+              type: type.value
+            }
+          })
+  
+          if (type.value === 'store') {
+            Object.assign(storeResults, response.data)
+          } else if (type.value === 'review') {
+            Object.assign(reviewResults, response.data)
+          }
         } catch (error) {
           console.error(error)
-          alert('리뷰 삭제 중 오류가 발생했습니다.')
+          if (error.response && error.response.status === 401) {
+            alert('로그인이 필요합니다.')
+          }
         }
       }
-    }
-
-    return {
-      query,
-      sort,
-      type,
-      activeTab,
-      storeResults,
-      reviewResults,
-      performSearch,
-      switchTab,
-      updateSort,
-      sortStyle,
-      isAdmin,
-      onImageError,
-      formatDate,
-      deleteReview
+  
+      const switchTab = (tab) => {
+        activeTab.value = tab
+        type.value = tab
+        performSearch()
+      }
+  
+      const updateSort = (newSort, newType) => {
+        sort.value = newSort
+        type.value = newType
+        performSearch()
+      }
+  
+      const sortStyle = (currentSort, currentType) => {
+        return {
+          fontWeight: sort.value === currentSort && type.value === currentType ? 'bold' : 'normal',
+          color: sort.value === currentSort && type.value === currentType ? '#000000' : ''
+        }
+      }
+  
+      const onImageError = (event) => {
+        event.target.onerror = null
+        event.target.src = '/images/main_logo.png'
+      }
+  
+      const formatDate = (dateString) => {
+        const options = { year: 'numeric', month: '2-digit', day: '2-digit' }
+        return new Date(dateString).toLocaleDateString('ko-KR', options)
+      }
+  
+      const deleteReview = async (reviewId, memberId) => {
+        if (confirm('해당 리뷰를 삭제하시겠습니까?')) {
+          try {
+            await api.delete(`/store/${memberId}/review/${reviewId}`)
+            alert('리뷰가 삭제되었습니다.')
+            performSearch()
+          } catch (error) {
+            console.error(error)
+            alert('리뷰 삭제 중 오류가 발생했습니다.')
+          }
+        }
+      }
+  
+      // 이미지 URL 생성 함수 추가
+      const getImageUrl = (path) => {
+        const serverHost = 'http://localhost:8090' // 백엔드 서버 주소
+        return serverHost + path
+      }
+  
+      return {
+        query,
+        sort,
+        type,
+        activeTab,
+        storeResults,
+        reviewResults,
+        performSearch,
+        switchTab,
+        updateSort,
+        sortStyle,
+        isAdmin,
+        onImageError,
+        formatDate,
+        deleteReview,
+        getImageUrl, // 함수 반환에 추가
+      }
     }
   }
-}
-</script>
+  </script>
+  
 
 <style scoped>
 /* 기본 리셋 및 스타일 */
