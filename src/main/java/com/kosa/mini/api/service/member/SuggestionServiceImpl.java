@@ -10,7 +10,9 @@ import com.kosa.mini.api.repository.SuggestionRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,14 +39,14 @@ public class SuggestionServiceImpl implements SuggestionService {
 
     @Override
     public Page<ContactUs> getSuggestions(String type, String keyword, Pageable pageable) {
-        switch (type.toLowerCase()) {
-            case "title":
-                return suggestionRepository.findByTitleContaining(keyword, pageable);
-            case "content":
-                return suggestionRepository.findByContentContaining(keyword, pageable);
-            default:
-                return suggestionRepository.findAll(pageable);
-        }
+        // 정렬 정보 추가: createdAt 필드를 기준으로 내림차순 정렬
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
+        return switch (type.toLowerCase()) {
+            case "title" -> suggestionRepository.findByTitleContaining(keyword, sortedPageable);
+            case "content" -> suggestionRepository.findByContentContaining(keyword, sortedPageable);
+            default -> suggestionRepository.findAll(sortedPageable);
+        };
     }
 
     @Override
