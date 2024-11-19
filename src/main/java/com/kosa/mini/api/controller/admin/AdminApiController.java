@@ -1,6 +1,7 @@
 package com.kosa.mini.api.controller.admin;
 
 import com.kosa.mini.api.dto.admin.SuggestionDetailDTO;
+import com.kosa.mini.api.dto.admin.SuggestionListDTO;
 import com.kosa.mini.api.dto.member.UserSearchDTO;
 import com.kosa.mini.api.dto.request.AssignOwnerRequest;
 import com.kosa.mini.api.dto.request.StoreExistenceRequest;
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -40,11 +42,11 @@ public class AdminApiController {
 
     //@PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/suggestion/list")
-    public ResponseEntity<Page<ContactUs>> getListSuggestion(@AuthenticationPrincipal UserDetails userDetails,
-                                                             @RequestParam(name = "type", defaultValue = "title") String type,
-                                                             @RequestParam(name = "keyword", defaultValue = "") String keyword,
-                                                             @RequestParam(value = "page", defaultValue = "0") int page,
-                                                             @RequestParam(value = "size", defaultValue = "5") int size) {
+    public ResponseEntity<Page<SuggestionListDTO>> getListSuggestion(@AuthenticationPrincipal UserDetails userDetails,
+                                                                     @RequestParam(name = "type", defaultValue = "title") String type,
+                                                                     @RequestParam(name = "keyword", defaultValue = "") String keyword,
+                                                                     @RequestParam(value = "page", defaultValue = "0") int page,
+                                                                     @RequestParam(value = "size", defaultValue = "5") int size) {
         if (userDetails == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -56,8 +58,10 @@ public class AdminApiController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
-        Pageable pageable = PageRequest.of(page, size);
-        Page<ContactUs> suggestions = suggestionService.getSuggestions(type, keyword, pageable);
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<SuggestionListDTO> suggestions = suggestionService.getSuggestions(type, keyword, pageable);
 
         return ResponseEntity.ok(suggestions);
     }
