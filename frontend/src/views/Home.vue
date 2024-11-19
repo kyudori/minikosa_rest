@@ -1,3 +1,4 @@
+<!-- Home.vue -->
 <template>
   <div class="hero_area">
     <div class="bg-box">
@@ -58,7 +59,7 @@
               <div class="box">
                 <a :href="`/store/${store.storeId}`">
                   <div class="img-box">
-                    <img :src="store.storePhoto" alt="가게 사진" />
+                    <img :src="getImageUrl(store.storePhoto)" alt="가게 사진" @error="onImageError($event)" />
                   </div>
                   <div class="detail-box">
                     <h5>{{ store.storeName }}</h5>
@@ -95,7 +96,7 @@
 
 <script>
 import { ref, computed, onMounted } from 'vue';
-import api from '../axios';
+import api from '../axios.js'
 
 export default {
   name: 'Home',
@@ -133,6 +134,18 @@ export default {
       activeFilter.value = filterValue;
     };
 
+    // getImageUrl 함수 추가
+    const getImageUrl = (path) => {
+      const serverHost = 'http://localhost:8090'; // 백엔드 서버 주소로 변경 필요
+      return serverHost + path;
+    };
+
+    // 이미지 로드 실패 시 대체 이미지 설정
+    const onImageError = (event) => {
+      event.target.onerror = null;
+      event.target.src = '/images/main_logo.png'; // 대체 이미지 경로로 변경 가능
+    };
+
     onMounted(() => {
       fetchStores();
     });
@@ -143,6 +156,8 @@ export default {
       activeFilter,
       filteredStores,
       applyFilter,
+      getImageUrl,
+      onImageError, // 함수 반환
     };
   },
 };
@@ -152,4 +167,29 @@ export default {
 @import '../assets/css/home/bootstrap.css';
 @import '../assets/css/home/main.css';
 
+/* 링크 스타일 수정 */
+h5 {
+    text-decoration-line: none;
+    text-decoration: none;
+    color: black;
+    transition: color 0.3s, text-decoration 0.3s;
+}
+
+a:hover {
+    text-decoration: underline;
+    color: #FF885B;
+}
+
+/* 특정 클래스에서 언더라인 스타일 오버라이드 */
+.search_store_name {
+    color: #FF885B;
+    text-decoration: none;
+}
+
+.search_store_name:hover {
+    text-decoration: underline;
+    color: #FF885B;
+}
+
+/* 추가적인 스타일 조정이 필요할 경우 여기에 작성 */
 </style>

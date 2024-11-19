@@ -15,18 +15,14 @@ public class MemberEditProfileDTO {
     private String phoneNumber;
     private Role roleId;
 
-
+    private String currentPassword;
     private String password;
     private String confirmPassword;
 
-
-
-
-    // DTO -> Entity 변환 메서드
+    // DTO -> Entity
     public Member toEntity() {
-
         return Member.builder()
-                .memberId((memberId))
+                .memberId(memberId)
                 .name(name)
                 .nickname(nickname)
                 .email(email)
