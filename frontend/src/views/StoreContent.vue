@@ -90,13 +90,7 @@
             <div v-if="store.openingTime && store.closingTime" class="place_info_detail place_business_hours">
               <h4 class="info_title_detail">
                 <span class="place_info_icon">영업시간</span>
-                <img
-                  src="https://img.icons8.com/forma-thin/48/clock.png"
-                  width="16"
-                  height="16"
-                  class="homepage_icon"
-                  alt="Clock Icon"
-                />
+                <img src="https://img.icons8.com/forma-thin/48/clock.png" width="16" height="16" class="homepage_icon" alt="Clock Icon" />
               </h4>
               <div class="place_location">
                 <div class="business_hours_text">
@@ -470,9 +464,8 @@ export default {
 
     // Format Time
     const formatTime = (time) => {
-      const date = new Date(time);
-      const hours = date.getHours().toString().padStart(2, '0');
-      const minutes = date.getMinutes().toString().padStart(2, '0');
+      if (!time) return '';
+      const [hours, minutes] = time.split(':');
       return `${hours}:${minutes}`;
     };
 
