@@ -14,7 +14,7 @@ public interface HomeRepository extends JpaRepository<Store, Integer> {
             "   s.storeName, " +
             "   s.storePhoto, " +
             "   s.storeDescription, " +
-            "   round(avg(r.rating),1) as ratingAvg, " +
+            "   COALESCE(round(avg(r.rating),1), 0) as ratingAvg, " + // COALESCE로 null 처리
             "   c.categoryName ) " +
             "from " +
             "   Store s " +
@@ -23,6 +23,7 @@ public interface HomeRepository extends JpaRepository<Store, Integer> {
             "left join " +
             "   s.category c " +
             "group by " +
-            "   s.storeId")
+            "   s.storeId, s.storeName, s.storePhoto, s.storeDescription, c.categoryName")
     List<HomeStoreDTO> index();
 }
+

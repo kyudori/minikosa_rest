@@ -121,7 +121,6 @@ a:focus {
             padding: 20px;
         }*/
 
-
         /* 헤더 내부 컨텐츠 정렬 */
         .header .container-inner {
             display: flex;
@@ -351,6 +350,7 @@ a:focus {
 
         .footer-section {
             flex: auto;
+            /* min-height: 100vh; */
         }
 
         .footer-section h4 {
