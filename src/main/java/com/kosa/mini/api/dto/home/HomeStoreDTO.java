@@ -12,7 +12,6 @@ public class HomeStoreDTO {
     private String storeName;
     private String storePhoto;
     private String storeDescription;
-    private double ratingAvg;
+    private Double ratingAvg;
     private String categoryName;
-
 }
