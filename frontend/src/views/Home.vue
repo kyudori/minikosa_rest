@@ -114,8 +114,8 @@
     <section class="food_section layout_padding-bottom"  id="foodSection">
         <div class="container">
             <div class="heading_container heading_center">
-            </div>
-
+                </div>
+            
             <ul class="filters_menu">
                 <li class="active" data-filter="*">All</li>
                 <li data-filter=".한식">한식</li>
@@ -124,12 +124,13 @@
                 <li data-filter=".양식">양식</li>
                 <li data-filter=".카페">카페</li>
             </ul>
-
+            
 
             <div class="filters-content">
                 <div class="container">
                     <div class="row grid">
-                        <th:block th:each="store : ${store}">
+                          <template v-for="(store, i) in store" :key="i">
+                          
                         <div th:class="|col-sm-6 col-lg-4 all ${store.categoryName}|">
                             <div class="box">
                                 <a th:href="|/store/${store.storeId}|">
@@ -137,7 +138,7 @@
                                         <img th:src="${store.storePhoto}" alt="가게 사진">
                                     </div>
                                     <div class="detail-box">
-                                        <h5 th:text="${store.storeName}">
+                                        <h5 :model='store.storeName'>
                                             ###가게 이름
                                         </h5>
                                         <div class="detail-desc-info">
@@ -163,16 +164,77 @@
                                 </a>
                             </div>
                         </div>
-                        </th:block>
+                      </template>
                     </div>
-                    <!--/* <div class="btn-box">
+                    <!-- /* <div class="btn-box">
                         <a href="">
                             더보기
-                        </a> */-->
+                        </a> */
+                    </div> -->
                     </div>
                 </div>
             </div>
     </section>
+ 
+  <!-- <section class="food_section layout_padding-bottom" id="foodSection">
+    <div class="container">
+
+      <ul class="filters_menu">
+        <li
+          v-for="(filter, index) in filters"
+          :key="index"
+          :data-filter="filter.value"
+          :class="{ active: activeFilter === filter.value }"
+          @click="applyFilter(filter.value)"
+        >
+          {{ filter.label }}
+        </li>
+      </ul>
+
+      <div class="filters-content">
+        <div class="container">
+          <div class="row grid">
+            <div
+              v-for="store in filteredStores"
+              :key="store.storeId"
+              :class="['col-sm-6', 'col-lg-4', 'all', store.categoryName]"
+            >
+              <div class="box">
+                <a :href="`/store/${store.storeId}`">
+                  <div class="img-box">
+                    <img :src="store.storePhoto" alt="가게 사진" />
+                  </div>
+                  <div class="detail-box">
+                    <h5>{{ store.storeName }}</h5>
+                    <div class="detail-desc-info">
+                      <p>{{ store.storeDescription }}</p>
+                      <div class="detail-rate">
+                        <ul>
+                          <li>
+                            <img
+                              width="48"
+                              height="48"
+                              src="https://img.icons8.com/color/48/filled-star--v1.png"
+                              alt="filled-star--v1"
+                              class="icon_star"
+                            />
+                          </li>
+                          <li>
+                            <span class="rate_num">{{ store.ratingAvg }}</span>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+          <!-- 더보기 버튼은 필요 시 추가 -->
+        <!-- </div>
+      </div>
+    </div>
+  </section> -->
 
 
     </body>
@@ -222,18 +284,62 @@
         </div>
         <div class="footer-info footer-bottom">
             <p>
-                &copy;<span id="displayYear"></span> 먹코살코. All rights reserved.
+                &copy;<span>{{ currentYear }}</span> 먹코살코. All rights reserved.
             </p>
         </div>
     </footer>
-    <!-- footer section -->
-    <!-- jQery -->
-
-    </html>
+    
+     </html>
 </template>
 <script>
-// import '../assets/js/home/custom.js';
+import '../assets/js/home/custom.js';
 import '../assets/js/home/jquery-3.4.1.min.js';
+//  import Isotope from "isotope-layout";
+import { ref, reactive, computed, onMounted } from 'vue'
+  import api from '../axios'
+  import { useRouter } from 'vue-router'
+
+export default {
+  name:'Home',
+  setup() {
+    const router = useRouter()
+    const home = ref({});
+
+    const fetchHomeInfo = async () => {
+      try{
+        const response = await api.get(`/home`);
+        home.value = response.data;
+        console.log("response : " +response.data);
+        console.log("home.value : " + home.value);
+
+      } catch (error) {
+        console.error('Error', error)
+      }
+    }
+
+    // const payload = {
+    //   storeName: store.storeName,
+    //   storePhoto: store.storePhoto,
+    //   storeDescription: store.storeDescription,
+    //   ratingAvg: store.ratingAvg,
+    //   categoryName: store.categoryName
+    // }
+    onMounted(async () => {
+        await fetchHomeInfo();
+      });
+
+
+    return {
+      home,
+    }
+  },
+  data() {
+        return {
+            currentYear: new Date().getFullYear(),
+        };
+      }
+    }
+           
 </script>
 <style>
 @import '../assets/css/home/bootstrap.css';
