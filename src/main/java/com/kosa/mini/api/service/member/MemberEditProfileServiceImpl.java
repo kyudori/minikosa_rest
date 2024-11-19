@@ -29,28 +29,64 @@ public class MemberEditProfileServiceImpl {
     }
 
     public Member update(Integer memberId, MemberEditProfileDTO dto) {
-        dto.setPassword(passwordEncoder.encode(dto.getPassword()));
-        log.info("암호화  pw"+ dto.getPassword());
-        Member member = dto.toEntity();
-        log.info("password 인코딩"+member.getPassword());
-        log.info("id: "+memberId.toString()+"member: "+member.toString());
-        // 2. id 조회하기
-        Member members = memberRepository.findById(memberId).orElse(null);
-        // 3. 예외 처리
-        if(members == null || memberId != member.getMemberId()) {
-            //400, 잘못된 요청 응답!
-            log.info("잘못된 요청! id : "+memberId.toString()+"member: "+member.toString());
+        Member member = memberRepository.findById(memberId).orElse(null);
+        if (member == null) {
+            log.info("잘못된 요청! id : {}", memberId);
             return null;
         }
-        //비밀번호 암호화
-        if(dto.getPassword() != null && !dto.getPassword().isEmpty()) {
-            members.setPassword(dto.getPassword());
+
+        // 현재 비밀번호 확인
+        if (dto.getCurrentPassword() == null || dto.getCurrentPassword().isEmpty()) {
+            log.info("현재 비밀번호가 제공되지 않았습니다.");
+            return null;
         }
 
-        //4. 업데이트 및 정상 응답코드(200)날리기
-        members.put(member);
-        Member updated = memberRepository.save(members);
+        boolean isPasswordValid = passwordEncoder.matches(dto.getCurrentPassword(), member.getPassword());
+        if (!isPasswordValid) {
+            log.info("현재 비밀번호가 일치하지 않습니다.");
+            return null;
+        }
+
+        // 비밀번호 변경이 필요한 경우
+        if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
+            String encodedPassword = passwordEncoder.encode(dto.getPassword());
+            member.setPassword(encodedPassword);
+        }
+
+        // 기타 정보 업데이트
+        if (dto.getName() != null) {
+            member.setName(dto.getName());
+        }
+        if (dto.getNickname() != null) {
+            member.setNickname(dto.getNickname());
+        }
+        if (dto.getPhoneNumber() != null) {
+            member.setPhoneNumber(dto.getPhoneNumber());
+        }
+
+        // 업데이트 및 저장
+        Member updated = memberRepository.save(member);
         return updated;
+    }
+
+    // 비밀번호 확인 메소드 (회원 탈퇴 시 사용)
+    public boolean verifyPassword(Integer memberId, String rawPassword) {
+        Member member = memberRepository.findById(memberId).orElse(null);
+        if (member == null) {
+            return false;
+        }
+        return passwordEncoder.matches(rawPassword, member.getPassword());
+    }
+
+    // 회원 탈퇴 메소드
+    @Transactional
+    public boolean deleteMember(Integer memberId) {
+        Member member = memberRepository.findById(memberId).orElse(null);
+        if (member == null) {
+            return false;
+        }
+        memberRepository.delete(member);
+        return true;
     }
 
     public boolean existsByNickname(String nickname) {
