@@ -2,6 +2,7 @@
   <div id="storeWrapper">
     <!-- Store Content -->
     <div class="container">
+      <div class="dimmed_layer" v-show="showEditModal"></div>
       <!-- Store Top Section -->
       <div class="content_out_line">
         <div class="content_inner">
@@ -9,7 +10,9 @@
             <div class="top_image_line">
               <span
                 class="image_present"
-                :style="`background-image: url(${getImageUrl(store.storePhoto)})`"
+                :style="`background-image: url(${getImageUrl(
+                  store.storePhoto
+                )})`"
               ></span>
               <span class="frame_g"></span>
 
@@ -18,8 +21,16 @@
                 <!-- Admin Buttons -->
                 <div class="btn_box" v-if="isAdmin">
                   <form @submit.prevent="handleAdminAction('modify')">
-                    <input type="hidden" :value="store.storeId" name="storeId" />
-                    <button type="submit" class="admin_button" data-result="modify">
+                    <input
+                      type="hidden"
+                      :value="store.storeId"
+                      name="storeId"
+                    />
+                    <button
+                      type="submit"
+                      class="admin_button"
+                      data-result="modify"
+                    >
                       수정
                     </button>
                     <button
@@ -44,9 +55,13 @@
                       alt="filled-star"
                       class="icon_star"
                     />
-                    <span class="evaluation_link">평점 : {{ store.ratingAvg }}</span>
+                    <span class="evaluation_link"
+                      >평점 : {{ store.ratingAvg }}</span
+                    >
                     <span class="bar"></span>
-                    <span class="evaluation_link">리뷰 : {{ store.countReview }}</span>
+                    <span class="evaluation_link"
+                      >리뷰 : {{ store.countReview }}</span
+                    >
                   </div>
                 </div>
               </div>
@@ -59,11 +74,16 @@
             <div class="place_info_detail">
               <h4 class="info_title_detail">
                 <span class="place_info_icon address_icon">위치</span>
-                <img src="/images/ico_location.png" class="address_icon" alt="Location Icon" />
+                <img
+                  src="/images/ico_location.png"
+                  class="address_icon"
+                  alt="Location Icon"
+                />
               </h4>
               <div class="place_location">
                 <span class="address_text">
-                  {{ store.roadAddress }} {{ store.detailAddress }} (우) {{ store.postcode }}
+                  {{ store.roadAddress }} {{ store.detailAddress }} (우)
+                  {{ store.postcode }}
                 </span>
                 <span class="address_num_text">
                   상세주소
@@ -74,28 +94,52 @@
             </div>
 
             <!-- Website Information -->
-            <div v-if="store.websiteInfo" class="place_info_detail place_homepage">
+            <div
+              v-if="store.websiteInfo"
+              class="place_info_detail place_homepage"
+            >
               <h4 class="info_title_detail">
                 <span class="place_info_icon">홈페이지</span>
-                <img src="/images/icon-internet.png" width="14" height="14" class="homepage_icon" alt="Internet Icon" />
+                <img
+                  src="/images/icon-internet.png"
+                  width="14"
+                  height="14"
+                  class="homepage_icon"
+                  alt="Internet Icon"
+                />
               </h4>
               <div class="place_location">
                 <div class="homepage_text">
-                  <a :href="store.websiteInfo" target="_blank" class="link_homepage">{{ store.websiteInfo }}</a>
+                  <a
+                    :href="store.websiteInfo"
+                    target="_blank"
+                    class="link_homepage"
+                    >{{ store.websiteInfo }}</a
+                  >
                 </div>
               </div>
             </div>
 
             <!-- Opening Hours -->
-            <div v-if="store.openingTime && store.closingTime" class="place_info_detail place_business_hours">
+            <div
+              v-if="store.openingTime && store.closingTime"
+              class="place_info_detail place_business_hours"
+            >
               <h4 class="info_title_detail">
                 <span class="place_info_icon">영업시간</span>
-                <img src="https://img.icons8.com/forma-thin/48/clock.png" width="16" height="16" class="homepage_icon" alt="Clock Icon" />
+                <img
+                  src="https://img.icons8.com/forma-thin/48/clock.png"
+                  width="16"
+                  height="16"
+                  class="homepage_icon"
+                  alt="Clock Icon"
+                />
               </h4>
               <div class="place_location">
                 <div class="business_hours_text">
                   <span class="hours_text">
-                    {{ formatTime(store.openingTime) }} - {{ formatTime(store.closingTime) }}
+                    {{ formatTime(store.openingTime) }} -
+                    {{ formatTime(store.closingTime) }}
                   </span>
                 </div>
               </div>
@@ -105,7 +149,11 @@
             <div class="place_info_detail place_phone">
               <h4 class="info_title_detail">
                 <span class="place_info_icon">전화번호</span>
-                <img src="/images/icon_phone.png" class="phone_icon" alt="Phone Icon" />
+                <img
+                  src="/images/icon_phone.png"
+                  class="phone_icon"
+                  alt="Phone Icon"
+                />
               </h4>
               <div class="place_location">
                 <span class="phone_text">
@@ -118,10 +166,16 @@
             <div class="place_info_detail">
               <h4 class="info_title_detail">
                 <span class="place_info_icon">소개</span>
-                <img src="/images/icon-desc.png" class="icon_desc" alt="Description Icon" />
+                <img
+                  src="/images/icon-desc.png"
+                  class="icon_desc"
+                  alt="Description Icon"
+                />
               </h4>
               <div class="place_location">
-                <span class="title_info_text">{{ store.storeDescription }}</span>
+                <span class="title_info_text">{{
+                  store.storeDescription
+                }}</span>
               </div>
             </div>
           </div>
@@ -141,7 +195,13 @@
               <li v-for="menu in store.menus" :key="menu.menuId">
                 <a href="#" class="link_photo">
                   <span class="inner_photo">
-                    <img :src="getImageUrl(menu.menuPhoto)" class="img_thumb" width="106" height="90" alt="Menu Photo" />
+                    <img
+                      :src="getImageUrl(menu.menuPhoto)"
+                      class="img_thumb"
+                      width="106"
+                      height="90"
+                      alt="Menu Photo"
+                    />
                   </span>
                 </a>
                 <div class="menu_title_box">
@@ -160,7 +220,9 @@
           <form @submit.prevent="submitReview" id="userWrite">
             <div class="rate_box">
               <div class="rate_intro">
-                <p class="desc_rate_username">{{ user.nickname }}님! 이 장소의 후기를 남겨주세요</p>
+                <p class="desc_rate_username">
+                  {{ user.nickname }}님! 이 장소의 후기를 남겨주세요
+                </p>
                 <div class="user_rate">
                   <div class="grade_star_box">
                     <span class="ico_star_rate">
@@ -169,15 +231,46 @@
                   </div>
                 </div>
                 <div class="star-rating space-x-4 mx-auto">
-                  <input type="radio" id="5-stars" name="rating" value="5" v-model="newReview.rating" checked />
+                  <input
+                    type="radio"
+                    id="5-stars"
+                    name="rating"
+                    value="5"
+                    v-model="newReview.rating"
+                    checked
+                  />
                   <label for="5-stars" class="star pr-4">★</label>
-                  <input type="radio" id="4-stars" name="rating" value="4" v-model="newReview.rating" />
+                  <input
+                    type="radio"
+                    id="4-stars"
+                    name="rating"
+                    value="4"
+                    v-model="newReview.rating"
+                  />
                   <label for="4-stars" class="star">★</label>
-                  <input type="radio" id="3-stars" name="rating" value="3" v-model="newReview.rating" />
+                  <input
+                    type="radio"
+                    id="3-stars"
+                    name="rating"
+                    value="3"
+                    v-model="newReview.rating"
+                  />
                   <label for="3-stars" class="star">★</label>
-                  <input type="radio" id="2-stars" name="rating" value="2" v-model="newReview.rating" />
+                  <input
+                    type="radio"
+                    id="2-stars"
+                    name="rating"
+                    value="2"
+                    v-model="newReview.rating"
+                  />
                   <label for="2-stars" class="star">★</label>
-                  <input type="radio" id="1-star" name="rating" value="1" v-model="newReview.rating" />
+                  <input
+                    type="radio"
+                    id="1-star"
+                    name="rating"
+                    value="1"
+                    v-model="newReview.rating"
+                  />
                   <label for="1-star" class="star">★</label>
                 </div>
               </div>
@@ -193,7 +286,13 @@
                   required
                 ></textarea>
                 <div class="button_box">
-                  <button class="select_button" type="reset" @click="resetReview">다시쓰기</button>
+                  <button
+                    class="select_button"
+                    type="reset"
+                    @click="resetReview"
+                  >
+                    다시쓰기
+                  </button>
                   <button class="select_button" type="submit">작성완료</button>
                 </div>
               </div>
@@ -216,11 +315,15 @@
                 alt="filled-star"
                 class="icon_star"
               />
-              <em class="num_rate">{{ store.ratingAvg }}
+              <em class="num_rate"
+                >{{ store.ratingAvg }}
                 <span class="text_score">점</span>
               </em>
               <span class="ico_star_rate">
-                <span class="ico_star_rate inner_star" :style="{ width: starWidth }"></span>
+                <span
+                  class="ico_star_rate inner_star"
+                  :style="{ width: starWidth }"
+                ></span>
               </span>
             </div>
           </div>
@@ -230,108 +333,114 @@
           <!-- Reviews List -->
           <div class="review_box">
             <strong class="screen_out">후기 리스트</strong>
-            <ul class="review_list" v-if="reviews.length">
-              <li v-for="review in reviews" :key="review.reviewId">
-                <div class="unit_info">
-                  <em class="screen_out">작성자 : </em>
-                  <a href="#" class="link_user">
-                    <div class="inner_user">
-                      <span class="text_username">{{ review.nickname }}</span>
-                    </div>
-                  </a>
-                  <span class="bar"></span>
-                  <span class="text_item">별점 : </span>
-                  <span class="text_desc">{{ review.rating }}</span>
-                  <span class="bar"></span>
-                  <span class="text_item">작성일 : </span>
-                  <span class="time_write">{{ formatDate(review.createdAt) }}</span>
-                </div>
+            <template v-for="review in reviews" :key="review.reviewId">
+              <ul class="review_list" v-if="reviews.length">
+                <li>
+                  <div class="unit_info">
+                    <em class="screen_out">작성자 : </em>
+                    <a href="#" class="link_user">
+                      <div class="inner_user">
+                        <span class="text_username">{{ review.nickname }}</span>
+                      </div>
+                    </a>
+                    <span class="bar"></span>
+                    <span class="text_item">별점 : </span>
+                    <span class="text_desc">{{ review.rating }}</span>
+                    <span class="bar"></span>
+                    <span class="text_item">작성일 : </span>
+                    <span class="time_write">{{
+                      formatDate(review.createdAt)
+                    }}</span>
+                  </div>
 
-                <div class="photo_group">
-                  <ul class="list_photo">
-                    <!-- If there are photos, display them -->
-                    <li v-for="photo in review.photos" :key="photo.photoId">
-                      <img :src="getImageUrl(photo.url)" alt="Review Photo" class="img_thumb" />
-                    </li>
-                  </ul>
-                </div>
+                  <div class="photo_group">
+                    <ul class="list_photo">
+                      <!-- If there are photos, display them -->
+                      <!-- <li v-for="photo in review.photos" :key="photo.photoId">
+                        <img :src="photo.url" alt="Review Photo" class="img_thumb" />
+                      </li> -->
+                    </ul>
+                  </div>
 
-                <div class="comment_info">
-                  <p class="text_comment">{{ review.reviewText }}</p>
-                </div>
+                  <div class="comment_info">
+                    <p class="text_comment">
+                      <span>{{ review.reviewText }}</span>
+                    </p>
+                  </div>
 
-                <div class="wrap_util">
-                  <!-- Owner Reply Button -->
-                  <button
-                    v-if="isOwner && !review.replyId"
-                    type="button"
-                    class="comment_pd_button"
-                    @click="openReplyModal(review)"
-                  >
-                    답글
-                  </button>
+                  <div class="wrap_util">
+                    <!-- Owner Reply Button -->
+                    <button
+                      v-if="isOwner && !review.replyId"
+                      type="button"
+                      class="comment_pd_button"
+                      @click="openReplyModal(review)"
+                    >
+                      답글
+                    </button>
 
-                  <!-- User Modify/Delete Buttons -->
-                  <button
-                    v-if="isCurrentUser(review.memberId)"
-                    type="button"
-                    class="comment_user_button"
-                    @click="openEditModal(review)"
-                  >
-                    수정
-                  </button>
-                  <button
-                    v-if="isCurrentUser(review.memberId)"
-                    type="button"
-                    class="comment_user_button"
-                    @click="deleteReview(review.reviewId)"
-                  >
-                    삭제
-                  </button>
-                </div>
+                    <!-- User Modify/Delete Buttons -->
+                    <template v-if="isCurrentUser(review.memberId)">
+                      <button
+                        type="button"
+                        class="comment_user_button"
+                        @click="openEditModal(review)"
+                      >
+                        수정
+                      </button>
+                      <button
+                        type="button"
+                        class="comment_user_button"
+                        @click="deleteReview(review.reviewId)"
+                      >
+                        삭제
+                      </button>
+                    </template>
+                  </div>
+                </li>
 
                 <!-- Owner's Reply -->
-                <ul v-if="review.replyId" class="reply_comment_list">
-                  <li>
-                    <a href="#" class="reply_img">
-                      <img
-                        width="16"
-                        height="16"
-                        src="https://img.icons8.com/small/16/down-right.png"
-                        alt="down-right"
-                        class="icon_reply"
-                      />
-                    </a>
-                    <div class="unit_info_admin">
-                      <em class="screen_out">사장 : </em>
-                      <div class="comment_info_reply">
-                        <p class="text_comment">{{ review.replyText }}</p>
-                      </div>
-                      <div class="wrap_util">
-                        <!-- Owner Edit/Delete Reply Buttons -->
-                        <button
-                          v-if="isOwner"
-                          type="button"
-                          class="comment_pd_button"
-                          @click="openReplyEditModal(review)"
-                        >
-                          수정
-                        </button>
-                        <button
-                          v-if="isOwner"
-                          type="button"
-                          class="comment_pd_button"
-                          @click="deleteReply(review.replyId)"
-                        >
-                          삭제
-                        </button>
-                      </div>
+                <li v-if="review.replyId" class="reply_comment_list">
+                  <a href="#" class="reply_img">
+                    <img
+                      width="16"
+                      height="16"
+                      src="https://img.icons8.com/small/16/down-right.png"
+                      alt="down-right"
+                      class="icon_reply"
+                    />
+                  </a>
+                  <div class="unit_info_admin">
+                    <em class="screen_out">사장 : </em>
+                    <div class="comment_info_reply">
+                      <p class="text_comment">
+                        <span>{{ review.replyText }}</span>
+                      </p>
                     </div>
-                  </li>
-                </ul>
-              </li>
-            </ul>
-            <p v-else>작성된 후기가 없습니다.</p>
+                    <div class="wrap_util">
+                      <!-- Owner Edit/Delete Reply Buttons -->
+                      <button
+                        v-if="isOwner"
+                        type="button"
+                        class="comment_pd_button"
+                        @click="openReplyEditModal(review)"
+                      >
+                        수정
+                      </button>
+                      <button
+                        v-if="isOwner"
+                        type="button"
+                        class="comment_pd_button"
+                        @click="deleteReply(review.replyId)"
+                      >
+                        삭제
+                      </button>
+                    </div>
+                  </div>
+                </li>
+                <!-- <p v-else>작성된 후기가 없습니다.</p> -->
+              </ul>
+            </template>
           </div>
         </div>
 
@@ -341,7 +450,7 @@
           <div class="map_box">
             <h4 class="screen_out">지도 보기</h4>
             <div class="view_map">
-              <div id="map" style="width: 100%; height: 350px;"></div>
+              <div id="map" style="width: 100%; height: 350px"></div>
             </div>
           </div>
         </div>
@@ -353,44 +462,149 @@
       <div class="modal-content">
         <span class="close" @click="closeReplyModal">&times;</span>
         <h3>답글 작성</h3>
-        <textarea v-model="replyText" placeholder="답글을 작성해주세요."></textarea>
+        <textarea
+          v-model="replyText"
+          placeholder="답글을 작성해주세요."
+        ></textarea>
         <button @click="submitReply">작성</button>
       </div>
     </div>
 
     <!-- Edit Review Modal -->
-    <div v-if="showEditModal" class="modal">
+    <!-- <div v-if="showEditModal" class="modal">
       <div class="modal-content">
         <span class="close" @click="closeEditModal">&times;</span>
         <h3>후기 수정</h3>
-        <textarea v-model="editReviewText" placeholder="후기를 수정해주세요."></textarea>
+        <textarea
+          v-model="editReviewText"
+          placeholder="후기를 수정해주세요."
+        ></textarea>
         <button @click="updateReview">수정</button>
       </div>
-    </div>
+    </div> -->
 
     <!-- Edit Reply Modal -->
     <div v-if="showReplyEditModal" class="modal">
       <div class="modal-content">
         <span class="close" @click="closeReplyEditModal">&times;</span>
         <h3>답글 수정</h3>
-        <textarea v-model="editReplyText" placeholder="답글을 수정해주세요."></textarea>
+        <textarea
+          v-model="editReplyText"
+          placeholder="답글을 수정해주세요."
+        ></textarea>
         <button @click="updateReply">수정</button>
       </div>
     </div>
   </div>
-</template>
 
-  
+
+
+
+ <!-- Edit Review Modal -->
+ <div v-show="showEditModal" data-root="" class="evaluation_layer" :style="{top:modalTop}">
+  <div class="inner_layer">
+    <div class="layer_head"><strong class="tit_layer">{{ store.storeName }}</strong></div>
+      <div class="layer_body">
+        <form action="#">
+          <fieldset>
+            <legend class="screen_out">후기작성</legend>
+            <div class="group_rate">
+              <div class="user_rate">
+                  <div class="grade_star_box">
+                    <span class="ico_star_rate">
+                      <span class="ico_star_rate inner_star"></span>
+                    </span>
+                  </div>
+                </div>
+                <div class="star-rating space-x-4 mx-auto">
+                  <input
+                    type="radio"
+                    id="5-stars"
+                    name="rating"
+                    value="5"
+                    v-model="newReview.rating"
+                    checked
+                  />
+                  <label for="5-stars" class="star pr-4">★</label>
+                  <input
+                    type="radio"
+                    id="4-stars"
+                    name="rating"
+                    value="4"
+                    v-model="newReview.rating"
+                  />
+                  <label for="4-stars" class="star">★</label>
+                  <input
+                    type="radio"
+                    id="3-stars"
+                    name="rating"
+                    value="3"
+                    v-model="newReview.rating"
+                  />
+                  <label for="3-stars" class="star">★</label>
+                  <input
+                    type="radio"
+                    id="2-stars"
+                    name="rating"
+                    value="2"
+                    v-model="newReview.rating"
+                  />
+                  <label for="2-stars" class="star">★</label>
+                  <input
+                    type="radio"
+                    id="1-star"
+                    name="rating"
+                    value="1"
+                    v-model="newReview.rating"
+                  />
+                  <label for="1-star" class="star">★</label>
+                </div>
+              <div class="grade_rate">
+                <div class="grade_star size_l">
+                  <span class="ico_star star_rate">
+                    <span class="ico_star inner_star" style="width: 100%;"></span>
+                  </span>
+                </div>
+              </div>
+              <span class="info_rate">
+                <span class="screen_out">선택한 별점</span>
+                <span class="num_rate">5</span>/<span class="screen_out">선택 가능한 총 별점</span><span class="num_limit">5</span>
+              </span>
+            </div>
+            <div class="box_evaluation">
+              <div class="group_review">
+                <label for="tfReview" class="screen_out">후기 작성</label>
+                <textarea id="tfReview" name="tf_review" class="tf_review" placeholder="작성내용은 마이페이지와 장소상세에 노출되며 매장주를 포함한 다른 사용자들이 볼 수 있으니, 서로를 배려하는 마음을 담아 작성해 주세요."></textarea>
+              </div>
+              <div class="group_etc">
+                <a href="https://kakaomap.tistory.com/358" target="_blank" class="link_notice">후기 작성 시 주의사항</a>
+                <span class="num_letter">
+                  <span class="screen_out">등록한 글자수: </span><span class="txt_len"></span><span class="num_total"> / 2000</span></span>
+                
+              </div>
+            </div>
+            <div class="group_btn">
+              <button type="reset" class="btn_reset">취소</button>
+              <button type="submit" class="btn_submit">등록</button>
+            </div>
+          </fieldset>
+        </form>
+      </div>
+    </div>
+  </div>
+
+</template>
 <script>
-import { ref, onMounted, computed } from 'vue';
-import { useAuthStore } from '../stores/auth';
-import { useAdminStore } from '../stores/admin';
-import api from '../axios'; // Centralized Axios instance import
+import { ref, onMounted, computed } from "vue";
+import { useAuthStore } from "../stores/auth";
+import { useAdminStore } from "../stores/admin";
+import api from "../axios"; // Centralized Axios instance import
 
 export default {
-  name: 'StoreContent',
+  name: "StoreContent",
   props: {
-    id: { // route param 'id' as a prop
+    id: {
+      // route param 'id' as a prop
       type: Number,
       required: true,
     },
@@ -402,13 +616,17 @@ export default {
     const adminStore = useAdminStore();
     const user = computed(() => authStore.user);
     const isAdmin = computed(() => user.value && user.value.roleId === 2);
-    const isOwner = computed(() => user.value && user.value.memberId === store.value.ownerMemberId);
+    const isOwner = computed(
+      () => user.value && user.value.memberId === store.value.ownerMemberId
+    );
     const starWidth = computed(() => `${(store.value.ratingAvg / 5) * 100}%`);
 
     // Review Form
     const newReview = ref({
       rating: 5,
-      reviewText: '',
+      reviewText: "",
+
+      
     });
 
     // Modals
@@ -416,13 +634,14 @@ export default {
     const showEditModal = ref(false);
     const showReplyEditModal = ref(false);
     const currentReview = ref(null);
-    const replyText = ref('');
-    const editReviewText = ref('');
-    const editReplyText = ref('');
+    const replyText = ref("");
+    const editReviewText = ref("");
+    const editReplyText = ref("");
+    const modalTop = ref("50%");
 
     // Function to construct image URLs
     const getImageUrl = (path) => {
-      const serverHost = 'http://localhost:8090'; // Update if different
+      const serverHost = "http://localhost:8090"; // Update if different
       return serverHost + path;
     };
 
@@ -438,7 +657,7 @@ export default {
         // Fetch Reviews
         await fetchReviews();
       } catch (error) {
-        console.error('Error fetching store info:', error);
+        console.error("Error fetching store info:", error);
       }
     };
 
@@ -448,7 +667,7 @@ export default {
         const response = await api.get(`/menu/${props.id}`);
         store.value.menus = response.data; // Assign to store.menus
       } catch (error) {
-        console.error('Error fetching menus:', error);
+        console.error("Error fetching menus:", error);
       }
     };
 
@@ -458,14 +677,14 @@ export default {
         const response = await api.get(`/reviews/${props.id}`);
         reviews.value = response.data;
       } catch (error) {
-        console.error('Error fetching reviews:', error);
+        console.error("Error fetching reviews:", error);
       }
     };
 
     // Format Time
     const formatTime = (time) => {
-      if (!time) return '';
-      const [hours, minutes] = time.split(':');
+      if (!time) return "";
+      const [hours, minutes] = time.split(":");
       return `${hours}:${minutes}`;
     };
 
@@ -478,8 +697,8 @@ export default {
     const formatDate = (date) => {
       const d = new Date(date);
       const year = d.getFullYear();
-      const month = `${d.getMonth() + 1}`.padStart(2, '0');
-      const day = `${d.getDate()}`.padStart(2, '0');
+      const month = `${d.getMonth() + 1}`.padStart(2, "0");
+      const day = `${d.getDate()}`.padStart(2, "0");
       return `${year}.${month}.${day}.`;
     };
 
@@ -490,7 +709,7 @@ export default {
 
     // Handle Admin Actions
     const handleAdminAction = (action) => {
-      if (action === 'modify') {
+      if (action === "modify") {
         // Redirect to modify page or open a modal
         window.location.href = `/admin/store/${store.value.storeId}/modify`;
       }
@@ -498,14 +717,14 @@ export default {
 
     // Delete Store
     const handleDeleteStore = async () => {
-      if (confirm('가게를 삭제하시겠습니까?')) {
+      if (confirm("가게를 삭제하시겠습니까?")) {
         try {
           await api.delete(`/store/${store.value.storeId}`);
-          alert('가게가 성공적으로 삭제되었습니다.');
-          window.location.href = '/admin/suggestion/list'; // Redirect to admin list page
+          alert("가게가 성공적으로 삭제되었습니다.");
+          window.location.href = "/admin/suggestion/list"; // Redirect to admin list page
         } catch (error) {
-          console.error('Error deleting store:', error);
-          alert('가게 삭제 중 오류가 발생했습니다.');
+          console.error("Error deleting store:", error);
+          alert("가게 삭제 중 오류가 발생했습니다.");
         }
       }
     };
@@ -513,38 +732,38 @@ export default {
     // Submit Review
     const submitReview = async () => {
       if (!newReview.value.reviewText) {
-        alert('후기를 작성해주세요.');
+        alert("후기를 작성해주세요.");
         return;
       }
 
       try {
         await api.post(`/review/${store.value.storeId}`, newReview.value);
-        alert('후기가 성공적으로 작성되었습니다.');
+        alert("후기가 성공적으로 작성되었습니다.");
         newReview.value.rating = 5;
-        newReview.value.reviewText = '';
+        newReview.value.reviewText = "";
         await fetchReviews();
       } catch (error) {
-        console.error('Error submitting review:', error);
-        alert('후기 작성 중 오류가 발생했습니다.');
+        console.error("Error submitting review:", error);
+        alert("후기 작성 중 오류가 발생했습니다.");
       }
     };
 
     // Reset Review Form
     const resetReview = () => {
       newReview.value.rating = 5;
-      newReview.value.reviewText = '';
+      newReview.value.reviewText = "";
     };
 
     // Delete Review
     const deleteReview = async (reviewId) => {
-      if (confirm('후기를 삭제하시겠습니까?')) {
+      if (confirm("후기를 삭제하시겠습니까?")) {
         try {
           await api.delete(`/reviews/${store.value.storeId}/${reviewId}`);
-          alert('후기가 성공적으로 삭제되었습니다.');
+          alert("후기가 성공적으로 삭제되었습니다.");
           await fetchReviews();
         } catch (error) {
-          console.error('Error deleting review:', error);
-          alert('후기 삭제 중 오류가 발생했습니다.');
+          console.error("Error deleting review:", error);
+          alert("후기 삭제 중 오류가 발생했습니다.");
         }
       }
     };
@@ -552,21 +771,21 @@ export default {
     // Open Reply Modal
     const openReplyModal = (review) => {
       currentReview.value = review;
-      replyText.value = '';
+      replyText.value = "";
       showReplyModal.value = true;
     };
 
     // Close Reply Modal
     const closeReplyModal = () => {
       showReplyModal.value = false;
-      replyText.value = '';
+      replyText.value = "";
       currentReview.value = null;
     };
 
     // Submit Reply
     const submitReply = async () => {
       if (!replyText.value) {
-        alert('답글을 작성해주세요.');
+        alert("답글을 작성해주세요.");
         return;
       }
 
@@ -576,17 +795,27 @@ export default {
           ownerId: user.value.memberId, // Set ownerId as current user's memberId
           replyText: replyText.value,
         });
-        alert('답글이 성공적으로 작성되었습니다.');
+        alert("답글이 성공적으로 작성되었습니다.");
         closeReplyModal();
         await fetchReviews();
       } catch (error) {
-        console.error('Error submitting reply:', error);
-        alert('답글 작성 중 오류가 발생했습니다.');
+        console.error("Error submitting reply:", error);
+        alert("답글 작성 중 오류가 발생했습니다.");
       }
     };
 
+
+    
     // Open Edit Review Modal
     const openEditModal = (review) => {
+      if(confirm("후기를 수정하시겠습니까?")){
+        const scrollY = window.scrollY || document.documentElement.scrollTop;
+        const viewportHeight = window.innerHeight;
+
+      // 모달이 화면 중앙에 위치하도록 설정
+      modalTop.value = `${scrollY + viewportHeight / 2}px`;
+
+      }
       currentReview.value = review;
       editReviewText.value = review.reviewText;
       showEditModal.value = true;
@@ -595,32 +824,35 @@ export default {
     // Close Edit Review Modal
     const closeEditModal = () => {
       showEditModal.value = false;
-      editReviewText.value = '';
+      editReviewText.value = "";
       currentReview.value = null;
     };
 
     // Update Review
     const updateReview = async () => {
       if (!editReviewText.value) {
-        alert('후기를 작성해주세요.');
+        alert("후기를 작성해주세요.");
         return;
       }
 
       try {
-        await api.patch(`/reviews/${store.value.storeId}/${currentReview.value.reviewId}`, {
-          reviewId: currentReview.value.reviewId,
-          storeId: store.value.storeId,
-          rating: currentReview.value.rating, // Maintain existing rating
-          reviewText: editReviewText.value,
-          updatedAt: new Date(),
-          memberId: user.value.memberId,
-        });
-        alert('후기가 성공적으로 수정되었습니다.');
+        await api.patch(
+          `/reviews/${store.value.storeId}/${currentReview.value.reviewId}`,
+          {
+            reviewId: currentReview.value.reviewId,
+            storeId: store.value.storeId,
+            rating: currentReview.value.rating, // Maintain existing rating
+            reviewText: editReviewText.value,
+            updatedAt: new Date(),
+            memberId: user.value.memberId,
+          }
+        );
+        alert("후기가 성공적으로 수정되었습니다.");
         closeEditModal();
         await fetchReviews();
       } catch (error) {
-        console.error('Error updating review:', error);
-        alert('후기 수정 중 오류가 발생했습니다.');
+        console.error("Error updating review:", error);
+        alert("후기 수정 중 오류가 발생했습니다.");
       }
     };
 
@@ -634,43 +866,46 @@ export default {
     // Close Edit Reply Modal
     const closeReplyEditModal = () => {
       showReplyEditModal.value = false;
-      editReplyText.value = '';
+      editReplyText.value = "";
       currentReview.value = null;
     };
 
     // Update Reply
     const updateReply = async () => {
       if (!editReplyText.value) {
-        alert('답글을 작성해주세요.');
+        alert("답글을 작성해주세요.");
         return;
       }
 
       try {
-        await api.patch(`/reply/${currentReview.value.reviewId}/${currentReview.value.replyId}`, {
-          replyId: currentReview.value.replyId,
-          reviewId: currentReview.value.reviewId,
-          replyText: editReplyText.value,
-          updatedAt: new Date(),
-        });
-        alert('답글이 성공적으로 수정되었습니다.');
+        await api.patch(
+          `/reply/${currentReview.value.reviewId}/${currentReview.value.replyId}`,
+          {
+            replyId: currentReview.value.replyId,
+            reviewId: currentReview.value.reviewId,
+            replyText: editReplyText.value,
+            updatedAt: new Date(),
+          }
+        );
+        alert("답글이 성공적으로 수정되었습니다.");
         closeReplyEditModal();
         await fetchReviews();
       } catch (error) {
-        console.error('Error updating reply:', error);
-        alert('답글 수정 중 오류가 발생했습니다.');
+        console.error("Error updating reply:", error);
+        alert("답글 수정 중 오류가 발생했습니다.");
       }
     };
 
     // Delete Reply
     const deleteReply = async (replyId) => {
-      if (confirm('답글을 삭제하시겠습니까?')) {
+      if (confirm("답글을 삭제하시겠습니까?")) {
         try {
           await api.delete(`/reply/${replyId}`);
-          alert('답글이 성공적으로 삭제되었습니다.');
+          alert("답글이 성공적으로 삭제되었습니다.");
           await fetchReviews();
         } catch (error) {
-          console.error('Error deleting reply:', error);
-          alert('답글 삭제 중 오류가 발생했습니다.');
+          console.error("Error deleting reply:", error);
+          alert("답글 삭제 중 오류가 발생했습니다.");
         }
       }
     };
@@ -679,12 +914,12 @@ export default {
     const initMap = () => {
       const { kakao } = window;
       if (!kakao) {
-        console.error('Kakao Maps SDK not loaded.');
+        console.error("Kakao Maps SDK not loaded.");
         return;
       }
 
       const storeLocation = `${store.value.roadAddress} ${store.value.detailAddress}`;
-      const mapContainer = document.getElementById('map'); // The div to display the map
+      const mapContainer = document.getElementById("map"); // The div to display the map
       const mapOption = {
         center: new kakao.maps.LatLng(37.564214, 126.977943), // Temporary center coordinates
         level: 3,
@@ -748,16 +983,15 @@ export default {
       editReviewText,
       editReplyText,
       getImageUrl, // Expose the function to the template
+      modalTop
     };
   },
 };
 </script>
 
-  <style scoped>
-    @import '../../src/assets/css/content.css';
+<style scoped>
+@import "../../src/assets/css/content.css";
 
-  /* Scoped CSS similar to your Thymeleaf template's CSS */
-  /* Example styles */
-
-  </style>
-  
+/* Scoped CSS similar to your Thymeleaf template's CSS */
+/* Example styles */
+</style>
