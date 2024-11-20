@@ -184,15 +184,6 @@ export default {
   transition: color 0.3s;
 }
 
-/* Active Link 스타일 조정 */
-.nav a.router-link-active.router-link-exact-active {
-  margin: 0 2px; /* 좌우 마진을 줄임 */
-  padding: 0 2px; /* 좌우 패딩을 줄임 */
-  color: #FF885B; /* 활성화된 링크 색상 변경 */
-  font-weight: bold; /* 글씨를 굵게 */
-  transition: margin 0.3s, padding 0.3s, color 0.3s, font-weight 0.3s; /* 부드러운 전환 효과 */
-}
-
 /* Hover 효과 추가 */
 .nav a:hover {
   color: #FF885B;
