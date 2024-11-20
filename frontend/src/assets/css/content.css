@@ -1591,3 +1591,8 @@ fieldset, img {
 .evaluation_layer .box_evaluation {
     border: 1px solid #ddd;
 }
+
+button:focus{ 	
+    border: none;
+    outline:none;
+    }
