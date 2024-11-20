@@ -44,20 +44,24 @@ public class MenuApiServiceImpl implements MenuApiService {
 
     @Override
     public String getMenusImages(MultipartFile menuPhoto, Integer menuId) throws Exception {
-        String oldPath = menuRepository.getMenuPhoto(menuId);
-        Menu menu;
-        if (oldPath != null) {
-            String newFileName = fileStorageService.findByFile(oldPath, menuPhoto, DIRECTORY_NAME);
-            menu = menuRepository.findById(menuId).get();
-            menu.setMenuPhoto(newFileName);
+//        String oldPath = menuRepository.getMenuPhoto(menuId);
+//        Menu menu;
+        Menu menu = menuRepository.findById(menuId).orElseThrow(() -> new Exception("메뉴를 찾을 수 없습니다."));
+        // 새로운 사진이 업로드된 경우
+        if (menuPhoto != null && !menuPhoto.isEmpty()) {
+            // 기존 사진 삭제
+            String oldPhotoPath = menu.getMenuPhoto();
+            if (oldPhotoPath != null) {
+                fileStorageService.deleteImage(oldPhotoPath, DIRECTORY_NAME);
+            }
+            // 새로운 사진 저장
+            String newFileName = fileStorageService.storeFile(menuPhoto, DIRECTORY_NAME);
+            menu.setMenuPhoto("/uploads/menus/" + newFileName);
             menuRepository.save(menu);
-            return newFileName;
-        } else {
-            String newPath = fileStorageService.storeFile(menuPhoto, DIRECTORY_NAME);
-            menu = menuRepository.findById(menuId).get();
-            menu.setMenuPhoto(menuPhoto.getName());
-            menuRepository.save(menu);
-            return newPath;
+            return menu.getMenuPhoto();
+        }  else {
+            // 사진을 변경하지 않는 경우
+            return menu.getMenuPhoto();
         }
     }
 
@@ -80,12 +84,26 @@ public class MenuApiServiceImpl implements MenuApiService {
     public MenuAdminDTO updateStoreMenus(Integer menuId,
                                          MultipartFile menuPhoto,
                                          MenuAdminDTO menuAdminDTO) throws Exception {
-
-        String newPhotoName = getMenusImages(menuPhoto, menuId);
-        menuAdminDTO.setMenuPhoto("/uploads/menus/"+newPhotoName);
-        Menu menu = menuRepository.findById(menuId).get();
+        // 메뉴 엔티티 가져오기
+        Menu menu = menuRepository.findById(menuId).orElseThrow(() -> new Exception("메뉴를 찾을 수 없습니다."));
         Store store = menu.getStore();
-        menu = menuAdminDTO.toEntity(store);
+
+        // 메뉴 정보 업데이트
+        menu.setMenuName(menuAdminDTO.getMenuName());
+        menu.setPrice(menuAdminDTO.getPrice());
+
+        // 사진 처리
+        if (menuPhoto != null && !menuPhoto.isEmpty()) {
+            // 기존 사진 삭제
+            String oldPhotoPath = menu.getMenuPhoto();
+            if (oldPhotoPath != null) {
+                fileStorageService.deleteImage(oldPhotoPath, DIRECTORY_NAME);
+            }
+            // 새로운 사진 저장
+            String newFileName = fileStorageService.storeFile(menuPhoto, DIRECTORY_NAME);
+            menu.setMenuPhoto("/uploads/menus/" + newFileName);
+        }
+
         menuRepository.save(menu);
         menuAdminDTO.fromEntity(menu);
 
