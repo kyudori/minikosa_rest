@@ -3,6 +3,7 @@ package com.kosa.mini.api.service.store;
 import com.kosa.mini.api.dto.member.UserSearchDTO;
 import com.kosa.mini.api.dto.request.AssignOwnerRequest;
 import com.kosa.mini.api.dto.response.AssignOwnerResponse;
+import com.kosa.mini.api.dto.store.StoreContentCategoryDTO;
 import com.kosa.mini.api.dto.store.StoreContentDTO;
 import com.kosa.mini.api.dto.store.StoreCreateDTO;
 import com.kosa.mini.api.dto.store.StoreSearchDTO;
@@ -15,7 +16,7 @@ import java.util.List;
 
 public interface StoreApiService {
 
-    public StoreContentDTO storeInfo(Integer id);
+    StoreContentCategoryDTO storeInfo(Integer id);
     List<UserSearchDTO> searchUsersByEmail(String email);
 
     List<StoreSearchDTO> searchStoresByName(String storeName);

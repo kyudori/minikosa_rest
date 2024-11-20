@@ -1,5 +1,6 @@
 package com.kosa.mini.api.controller.store;
 
+import com.kosa.mini.api.dto.store.StoreContentCategoryDTO;
 import com.kosa.mini.api.dto.store.StoreContentDTO;
 import com.kosa.mini.api.exception.StoreNotFoundException;
 import com.kosa.mini.api.service.store.StoreApiService;
@@ -18,9 +19,9 @@ public class StoreContentApiController {
     private final StoreApiService storeApiService;
 
     @GetMapping("/store/{id}")
-    public ResponseEntity<StoreContentDTO> storeInfo(@PathVariable Integer id){
+    public ResponseEntity<StoreContentCategoryDTO> storeInfo(@PathVariable Integer id){
         try {
-            StoreContentDTO storeContentDTO = storeApiService.storeInfo(id);
+            StoreContentCategoryDTO storeContentDTO = storeApiService.storeInfo(id);
             return ResponseEntity.ok(storeContentDTO);
         } catch (StoreNotFoundException e) {
             return ResponseEntity.status(404).body(null);
