@@ -243,7 +243,7 @@ export const useAdminStore = defineStore('admin', {
     async getStore(storeId) {
       this.isLoading = true
       try {
-        const response = await api.get(`/admin/stores/${storeId}`)
+        const response = await api.get(`/store/${storeId}`)
         this.currentStore = response.data
         this.errorMessage = ''
         return this.currentStore
@@ -256,13 +256,31 @@ export const useAdminStore = defineStore('admin', {
       }
     },
 
-    // 메뉴 수정 액션
+        // 메뉴 목록 가져오기
+        async getMenus(storeId) {
+          this.isLoading = true
+          try {
+            const response = await api.get(`/menu/${storeId}`)
+            this.errorMessage = ''
+            return response.data
+          } catch (error) {
+            console.error('메뉴 정보 가져오기 실패:', error)
+            this.errorMessage = '메뉴 정보를 가져오는 데 실패했습니다.'
+            throw error
+          } finally {
+            this.isLoading = false
+          }
+        },
+
+    // 메뉴 업데이트 액션 (이미 존재하는 메뉴)
     async updateMenu(menuId, menuData, menuPhoto) {
       this.isLoading = true
       try {
         const formData = new FormData()
         formData.append('menuAdminDTO', new Blob([JSON.stringify(menuData)], { type: 'application/json' }))
-        formData.append('menuPhoto', menuPhoto)
+        if (menuPhoto) {
+          formData.append('menuPhoto', menuPhoto)
+        }
 
         const response = await api.patch(`/admin/menu/${menuId}`, formData)
         this.successMessage = '메뉴가 성공적으로 수정되었습니다.'

@@ -82,7 +82,7 @@ public class MenuApiServiceImpl implements MenuApiService {
                                          MenuAdminDTO menuAdminDTO) throws Exception {
 
         String newPhotoName = getMenusImages(menuPhoto, menuId);
-        menuAdminDTO.setMenuPhoto(newPhotoName);
+        menuAdminDTO.setMenuPhoto("/uploads/menus/"+newPhotoName);
         Menu menu = menuRepository.findById(menuId).get();
         Store store = menu.getStore();
         menu = menuAdminDTO.toEntity(store);

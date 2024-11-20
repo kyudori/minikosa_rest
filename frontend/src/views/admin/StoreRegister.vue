@@ -1,3 +1,4 @@
+<!-- src/views/StoreRegister.vue -->
 <template>
   <div class="main-content">
     <h2>가게 등록</h2>

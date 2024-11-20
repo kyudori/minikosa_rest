@@ -1,114 +1,156 @@
+<!-- src/components/MenuRegister.vue -->
 <template>
-    <div>
-      <label>메뉴</label>
-      <div v-for="(menu, index) in menus" :key="index" class="menu-section">
-        <button type="button" class="remove-menu" @click="removeMenu(index)">×</button>
-        <div class="form-group">
-          <label>메뉴 이름</label>
-          <input type="text" v-model="menu.menuName" placeholder="메뉴 이름을 입력해 주세요." required>
-        </div>
-        <div class="form-group">
-          <label>가격</label>
-          <input type="number" v-model="menu.price" placeholder="가격을 입력해 주세요." required>
-        </div>
-        <div class="form-group">
-          <label>메뉴 사진</label>
-          <button type="button" class="custom-file-button" @click="triggerMenuPhoto(index)">메뉴 사진 선택</button>
-          <span class="file-name">{{ menu.menuPhotoName || '선택된 파일 없음' }}</span>
-          <input
-            type="file"
-            :ref="el => menuPhotoInputs[index] = el"
-            @change="handleMenuPhoto(index, $event)"
-            accept="image/*"
-            class="hidden-file-input"
-          >
-          <img v-if="menu.menuPhotoPreview" :src="menu.menuPhotoPreview" alt="메뉴 사진 미리보기" class="menu-photo-preview">
-        </div>
+  <div>
+    <label>메뉴</label>
+    <div v-for="(menu, index) in menus" :key="index" class="menu-section">
+      <button type="button" class="remove-menu" @click="removeMenu(index)">×</button>
+      <div class="form-group">
+        <label>메뉴 이름</label>
+        <input type="text" v-model="menu.menuName" placeholder="메뉴 이름을 입력해 주세요." required>
       </div>
-      <button type="button" class="add-menu-button" @click="addMenu">+ 메뉴 추가</button>
+      <div class="form-group">
+        <label>가격</label>
+        <input type="number" v-model="menu.price" placeholder="가격을 입력해 주세요." required>
+      </div>
+      <div class="form-group">
+        <label>메뉴 사진</label>
+        <button type="button" class="custom-file-button" @click="triggerMenuPhoto(index)">메뉴 사진 선택</button>
+        <span class="file-name">{{ menu.menuPhotoName || '선택된 파일 없음' }}</span>
+        <input
+          type="file"
+          :ref="el => menuPhotoInputs[index] = el"
+          @change="handleMenuPhoto(index, $event)"
+          accept="image/*"
+          class="hidden-file-input"
+        >
+        <img
+          v-if="menu.menuPhotoPreview"
+          :src="getImageUrl(menu.menuPhotoPreview)"
+          alt="메뉴 사진 미리보기"
+          class="menu-photo-preview"
+          @error="onImageError($event)"
+        >
+      </div>
     </div>
-  </template>
-  
-  <script>
-  import { reactive, ref, watch } from 'vue'
-  
-  export default {
-    name: 'MenuRegister',
-    props: {
-      modelValue: {
-        type: Array,
-        default: () => []
-      }
-    },
-    emits: ['update:modelValue'],
-    setup(props, { emit }) {
-      const menus = reactive(props.modelValue)
-      const menuPhotoInputs = ref([])
-  
-      const triggerMenuPhoto = (index) => {
-        const input = menuPhotoInputs.value[index]
-        if (input) {
-          input.click()
-        } else {
-          console.error(`menuPhotoInput${index}가 정의되지 않았습니다.`)
-        }
-      }
-  
-      const handleMenuPhoto = (index, event) => {
-        const file = event.target.files[0]
-        if (file) {
-          menus[index].menuPhoto = file
-          menus[index].menuPhotoName = file.name
-          const reader = new FileReader()
-          reader.onload = (e) => {
-            menus[index].menuPhotoPreview = e.target.result
-          }
-          reader.readAsDataURL(file)
-        } else {
-          menus[index].menuPhoto = null
-          menus[index].menuPhotoName = ''
-          menus[index].menuPhotoPreview = ''
-        }
-      }
-  
-      const addMenu = () => {
-        menus.push({
-          menuName: '',
-          price: '',
-          menuPhoto: null,
-          menuPhotoName: '',
-          menuPhotoPreview: ''
-        })
-      }
-  
-      const removeMenu = (index) => {
-        if (menus.length > 1) {
-          menus.splice(index, 1)
-          menuPhotoInputs.value.splice(index, 1)
-        } else {
-          alert('최소 하나의 메뉴는 등록해야 합니다.')
-        }
-      }
-  
-      watch(
-        () => menus,
-        (newMenus) => {
-          emit('update:modelValue', newMenus)
-        },
-        { deep: true }
-      )
-  
-      return {
-        menus,
-        menuPhotoInputs,
-        triggerMenuPhoto,
-        handleMenuPhoto,
-        addMenu,
-        removeMenu
+    <button type="button" class="add-menu-button" @click="addMenu">+ 메뉴 추가</button>
+  </div>
+</template>
+
+<script>
+import { ref, watch } from 'vue'
+
+export default {
+  name: 'MenuRegister',
+  props: {
+    modelValue: {
+      type: Array,
+      default: () => []
+    }
+  },
+  emits: ['update:modelValue'],
+  setup(props, { emit }) {
+    const menus = ref([]) // menus를 ref로 선언
+
+    // props.modelValue 변경 감지 및 menus 업데이트
+    watch(
+      () => props.modelValue,
+      (newVal) => {
+        menus.value = newVal.map(menu => ({
+          ...menu,
+          menuPhotoName: menu.menuPhotoName || '',
+          menuPhotoPreview: menu.menuPhotoPreview || menu.menuPhoto || ''
+        }))
+      },
+      { immediate: true, deep: true }
+    )
+
+    const menuPhotoInputs = ref([])
+
+    const triggerMenuPhoto = (index) => {
+      const input = menuPhotoInputs.value[index]
+      if (input) {
+        input.click()
+      } else {
+        console.error(`menuPhotoInput${index}가 정의되지 않았습니다.`)
       }
     }
+
+    const handleMenuPhoto = (index, event) => {
+      const file = event.target.files[0]
+      if (file) {
+        menus.value[index].menuPhoto = file
+        menus.value[index].menuPhotoName = file.name
+        const reader = new FileReader()
+        reader.onload = (e) => {
+          menus.value[index].menuPhotoPreview = e.target.result
+        }
+        reader.readAsDataURL(file)
+      } else {
+        menus.value[index].menuPhoto = null
+        menus.value[index].menuPhotoName = ''
+        menus.value[index].menuPhotoPreview = ''
+      }
+    }
+
+    const addMenu = () => {
+      menus.value.push({
+        menuId: null,
+        menuName: '',
+        price: '',
+        menuPhoto: null,
+        menuPhotoName: '',
+        menuPhotoPreview: ''
+      })
+    }
+
+    const removeMenu = (index) => {
+      if (menus.value.length > 1) {
+        menus.value.splice(index, 1)
+        menuPhotoInputs.value.splice(index, 1)
+      } else {
+        alert('최소 하나의 메뉴는 등록해야 합니다.')
+      }
+    }
+
+    // menus 변경 시 부모 컴포넌트로 emit
+    watch(
+      menus,
+      (newMenus) => {
+        emit('update:modelValue', newMenus)
+      },
+      { deep: true }
+    )
+
+    // getImageUrl 함수 추가
+    const getImageUrl = (path) => {
+      if (path.startsWith('data:')) {
+        // Base64 데이터 URI인 경우 그대로 반환
+        return path
+      } else {
+        const serverHost = 'http://localhost:8090' // 백엔드 서버 주소로 변경 필요
+        return serverHost + path
+      }
+    }
+
+    // 이미지 로드 실패 시 대체 이미지 설정
+    const onImageError = (event) => {
+      event.target.onerror = null
+      event.target.src = '/images/main_logo.png'
+    }
+
+    return {
+      menus,
+      menuPhotoInputs,
+      triggerMenuPhoto,
+      handleMenuPhoto,
+      addMenu,
+      removeMenu,
+      getImageUrl,
+      onImageError
+    }
   }
-  </script>
+}
+</script>
   
   <style scoped>
   /* 메뉴 섹션 스타일 */
