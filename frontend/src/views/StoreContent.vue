@@ -489,7 +489,6 @@
                     </div>
                   </div>
                 </li>
-
               </ul>
             </template>
           </div>
@@ -523,7 +522,7 @@
       <div class="layer_body">
         <form action="#">
           <fieldset>
-            <legend class="screen_out">후기작성</legend>
+            <legend class="screen_out">후기 작성</legend>
             <div class="group_rate">
               <div class="star-rating space-x-4 mx-auto">
                 <input
@@ -601,7 +600,7 @@
 
               <div class="group_etc">
                 <a href="#none" target="_blank" class="link_notice"
-                  >답글 작성 시 주의사항</a
+                  >후기 작성 시 주의사항</a
                 >
                 <span class="num_letter">
                   <span class="txt_len"></span
@@ -641,10 +640,10 @@
       <div class="layer_body">
         <form action="#">
           <fieldset>
-            <legend class="screen_out">답글작성</legend>
+            <legend class="screen_out">답글 작성</legend>
             <div class="box_evaluation">
               <div class="group_review">
-                <label for="tfReview" class="screen_out">후기 작성</label>
+                <label for="tfReview" class="screen_out">답글 작성</label>
                 <textarea
                   v-model="replyText"
                   id="tfReview"
@@ -695,10 +694,10 @@
       <div class="layer_body">
         <form action="#">
           <fieldset>
-            <legend class="screen_out">답글작성</legend>
+            <legend class="screen_out">답글 수정</legend>
             <div class="box_evaluation">
               <div class="group_review">
-                <label for="tfReview" class="screen_out">후기 작성</label>
+                <label for="tfReview" class="screen_out">답글 수정</label>
                 <textarea
                   v-model="editReplyText"
                   id="tfReview"
@@ -722,7 +721,7 @@
               </div>
             </div>
             <div class="group_btn">
-              <button type="reset" class="btn_reset" @click="closeReplyModal">
+              <button type="reset" class="btn_reset" @click="closeReplyEditModal">
                 취소
               </button>
               <button type="submit" class="btn_submit" @click="updateReply">
@@ -925,7 +924,6 @@ export default {
     const openReplyModal = (review) => {
       if (confirm("답글을 작성하시겠습니까?")) {
         const scrollY = window.scrollY || document.documentElement.scrollTop;
-
         const viewportHeight = window.innerHeight;
 
         // 모달이 화면 중앙에 위치하도록 설정
@@ -1004,6 +1002,10 @@ export default {
     // Open Edit Reply Modal
     const openReplyEditModal = (review) => {
       if (confirm("답글을 수정하시겠습니까?")) {
+        const scrollY = window.scrollY || document.documentElement.scrollTop;
+        const viewportHeight = window.innerHeight;
+        // 모달이 화면 중앙에 위치하도록 설정
+        modalTop.value = `${scrollY + viewportHeight / 2}px`;
         currentReview.value = review;
         editReplyText.value = review.replyText;
         showReplyEditModal.value = true;
@@ -1139,13 +1141,14 @@ export default {
     watch(replyText, (newValue) => {
       replyText.value = checkForbiddenText(newValue);
     });
+    watch(editReplyText, (newValue) => {
+      editReplyText.value = checkForbiddenText(newValue);
+    });
 
     const openEditModal = (review) => {
       if (confirm("후기를 수정하시겠습니까?")) {
         const scrollY = window.scrollY || document.documentElement.scrollTop;
-
         const viewportHeight = window.innerHeight;
-
         // 모달이 화면 중앙에 위치하도록 설정
         modalTop.value = `${scrollY + viewportHeight / 2}px`;
         currentReview.value = review;
