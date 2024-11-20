@@ -220,7 +220,7 @@
         </div>
 
         <!-- Review Section -->
-        <template v-if="!isAdmin">
+        <template v-if="!isAdmin && !isOwner">
           <div class="rate_container">
             <form @submit.prevent="submitReview" id="userWrite">
               <div class="rate_box">
@@ -415,7 +415,7 @@
                             </li>
                           </template>
                           <template
-                            v-else-if="
+                            v-if="
                               isAdmin || isCurrentUser(review.memberId)
                             "
                           >
