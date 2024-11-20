@@ -23,7 +23,13 @@
           accept="image/*"
           class="hidden-file-input"
         >
-        <img v-if="menu.menuPhotoPreview" :src="menu.menuPhotoPreview" alt="메뉴 사진 미리보기" class="menu-photo-preview">
+        <img
+          v-if="menu.menuPhotoPreview"
+          :src="getImageUrl(menu.menuPhotoPreview)"
+          alt="메뉴 사진 미리보기"
+          class="menu-photo-preview"
+          @error="onImageError($event)"
+        >
       </div>
     </div>
     <button type="button" class="add-menu-button" @click="addMenu">+ 메뉴 추가</button>
@@ -115,13 +121,32 @@ export default {
       { deep: true }
     )
 
+    // getImageUrl 함수 추가
+    const getImageUrl = (path) => {
+      if (path.startsWith('data:')) {
+        // Base64 데이터 URI인 경우 그대로 반환
+        return path
+      } else {
+        const serverHost = 'http://localhost:8090' // 백엔드 서버 주소로 변경 필요
+        return serverHost + path
+      }
+    }
+
+    // 이미지 로드 실패 시 대체 이미지 설정
+    const onImageError = (event) => {
+      event.target.onerror = null
+      event.target.src = '/images/main_logo.png'
+    }
+
     return {
       menus,
       menuPhotoInputs,
       triggerMenuPhoto,
       handleMenuPhoto,
       addMenu,
-      removeMenu
+      removeMenu,
+      getImageUrl,
+      onImageError
     }
   }
 }

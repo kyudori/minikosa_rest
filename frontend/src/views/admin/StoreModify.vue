@@ -58,7 +58,12 @@
           <button type="button" class="custom-file-button" @click="triggerStorePhoto">가게 사진 선택</button>
           <span class="file-name">{{ storePhotoName || '선택된 파일 없음' }}</span>
           <input type="file" ref="storePhotoInput" @change="handleStorePhoto" accept="image/*" class="hidden-file-input">
-          <img v-if="storePhotoPreview" :src="storePhotoPreview" alt="가게 사진 미리보기" class="store-photo-preview">
+          <img
+            :src="storePhotoPreview ? getImageUrl(storePhotoPreview) : '/images/main_logo.png'"
+            alt="가게 사진 미리보기"
+            class="store-photo-preview"
+            @error="onImageError"
+          >
         </div>
   
         <!-- 영업 시간 -->
@@ -106,7 +111,7 @@
   </template>
   
   <script>
-  import { ref, onMounted, watch } from 'vue'
+  import { ref, onMounted } from 'vue'
   import { useAdminStore } from '../../stores/admin'
   import { useRouter, useRoute } from 'vue-router'
   import MenuRegister from '../../components/MenuRegister.vue'
@@ -399,6 +404,22 @@
         router.push({ name: 'StoreContent', params: { id: storeId } })
       }
   
+      // 이미지 URL 처리 함수 추가
+      const getImageUrl = (path) => {
+        if (path.startsWith('data:')) {
+          return path
+        } else {
+          const serverHost = 'http://localhost:8090' // 실제 백엔드 서버 주소로 변경 필요
+          return serverHost + path
+        }
+      }
+  
+      // 이미지 로드 실패 시 대체 이미지 설정
+      const onImageError = (event) => {
+        event.target.onerror = null
+        event.target.src = '/images/main_logo.png'
+      }
+  
       onMounted(() => {
         // 페이지 로드 시 맵 초기화
         initMap()
@@ -430,172 +451,173 @@
         menus,
         submitForm,
         cancel,
-        openPostcode
+        openPostcode,
+        getImageUrl,
+        onImageError
       }
     }
   }
   </script>
   
-<style scoped>
+  <style scoped>
   /* 기존 스타일 유지 */
-/* 기존 스타일 유지 */
-.main-content {
-    width: 800px;
-    margin: 75px auto;
-    background-color: #fff;
-    padding: 30px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    margin-bottom: 100px;
-}
-
-.main-content h2 {
-    font-size: 28px;
-    color: #FF885B;
-    margin-bottom: 20px;
-    text-align: center;
-}
-
-.main-logo {
-    display: block;
-    margin: 0 auto 20px auto;
-    width: 150px;
-    height: auto;
-}
-
-.description {
-    text-align: center;
-    font-size: 15px;
-    color: #666;
-    margin-top: 20px;
-    margin-bottom: 20px;
-}
-
-.description.error {
-    color: red;
-}
-
-.description.success {
-    color: green;
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-group label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 8px;
-    color: #FF885B;
-}
-
-.form-group input[type="text"],
-.form-group input[type="email"],
-.form-group input[type="password"],
-.form-group input[type="number"],
-.form-group select,
-.form-group textarea {
-    width: 100%;
-    padding: 12px 15px;
-    border: 1.5px solid #FF885B;
-    border-radius: 5px;
-    font-size: 16px;
-    resize: none;
-    box-sizing: border-box;
-    font-family: "맑은 고딕", sans-serif;
-}
-
-.form-group textarea {
-    height: 200px;
-    line-height: 1.5;
-}
-
-.hidden-file-input {
-    display: none;
-}
-
-.custom-file-button {
-    display: inline-block;
-    background-color: #FF885B;
-    color: #fff;
-    border: none;
-    padding: 8px 16px;
-    font-size: 14px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    margin-top: 10px;
-    text-align: center;
-    text-decoration: none;
-}
-
-.custom-file-button:hover {
-    background-color: #e07a4d;
-}
-
-.file-name {
-    display: inline-block;
-    margin-left: 10px;
-    font-size: 14px;
-    color: #333;
-    vertical-align: middle;
-}
-
-.store-photo-preview {
-    display: block;
-    width: 150px;
-    height: auto;
-    margin-top: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-}
-
-.button-container {
-    text-align: center;
-    margin-top: 30px;
-}
-
-.button-container input[type="submit"],
-.button-container .cancel-button {
-    background-color: #FF885B;
-    color: #fff;
-    border: none;
-    padding: 12px 30px;
-    font-size: 16px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    margin: 0 10px;
-}
-
-.button-container .cancel-button {
-    background-color: #ccc;
-    color: #333;
-}
-
-.button-container input[type="submit"]:hover {
-    background-color: #e07a4d;
-}
-
-.button-container .cancel-button:hover {
-    background-color: #999;
-}
-
-.postcode-button {
-    background-color: #FF885B;
-    color: #fff;
-    border: none;
-    padding: 8px 16px;
-    font-size: 14px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    margin-top: 10px;
-}
-
-.postcode-button:hover {
-    background-color: #e07a4d;
-}
-</style>
+  .main-content {
+      width: 800px;
+      margin: 75px auto;
+      background-color: #fff;
+      padding: 30px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      margin-bottom: 100px;
+  }
+  
+  .main-content h2 {
+      font-size: 28px;
+      color: #FF885B;
+      margin-bottom: 20px;
+      text-align: center;
+  }
+  
+  .main-logo {
+      display: block;
+      margin: 0 auto 20px auto;
+      width: 150px;
+      height: auto;
+  }
+  
+  .description {
+      text-align: center;
+      font-size: 15px;
+      color: #666;
+      margin-top: 20px;
+      margin-bottom: 20px;
+  }
+  
+  .description.error {
+      color: red;
+  }
+  
+  .description.success {
+      color: green;
+  }
+  
+  .form-group {
+      margin-bottom: 20px;
+  }
+  
+  .form-group label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #FF885B;
+  }
+  
+  .form-group input[type="text"],
+  .form-group input[type="email"],
+  .form-group input[type="password"],
+  .form-group input[type="number"],
+  .form-group select,
+  .form-group textarea {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1.5px solid #FF885B;
+      border-radius: 5px;
+      font-size: 16px;
+      resize: none;
+      box-sizing: border-box;
+      font-family: "맑은 고딕", sans-serif;
+  }
+  
+  .form-group textarea {
+      height: 200px;
+      line-height: 1.5;
+  }
+  
+  .hidden-file-input {
+      display: none;
+  }
+  
+  .custom-file-button {
+      display: inline-block;
+      background-color: #FF885B;
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      font-size: 14px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      margin-top: 10px;
+      text-align: center;
+      text-decoration: none;
+  }
+  
+  .custom-file-button:hover {
+      background-color: #e07a4d;
+  }
+  
+  .file-name {
+      display: inline-block;
+      margin-left: 10px;
+      font-size: 14px;
+      color: #333;
+      vertical-align: middle;
+  }
+  
+  .store-photo-preview {
+      display: block;
+      width: 150px;
+      height: auto;
+      margin-top: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+  }
+  
+  .button-container {
+      text-align: center;
+      margin-top: 30px;
+  }
+  
+  .button-container input[type="submit"],
+  .button-container .cancel-button {
+      background-color: #FF885B;
+      color: #fff;
+      border: none;
+      padding: 12px 30px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      margin: 0 10px;
+  }
+  
+  .button-container .cancel-button {
+      background-color: #ccc;
+      color: #333;
+  }
+  
+  .button-container input[type="submit"]:hover {
+      background-color: #e07a4d;
+  }
+  
+  .button-container .cancel-button:hover {
+      background-color: #999;
+  }
+  
+  .postcode-button {
+      background-color: #FF885B;
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      font-size: 14px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      margin-top: 10px;
+  }
+  
+  .postcode-button:hover {
+      background-color: #e07a4d;
+  }
+  </style>
   
