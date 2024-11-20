@@ -159,19 +159,16 @@ public class StoreApiServiceImpl implements StoreApiService {
         store.setClosingTime(storeDTO.getClosingTime());
 
         // 가게 사진 저장
-//        MultipartFile photo = storePhoto.getName().getStorePhoto();
         if (storePhoto != null && !storePhoto.isEmpty()) {
             try {
                 String storePhotoName = fileStorageService.storeFile(storePhoto, "store");
-                store.setStorePhoto(storePhotoName);
+                store.setStorePhoto("/uploads/stores/"+storePhotoName);
             } catch (Exception e) {
                 throw new FileStorageException("가게 사진 저장 실패: " + e.getMessage(), e);
             }
         }
 
         // 소유자 설정 (초기에는 null 또는 특정 관리자)
-        // 예시: store.setOwner(adminMember);
-        // 여기서는 null로 설정
         store.setOwner(null);
 
         // 저장 시간 설정
@@ -182,32 +179,24 @@ public class StoreApiServiceImpl implements StoreApiService {
         // 저장
         Store savedStore = storeRepository.save(store);
 
-//        // 메뉴 정보 저장
-//        if (storeDTO.getMenuUploadDTOS() != null) {
-//            List<Menu> menus = storeDTO.getMenuUploadDTOS().stream().map(menuDTO -> {
-//                Menu menu = new Menu();
-//                menu.setMenuName(menuDTO.getMenuName());
-//                menu.setPrice(menuDTO.getPrice());
-//                menu.setStore(savedStore);
-//
-//                MultipartFile menuPhoto = menuDTO.getMenuPhoto();
-//                if (menuPhoto != null && !menuPhoto.isEmpty()) {
-//                    try {
-//                        String menuPhotoName = fileStorageService.storeFile(menuPhoto, "menu");
-//                        menu.setMenuPhoto(menuPhotoName);
-//                    } catch (Exception e) {
-//                        // 파일 저장 실패 시 롤백
-//                        throw new RuntimeException("메뉴 사진 저장 실패: " + e.getMessage());
-//                    }
-//                }
-//                return menu;
-//            }).collect(Collectors.toList());
-//
-//            savedStore.setMenus(menus.stream().collect(Collectors.toSet()));
-//            storeRepository.save(savedStore);
-//        }
+        // StoreCreateDTO에 저장된 storeId와 storePhotoPath 설정
+        StoreCreateDTO responseDTO = new StoreCreateDTO();
+        responseDTO.setStoreId(savedStore.getStoreId());
+        responseDTO.setStoreName(savedStore.getStoreName());
+        responseDTO.setPostcode(savedStore.getPostcode());
+        responseDTO.setRoadAddress(savedStore.getRoadAddress());
+        responseDTO.setDetailAddress(savedStore.getDetailAddress());
+        responseDTO.setExtraAddress(savedStore.getExtraAddress());
+        responseDTO.setCategoryId(savedStore.getCategory().getCategoryId());
+        responseDTO.setStorePhotoPath(savedStore.getStorePhoto());
+        responseDTO.setStoreDescription(savedStore.getStoreDescription());
+        responseDTO.setOwnerId(savedStore.getOwner() != null ? savedStore.getOwner().getMemberId() : null);
+        responseDTO.setOpeningTime(savedStore.getOpeningTime());
+        responseDTO.setClosingTime(savedStore.getClosingTime());
+        responseDTO.setWebsiteInfo(savedStore.getWebsiteInfo());
+        responseDTO.setContactNumber(savedStore.getContactNumber());
 
-        return storeDTO;
+        return responseDTO;
     }
 
     @Override

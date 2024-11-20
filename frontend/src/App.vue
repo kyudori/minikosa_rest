@@ -1,10 +1,10 @@
 <template>
   <div id="app">
     <!-- 조건에 따라 Header 표시 -->
-    <Header v-if="showHeader" />
+    <Header></Header>
     <router-view />
     <!-- 조건에 따라 Footer 표시 -->
-    <Footer v-if="showFooter" />
+    <Footer></Footer>
   </div>
 </template>
 
@@ -18,16 +18,16 @@ export default {
     Header,
     Footer,
   },
-  computed: {
-    showHeader() {
-      // 특정 URL 경로에서만 Header 표시
-      return !['/home'].includes(this.$route.path);
-    },
-    showFooter() {
-      // 특정 URL 경로에서만 Footer 표시
-      return !['/home'].includes(this.$route.path);
-    },
-  },
+  // computed: {
+  //   showHeader() {
+  //     // 특정 URL 경로에서만 Header 표시
+  //     return !['/home'].includes(this.$route.path);
+  //   },
+  //   showFooter() {
+  //     // 특정 URL 경로에서만 Footer 표시
+  //     return !['/home'].includes(this.$route.path);
+  //   },
+  // },
   watch: {
     // 경로가 변경될 때 UI 업데이트
     $route() {
