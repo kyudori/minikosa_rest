@@ -402,8 +402,7 @@
                           </li>
                         </ul>
                       </div>
-                    </template>
-                    <button
+                      <button
                       v-if="isOwner && !review.replyId"
                       type="button"
                       class="comment_pd_button"
@@ -411,6 +410,8 @@
                     >
                       답글
                     </button>
+                    </template>
+
 
                     <!-- User Modify/Delete Buttons -->
                     <!--                     
@@ -874,6 +875,7 @@ export default {
 
         // 모달이 화면 중앙에 위치하도록 설정
         modalTop.value = `${scrollY + viewportHeight / 2}px`;
+        currentReview.value = review;
         newReview.value.rating = review.rating;
         editReviewText.value = review.reviewText;
         showEditModal.value = true;
@@ -897,21 +899,23 @@ export default {
       try {
         await api.patch(
           `/reviews/${store.value.storeId}/${currentReview.value.reviewId}`,
+          
           {
             reviewId: currentReview.value.reviewId,
-            storeId: store.value.storeId,
+            // storeId: store.value.storeId,
             rating: newReview.value.rating, // Maintain existing rating
             reviewText: editReviewText.value,
             // updatedAt: new Date(),
             // memberId: user.value.memberId,
           }
         );
+        console.log(`/reviews/${store.value.storeId}/${currentReview.value.reviewId}`);
         alert("후기가 성공적으로 수정되었습니다.");
         closeEditModal();
         await fetchReviews();
       } catch (error) {
         console.error("Error updating review:", error);
-        alert("후기 수정 중 오류가 발생했습니다.");
+        alert(error);
       }
     };
 
