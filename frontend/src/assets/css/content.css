@@ -1405,3 +1405,174 @@ button {
     float: left;
     margin-right: 10px;
 }
+
+/* review edit madal */
+.evaluation_layer {
+    left: 50%;
+    position: absolute;
+    top: 224px;
+    transform: translate(-50%,-50%);
+    z-index: 999;
+}
+
+.evaluation_layer .inner_layer {
+    background-color: #fff;
+    width: 640px;
+}
+
+.evaluation_layer .layer_head {
+    border-bottom: 1px solid #f0f0f0;
+    height: 64px;
+    text-align: center;
+}
+
+.evaluation_layer .tit_layer {
+    display: block;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 70px;
+    overflow: hidden;
+    padding: 0 90px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.evaluation_layer .layer_body {
+    padding: 0 40px 38px;
+}
+
+fieldset, img {
+    border: 0;
+}
+
+.evaluation_layer .group_rate {
+    padding: 30px 0 17px;
+    text-align: center;
+}
+
+.evaluation_layer .group_rate .grade_rate {
+    cursor: pointer;
+    display: block;
+    margin: 0 auto;
+    width: 204px;
+}
+
+.evaluation_layer .group_rate .star_rate {
+    background-position: 0 -100px;
+    height: 36px;
+    width: 204px;
+}
+
+.evaluation_layer .group_rate .inner_star {
+    background-position: 0 -140px;
+}
+
+.star_rate .inner_star {
+    background-position: 0 -30px;
+    height: 100%;
+}
+
+.evaluation_layer .group_rate .info_rate {
+    color: #959595;
+    display: block;
+    padding-top: 5px;
+}
+
+.evaluation_layer .group_rate .num_rate {
+    color: #000;
+    padding-right: 2px;
+}
+
+.evaluation_layer .group_rate .num_limit {
+    padding-left: 2px;
+}
+
+.evaluation_layer .group_revisit {
+    border-bottom: 1px solid #f2f2f2;
+    height: 55px;
+    padding: 0 23px 0 21px;
+}
+
+.evaluation_layer .group_revisit .btn_like {
+    float: right;
+    margin-top: 10px;
+}
+
+.evaluation_layer .btn_like {
+    border: 1px solid rgba(0,0,0,.2);
+    border-radius: 36px;
+    font-size: 0;
+    height: 36px;
+    margin: 4px 2px 0;
+    padding: 0 19px;
+    position: relative;
+}
+
+.evaluation_layer .group_revisit .ico_check2 {
+    background-position: -170px -500px;
+    display: inline-block;
+    height: 20px;
+    margin: 7px 1px 0 -4px;
+    vertical-align: top;
+    width: 20px;
+}
+
+.evaluation_layer .group_review .tf_review {
+    border: 0;
+    box-sizing: border-box;
+    color: #444;
+    height: 150px;
+    line-height: 22px;
+    padding: 24px 21px 0;
+    resize: none;
+    width: 100%;
+}
+
+.evaluation_layer .group_etc {
+    border-top: 1px solid #ddd;
+    font-size: 13px;
+    overflow: hidden;
+    padding: 13px 18px 11px 20px;
+}
+
+.evaluation_layer .group_etc .num_letter {
+    float: right;
+}
+
+.evaluation_layer .group_etc {
+    border-top: 1px solid #ddd;
+    font-size: 13px;
+    overflow: hidden;
+    padding: 13px 18px 11px 20px;
+}
+
+.evaluation_layer .group_etc .num_total {
+    color: #888;
+}
+
+.evaluation_layer .group_btn .btn_reset {
+    left: 0;
+}
+
+.evaluation_layer .group_btn [class*=btn_] {
+    font-size: 16px;
+    line-height: 29px;
+    padding: 20px 30px;
+    position: absolute;
+    top: 0;
+}
+
+.evaluation_layer .group_btn .btn_submit {
+    color: #007dff;
+    right: 0;
+}
+
+.dimmed_layer {
+    background: url(//t1.daumcdn.net/localimg/localimages/07/2017/pc/bg_dimmed.png);
+    height: 100%;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 998;
+}
