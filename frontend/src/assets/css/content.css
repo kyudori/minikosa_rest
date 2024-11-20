@@ -1323,6 +1323,35 @@ button {
     position: absolute;
 }
 
+.wrap_util .btn_util {
+    height: 33px;
+    width: 33px;
+}
+.wrap_util .btn_util.util_on~.layer_util {
+    display: block;
+}
+.review_list .wrap_util .layer_util {
+    padding: 4px 0;
+    right: 0;
+    top: 30px;
+    width: 51px;
+}
+.wrap_util .layer_util {
+    background-color: #fff;
+    border: 1px solid rgba(0,0,0,.05);
+    border-radius: 3px;
+    display: none;
+    padding: 4px 0;
+    position: absolute;
+    z-index: 10;
+}
+.wrap_util .ico_more {
+    background-position: -240px -450px;
+    height: 17px;
+    margin: 0 auto;
+    width: 3px;
+}
+
 .ico_comm {
     background-image: url(//t1.daumcdn.net/localimg/localimages/07/2018/pc/rtn/ico_detail_240813.png);
     background-size: 270px auto;
@@ -1450,26 +1479,8 @@ fieldset, img {
     text-align: center;
 }
 
-.evaluation_layer .group_rate .grade_rate {
-    cursor: pointer;
-    display: block;
-    margin: 0 auto;
-    width: 204px;
-}
-
-.evaluation_layer .group_rate .star_rate {
-    background-position: 0 -100px;
-    height: 36px;
-    width: 204px;
-}
-
-.evaluation_layer .group_rate .inner_star {
-    background-position: 0 -140px;
-}
-
-.star_rate .inner_star {
-    background-position: 0 -30px;
-    height: 100%;
+.evaluation_layer .star-rating {
+    float: none;
 }
 
 .evaluation_layer .group_rate .info_rate {
@@ -1563,7 +1574,7 @@ fieldset, img {
 }
 
 .evaluation_layer .group_btn .btn_submit {
-    color: #007dff;
+    color: #FF885B;
     right: 0;
 }
 
@@ -1575,4 +1586,8 @@ fieldset, img {
     top: 0;
     width: 100%;
     z-index: 998;
+}
+
+.evaluation_layer .box_evaluation {
+    border: 1px solid #ddd;
 }

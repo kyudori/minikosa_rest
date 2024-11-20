@@ -216,6 +216,7 @@
         </div>
 
         <!-- Review Section -->
+         <!-- <template v-if="isCurrentUser(review.memberId) == false"> -->
         <div class="rate_container">
           <form @submit.prevent="submitReview" id="userWrite">
             <div class="rate_box">
@@ -274,6 +275,7 @@
                   <label for="1-star" class="star">★</label>
                 </div>
               </div>
+           
 
               <!-- Review Textarea and Buttons -->
               <div class="comment_write_box">
@@ -299,6 +301,7 @@
             </div>
           </form>
         </div>
+      <!-- </template> -->
 
         <!-- Reviews List -->
         <div class="comments_box">
@@ -370,6 +373,36 @@
 
                   <div class="wrap_util">
                     <!-- Owner Reply Button -->
+                    <template v-if="isCurrentUser(review.memberId)">
+                      <button
+                      type="button" 
+                      :class="['btn_util', { util_on: isMenuOpen }]"
+                      @click="toggleMenu">
+                        <span class="ico_comm ico_more">메뉴 더보기</span>
+                      </button>
+                      <div class="layer_util">
+                        <ul class="list_opt">
+                          <li>
+                            <a
+                              href="#none"
+                              data-id="updateBtn"
+                              class="link_util"
+                              @click="openEditModal(review)"
+                              >수정</a
+                            >
+                          </li>
+                          <li>
+                            <a
+                              href="#none"
+                              data-id="deleteBtn"
+                              class="link_util"
+                              @click="deleteReview(review.reviewId)"
+                              >삭제</a
+                            >
+                          </li>
+                        </ul>
+                      </div>
+                    </template>
                     <button
                       v-if="isOwner && !review.replyId"
                       type="button"
@@ -380,22 +413,22 @@
                     </button>
 
                     <!-- User Modify/Delete Buttons -->
-                    <template v-if="isCurrentUser(review.memberId)">
+                    <!--                     
                       <button
                         type="button"
                         class="comment_user_button"
-                        @click="openEditModal(review)"
+                        
                       >
                         수정
                       </button>
                       <button
                         type="button"
                         class="comment_user_button"
-                        @click="deleteReview(review.reviewId)"
+                        
                       >
                         삭제
                       </button>
-                    </template>
+                    -->
                   </div>
                 </li>
 
@@ -497,102 +530,126 @@
     </div>
   </div>
 
-
-
-
- <!-- Edit Review Modal -->
- <div v-show="showEditModal" data-root="" class="evaluation_layer" :style="{top:modalTop}">
-  <div class="inner_layer">
-    <div class="layer_head"><strong class="tit_layer">{{ store.storeName }}</strong></div>
+  <!-- Edit Review Modal -->
+  <div
+    v-show="showEditModal"
+    data-root=""
+    class="evaluation_layer"
+    :style="{ top: modalTop }"
+  >
+    <!-- <div
+  
+    data-root=""
+    class="evaluation_layer"
+    :style="{ top: modalTop }"
+  > -->
+    <div class="inner_layer">
+      <div class="layer_head">
+        <strong class="tit_layer">{{ store.storeName }}</strong>
+      </div>
       <div class="layer_body">
         <form action="#">
           <fieldset>
             <legend class="screen_out">후기작성</legend>
             <div class="group_rate">
-              <div class="user_rate">
-                  <div class="grade_star_box">
-                    <span class="ico_star_rate">
-                      <span class="ico_star_rate inner_star"></span>
-                    </span>
-                  </div>
-                </div>
-                <div class="star-rating space-x-4 mx-auto">
-                  <input
-                    type="radio"
-                    id="5-stars"
-                    name="rating"
-                    value="5"
-                    v-model="newReview.rating"
-                    checked
-                  />
-                  <label for="5-stars" class="star pr-4">★</label>
-                  <input
-                    type="radio"
-                    id="4-stars"
-                    name="rating"
-                    value="4"
-                    v-model="newReview.rating"
-                  />
-                  <label for="4-stars" class="star">★</label>
-                  <input
-                    type="radio"
-                    id="3-stars"
-                    name="rating"
-                    value="3"
-                    v-model="newReview.rating"
-                  />
-                  <label for="3-stars" class="star">★</label>
-                  <input
-                    type="radio"
-                    id="2-stars"
-                    name="rating"
-                    value="2"
-                    v-model="newReview.rating"
-                  />
-                  <label for="2-stars" class="star">★</label>
-                  <input
-                    type="radio"
-                    id="1-star"
-                    name="rating"
-                    value="1"
-                    v-model="newReview.rating"
-                  />
-                  <label for="1-star" class="star">★</label>
-                </div>
+              <div class="star-rating space-x-4 mx-auto">
+                <input
+                  type="radio"
+                  id="5-stars"
+                  name="rating"
+                  value="5"
+                  v-model="newReview.rating"
+                  checked
+                />
+                <label for="5-stars" class="star pr-4">★</label>
+                <input
+                  type="radio"
+                  id="4-stars"
+                  name="rating"
+                  value="4"
+                  v-model="newReview.rating"
+                />
+                <label for="4-stars" class="star">★</label>
+                <input
+                  type="radio"
+                  id="3-stars"
+                  name="rating"
+                  value="3"
+                  v-model="newReview.rating"
+                />
+                <label for="3-stars" class="star">★</label>
+                <input
+                  type="radio"
+                  id="2-stars"
+                  name="rating"
+                  value="2"
+                  v-model="newReview.rating"
+                />
+                <label for="2-stars" class="star">★</label>
+                <input
+                  type="radio"
+                  id="1-star"
+                  name="rating"
+                  value="1"
+                  v-model="newReview.rating"
+                />
+                <label for="1-star" class="star">★</label>
+              </div>
               <div class="grade_rate">
                 <div class="grade_star size_l">
                   <span class="ico_star star_rate">
-                    <span class="ico_star inner_star" style="width: 100%;"></span>
+                    <span
+                      class="ico_star inner_star"
+                      style="width: 100%"
+                    ></span>
                   </span>
                 </div>
               </div>
               <span class="info_rate">
                 <span class="screen_out">선택한 별점</span>
-                <span class="num_rate">5</span>/<span class="screen_out">선택 가능한 총 별점</span><span class="num_limit">5</span>
+                <span class="num_rate">{{ newReview.rating }}</span
+                >/<span class="screen_out">선택 가능한 총 별점</span
+                ><span class="num_limit">5</span>
               </span>
             </div>
             <div class="box_evaluation">
               <div class="group_review">
                 <label for="tfReview" class="screen_out">후기 작성</label>
-                <textarea id="tfReview" name="tf_review" class="tf_review" placeholder="작성내용은 마이페이지와 장소상세에 노출되며 매장주를 포함한 다른 사용자들이 볼 수 있으니, 서로를 배려하는 마음을 담아 작성해 주세요."></textarea>
+                <textarea
+                  v-model="editReviewText"
+                  id="tfReview"
+                  name="reviewText"
+                  class="tf_review"
+                  placeholder="작성내용은 마이페이지와 장소상세에 노출되며 매장주를 포함한 다른 사용자들이 볼 수 있으니, 서로를 배려하는 마음을 담아 작성해 주세요."
+                ></textarea>
               </div>
               <div class="group_etc">
-                <a href="https://kakaomap.tistory.com/358" target="_blank" class="link_notice">후기 작성 시 주의사항</a>
+                <a
+                  href="https://kakaomap.tistory.com/358"
+                  target="_blank"
+                  class="link_notice"
+                  >후기 작성 시 주의사항</a
+                >
                 <span class="num_letter">
-                  <span class="screen_out">등록한 글자수: </span><span class="txt_len"></span><span class="num_total"> / 2000</span></span>
-                
+                  <span class="screen_out">등록한 글자수: </span
+                  ><span class="txt_len"></span
+                  ><span class="num_total"> / 2000</span></span
+                >
               </div>
             </div>
             <div class="group_btn">
-              <button type="reset" class="btn_reset">취소</button>
-              <button type="submit" class="btn_submit">등록</button>
+              <button type="reset" class="btn_reset" @click="closeEditModal">
+                취소
+              </button>
+              <button type="submit" class="btn_submit" @click="updateReview">
+                등록
+              </button>
             </div>
           </fieldset>
         </form>
       </div>
     </div>
   </div>
-
 </template>
 <script>
 import { ref, onMounted, computed } from "vue";
@@ -625,9 +682,8 @@ export default {
     const newReview = ref({
       rating: 5,
       reviewText: "",
-
-      
     });
+    const currentRating = ref(5);
 
     // Modals
     const showReplyModal = ref(false);
@@ -635,9 +691,15 @@ export default {
     const showReplyEditModal = ref(false);
     const currentReview = ref(null);
     const replyText = ref("");
+    let editRating = ref(0);
     const editReviewText = ref("");
     const editReplyText = ref("");
     const modalTop = ref("50%");
+    const isMenuOpen = ref(false); // 메뉴 열림 여부 상태
+
+    const toggleMenu = () => {
+      isMenuOpen.value = !isMenuOpen.value; // 클릭 시 상태 변경
+    };
 
     // Function to construct image URLs
     const getImageUrl = (path) => {
@@ -804,21 +866,18 @@ export default {
       }
     };
 
-
-    
     // Open Edit Review Modal
     const openEditModal = (review) => {
-      if(confirm("후기를 수정하시겠습니까?")){
+      if (confirm("후기를 수정하시겠습니까?")) {
         const scrollY = window.scrollY || document.documentElement.scrollTop;
         const viewportHeight = window.innerHeight;
 
-      // 모달이 화면 중앙에 위치하도록 설정
-      modalTop.value = `${scrollY + viewportHeight / 2}px`;
-
+        // 모달이 화면 중앙에 위치하도록 설정
+        modalTop.value = `${scrollY + viewportHeight / 2}px`;
+        newReview.value.rating = review.rating;
+        editReviewText.value = review.reviewText;
+        showEditModal.value = true;
       }
-      currentReview.value = review;
-      editReviewText.value = review.reviewText;
-      showEditModal.value = true;
     };
 
     // Close Edit Review Modal
@@ -841,10 +900,10 @@ export default {
           {
             reviewId: currentReview.value.reviewId,
             storeId: store.value.storeId,
-            rating: currentReview.value.rating, // Maintain existing rating
+            rating: newReview.value.rating, // Maintain existing rating
             reviewText: editReviewText.value,
-            updatedAt: new Date(),
-            memberId: user.value.memberId,
+            // updatedAt: new Date(),
+            // memberId: user.value.memberId,
           }
         );
         alert("후기가 성공적으로 수정되었습니다.");
@@ -983,7 +1042,10 @@ export default {
       editReviewText,
       editReplyText,
       getImageUrl, // Expose the function to the template
-      modalTop
+      modalTop,
+      editRating,
+      toggleMenu,
+      isMenuOpen
     };
   },
 };
