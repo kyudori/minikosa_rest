@@ -97,6 +97,7 @@
 <script>
 import { ref, computed, onMounted } from 'vue';
 import api from '../axios.js'
+import '../assets/js/home/custom.js';
 
 export default {
   name: 'Home',
