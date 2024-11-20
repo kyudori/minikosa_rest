@@ -230,7 +230,7 @@ public class StoreApiServiceImpl implements StoreApiService {
             try {
                 String dbImage = storeRepository.getStorePhoto(storeId);
                 String storePhotoName = fileStorageService.findByFile(dbImage, storePhoto, "store");
-                store.setStorePhoto(storePhotoName);
+                store.setStorePhoto("/uploads/stores/"+storePhotoName);
             } catch (Exception e) {
                 throw new FileStorageException("가게 사진 저장 실패: " + e.getMessage(), e);
             }

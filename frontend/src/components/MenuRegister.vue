@@ -1,3 +1,4 @@
+<!-- src/components/MenuRegister.vue -->
 <template>
     <div>
       <label>메뉴</label>
@@ -73,6 +74,7 @@
   
       const addMenu = () => {
         menus.push({
+          menuId: null, // 새로운 메뉴는 menuId가 null
           menuName: '',
           price: '',
           menuPhoto: null,

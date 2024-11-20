@@ -719,7 +719,7 @@ export default {
     const handleDeleteStore = async () => {
       if (confirm("가게를 삭제하시겠습니까?")) {
         try {
-          await api.delete(`/store/${store.value.storeId}`);
+          await api.delete(`/admin/stores/${store.value.storeId}`);
           alert("가게가 성공적으로 삭제되었습니다.");
           window.location.href = "/admin/suggestion/list"; // Redirect to admin list page
         } catch (error) {
