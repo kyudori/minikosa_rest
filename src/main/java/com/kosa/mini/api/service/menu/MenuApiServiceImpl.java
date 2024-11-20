@@ -68,7 +68,7 @@ public class MenuApiServiceImpl implements MenuApiService {
         String newPhotoName = fileStorageService.storeFile(menuPhoto, DIRECTORY_NAME);
         Store store = new Store();
         store.setStoreId(storeId);
-        menuCreateDTO.setMenuPhoto(newPhotoName);
+        menuCreateDTO.setMenuPhoto("/uploads/menus/"+ newPhotoName);
         Menu menu = menuCreateDTO.toEntity(store);
         menuRepository.save(menu);
         menuCreateDTO.fromEntity(menu);

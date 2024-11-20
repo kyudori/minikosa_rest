@@ -84,17 +84,22 @@
         <input type="text" id="contactNumber" v-model="contactNumber" placeholder="전화번호를 입력해 주세요.">
       </div>
       
-      <!-- 가게 설명 -->
-      <div class="form-group">
-        <label for="storeDescription">가게 설명</label>
-        <textarea id="storeDescription" v-model="storeDescription" placeholder="가게에 대한 설명을 입력해 주세요." required></textarea>
-      </div>
-      
-      <!-- 버튼 컨테이너 -->
-      <div class="button-container">
-        <input type="submit" value="등록">
-        <button type="button" class="cancel-button" @click="cancel">취소</button>
-      </div>
+    <!-- 가게 설명 -->
+    <div class="form-group">
+      <label for="storeDescription">가게 설명</label>
+      <textarea id="storeDescription" v-model="storeDescription" placeholder="가게에 대한 설명을 입력해 주세요." required></textarea>
+    </div>
+    
+    <!-- 메뉴 등록 컴포넌트 -->
+    <div class="form-group">
+      <MenuRegister v-model="menus" />
+    </div>
+    
+    <!-- 버튼 컨테이너 -->
+    <div class="button-container">
+      <input type="submit" value="등록">
+      <button type="button" class="cancel-button" @click="cancel">취소</button>
+    </div>
     </form>
   </div>
 </template>
@@ -103,14 +108,18 @@
 import { ref, onMounted } from 'vue'
 import { useAdminStore } from '../../stores/admin'
 import { useRouter } from 'vue-router'
+import MenuRegister from '../../components/MenuRegister.vue'
 
 export default {
   name: 'StoreRegister',
+  components: {
+    MenuRegister
+  },
   setup() {
     const adminStore = useAdminStore()
     const router = useRouter()
 
-    // 폼 데이터
+    // 가게 정보
     const storeName = ref('')
     const roadAddress = ref('')
     const postcode = ref('')
@@ -123,10 +132,14 @@ export default {
     const contactNumber = ref('')
     const storeDescription = ref('')
 
-    // 사진 관련
+    // 가게 사진
     const storePhoto = ref(null)
     const storePhotoName = ref('')
     const storePhotoPreview = ref('')
+    const storePhotoInput = ref(null)
+
+    // 메뉴 정보
+    const menus = ref([])
 
     // 메시지
     const errorMessage = ref('')
@@ -142,17 +155,16 @@ export default {
       { id: 6, name: '디저트' }
     ])
 
-    // 파일 입력 트리거
-    const storePhotoInput = ref(null)
-
+    // 가게 사진 업로드 트리거
     const triggerStorePhoto = () => {
       if (storePhotoInput.value) {
         storePhotoInput.value.click()
       } else {
-        console.error('storePhotoInput is not defined')
+        console.error('storePhotoInput이 정의되지 않았습니다.')
       }
     }
 
+    // 가게 사진 처리
     const handleStorePhoto = (event) => {
       const file = event.target.files[0]
       if (file) {
@@ -170,13 +182,12 @@ export default {
       }
     }
 
-    // 맵 관련 변수
+    // 카카오맵 초기화
     let map = null
     let geocoder = null
     let marker = null
     let infowindow = null
 
-    // 카카오맵 초기화 함수
     const initMap = () => {
       if (!window.kakao || !window.kakao.maps) {
         console.error('Kakao Maps API 로드 실패')
@@ -194,7 +205,6 @@ export default {
 
     // 우편번호 찾기 및 지도 표시
     const openPostcode = () => {
-
       new daum.Postcode({
         oncomplete: function(data) {
           // 선택한 주소 정보를 해당 필드에 입력
@@ -245,6 +255,19 @@ export default {
         return
       }
 
+      // 메뉴 유효성 검사
+      if (menus.value.length === 0) {
+        alert('최소 하나의 메뉴를 등록해야 합니다.')
+        return
+      }
+      for (let i = 0; i < menus.value.length; i++) {
+        const menu = menus.value[i]
+        if (!menu.menuName || !menu.price) {
+          alert(`메뉴 ${i + 1}의 이름과 가격을 모두 입력해 주세요.`)
+          return
+        }
+      }
+
       // StoreCreateDTO 객체 생성
       const storeData = {
         storeName: storeName.value,
@@ -253,27 +276,35 @@ export default {
         detailAddress: detailAddress.value,
         extraAddress: extraAddress.value,
         categoryId: categoryId.value,
-        openingTime: openingTime.value,
-        closingTime: closingTime.value,
+        openingTime: openingTime.value || null,
+        closingTime: closingTime.value || null,
         websiteInfo: websiteInfo.value,
         contactNumber: contactNumber.value,
         storeDescription: storeDescription.value,
-        // 기타 필요한 필드 추가
       }
 
+      // 메뉴 데이터 준비
+      const menuData = menus.value.map(menu => ({
+        menuName: menu.menuName,
+        price: menu.price,
+        menuPhoto: menu.menuPhoto
+      }))
+
       try {
-        const createdStore = await adminStore.createStore(storeData, storePhoto.value)
-        successMessage.value = '가게가 성공적으로 등록되었습니다.'
+        // 가게와 메뉴를 순차적으로 생성
+        const createdStore = await adminStore.createStoreAndMenus(storeData, storePhoto.value, menuData)
+        successMessage.value = '가게와 메뉴가 성공적으로 등록되었습니다.'
         errorMessage.value = ''
         resetForm()
-        // 메뉴 관리 페이지로 이동, storeId를 params로 전달
-        router.push({ name: 'StoreMenu', params: { storeId: createdStore.id } })
+        // 새로 생성된 가게의 상세 페이지로 이동
+        router.push({ name: 'StoreContent', params: { id: createdStore.storeId } })
       } catch (error) {
-        errorMessage.value = adminStore.errorMessage || '가게 등록에 실패했습니다.'
+        errorMessage.value = adminStore.errorMessage || '가게 및 메뉴 등록에 실패했습니다.'
         successMessage.value = ''
       }
     }
 
+    // 폼 초기화
     const resetForm = () => {
       storeName.value = ''
       roadAddress.value = ''
@@ -289,8 +320,12 @@ export default {
       storePhoto.value = null
       storePhotoName.value = ''
       storePhotoPreview.value = ''
+
+      // 메뉴 초기화
+      menus.value = []
     }
 
+    // 취소 버튼 핸들러
     const cancel = () => {
       router.push('/admin/suggestion/list') // 취소 시 이동할 페이지
     }
@@ -321,6 +356,7 @@ export default {
       storePhotoInput,
       triggerStorePhoto,
       handleStorePhoto,
+      menus,
       submitForm,
       cancel,
       openPostcode

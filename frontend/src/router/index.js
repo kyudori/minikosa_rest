@@ -15,7 +15,6 @@ import RegisterOwner from '../views/admin/RegisterOwner.vue'
 import Search from '../views/Search.vue'
 import Home from '../views/Home.vue'
 import StoreRegister from '../views/admin/StoreRegister.vue'
-import StoreMenu from '../views/admin/StoreMenu.vue'
 
 // 다른 뷰를 추가로 임포트
 
@@ -105,13 +104,6 @@ const routes = [
     name: 'StoreRegister',
     component: StoreRegister,
     meta: { requiresAuth: true, requiresAdmin: true }
-  },
-  {
-    path: '/admin/store/:storeId/menu',
-    name: 'StoreMenu',
-    component: StoreMenu,
-    meta: { requiresAuth: true, requiresAdmin: true },
-    props: true
   },
   // 기타 라우트
   {
