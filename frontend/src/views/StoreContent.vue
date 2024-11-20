@@ -415,9 +415,7 @@
                             </li>
                           </template>
                           <template
-                            v-if="
-                              isAdmin || isCurrentUser(review.memberId)
-                            "
+                            v-if="isAdmin || isCurrentUser(review.memberId)"
                           >
                             <li>
                               <a
@@ -580,7 +578,7 @@
               <span class="info_rate">
                 <span class="screen_out">선택한 별점</span>
                 <span class="num_rate">{{
-                  formatRating(newReview.rating)
+                  newReview.rating
                 }}</span
                 >/<span class="screen_out">선택 가능한 총 별점</span
                 ><span class="num_limit">5</span>
@@ -721,7 +719,11 @@
               </div>
             </div>
             <div class="group_btn">
-              <button type="reset" class="btn_reset" @click="closeReplyEditModal">
+              <button
+                type="reset"
+                class="btn_reset"
+                @click="closeReplyEditModal"
+              >
                 취소
               </button>
               <button type="submit" class="btn_submit" @click="updateReply">
@@ -765,8 +767,8 @@ export default {
 
     // Format Rating Method
     const formatRating = (rating) => {
-      if (typeof rating !== "number") return "0.00";
-      return rating.toFixed(2);
+      if (typeof rating !== "number") return "0.0";
+      return rating.toFixed(1);
     };
 
     // Review Form
@@ -790,6 +792,12 @@ export default {
     const toggleMenu = () => {
       isMenuOpen.value = !isMenuOpen.value; // 클릭 시 상태 변경
     };
+
+
+    // // 해당 리뷰의 메뉴 열림/닫힘 상태를 토글
+    // const toggleMenu = (review) => {
+    //   review.isMenuOpen = !review.isMenuOpen;
+    // };
 
     // Function to construct image URLs
     const getImageUrl = (path) => {
@@ -925,10 +933,7 @@ export default {
       if (confirm("답글을 작성하시겠습니까?")) {
         const scrollY = window.scrollY || document.documentElement.scrollTop;
         const viewportHeight = window.innerHeight;
-
-        // 모달이 화면 중앙에 위치하도록 설정
         modalTop.value = `${scrollY + viewportHeight / 2}px`;
-
         currentReview.value = review;
         replyText.value = "";
         showReplyModal.value = true;
@@ -1004,7 +1009,6 @@ export default {
       if (confirm("답글을 수정하시겠습니까?")) {
         const scrollY = window.scrollY || document.documentElement.scrollTop;
         const viewportHeight = window.innerHeight;
-        // 모달이 화면 중앙에 위치하도록 설정
         modalTop.value = `${scrollY + viewportHeight / 2}px`;
         currentReview.value = review;
         editReplyText.value = review.replyText;
@@ -1127,7 +1131,7 @@ export default {
       return text;
     };
 
-    // reviewText와 editReviewText에 대해 금지어 체크
+    // reviewText,editReviewText,replyText,editReplyText 금지어 체크
     watch(
       () => newReview.value.reviewText,
       (newValue) => {
