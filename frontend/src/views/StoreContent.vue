@@ -275,6 +275,8 @@
 
               <!-- Review Textarea and Buttons -->
               <div class="comment_write_box">
+                <div id = "app">
+                <p></p>
                 <textarea
                   class="comment_write"
                   name="reviewText"
@@ -291,6 +293,7 @@
                   >
                     다시쓰기
                   </button>
+                </div>
                   <button class="select_button" type="submit">작성완료</button>
                 </div>
               </div>
@@ -408,24 +411,23 @@
                         답글
                       </button>
                     </template>
-
                     <!-- User Modify/Delete Buttons -->
-                    <!--                     
+                    <template v-if="isCurrentUser(review.memberId)">
                       <button
                         type="button"
                         class="comment_user_button"
-                        
+                        @click="openEditModal(review)"
                       >
                         수정
                       </button>
                       <button
                         type="button"
                         class="comment_user_button"
-                        
+                        @click="deleteReview(review.reviewId)"
                       >
                         삭제
                       </button>
-                    -->
+                    </template>
                   </div>
                 </li>
 
@@ -491,11 +493,14 @@
     <div v-if="showReplyModal" class="modal">
       <div class="modal-content">
         <span class="close" @click="closeReplyModal">&times;</span>
+        <div id="app">
+        <p>「{{ forbiddenText }}」, 「{{ forbiddenText2 }}」, 「{{ forbiddenText3 }}」, 「{{ forbiddenText4 }}」, 「{{ forbiddenText5 }}」</p>
         <h3>답글 작성</h3>
         <textarea
           v-model="replyText"
           placeholder="답글을 작성해주세요."
         ></textarea>
+        </div>
         <button @click="submitReply">작성</button>
       </div>
     </div>
@@ -518,10 +523,13 @@
       <div class="modal-content">
         <span class="close" @click="closeReplyEditModal">&times;</span>
         <h3>답글 수정</h3>
+        <div id="app">
+        <p>「{{ forbiddenText }}」, 「{{ forbiddenText2 }}」</p>
         <textarea
           v-model="editReplyText"
           placeholder="답글을 수정해주세요."
         ></textarea>
+        </div>div>
         <button @click="updateReply">수정</button>
       </div>
     </div>
@@ -663,6 +671,46 @@ export default {
       required: true,
     },
   },
+  name: "App",
+    data (){
+    return {
+      forbiddenText: "씨발",
+      forbiddenText2: "병신",
+      forbiddenText3: "새끼",
+      forbiddenText4: "좆",
+      inputText: "",
+    };
+
+  },
+  watch: {
+          // inputText 감시
+        inputText: function () {
+            var pos = this.inputText.indexOf(this.forbiddenText);
+            if (pos >= 0) {
+            alert("욕설 비방 관련된 글은 입력할 수 없습니다.");
+              // 입력문자에서 금지 문자를 삭제한다.
+            this.inputText = this.inputText.substr(0, pos);
+            }
+            var pos = this.inputText.indexOf(this.forbiddenText2);
+            if (pos >= 0) {
+            alert("욕설 비방 관련된 글은 입력할 수 없습니다.");
+             // 입력문자에서 금지 문자를 삭제한다.
+            this.inputText = this.inputText.substr(0, pos);
+            }
+            var pos = this.inputText.indexOf(this.forbiddenText3);
+            if (pos >= 0) {
+            alert("욕설 비방 관련된 글은 입력할 수 없습니다.");
+              // 입력문자에서 금지 문자를 삭제한다.
+            this.inputText = this.inputText.substr(0, pos);
+            }
+            var pos = this.inputText.indexOf(this.forbiddenText4);
+            if (pos >= 0) {
+            alert("욕설 비방 관련된 글은 입력할 수 없습니다.");
+              // 입력문자에서 금지 문자를 삭제한다.
+            this.inputText = this.inputText.substr(0, pos);
+            }
+        },
+      },
   setup(props) {
     const store = ref({});
     const reviews = ref([]);
@@ -919,7 +967,7 @@ export default {
         await fetchReviews();
       } catch (error) {
         console.error("Error updating review:", error);
-        alert(error);
+        alert("후기 수정 중 오류가 발생했습니다.");
       }
     };
 
