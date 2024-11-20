@@ -282,7 +282,7 @@ export const useAdminStore = defineStore('admin', {
           formData.append('menuPhoto', menuPhoto)
         }
 
-        const response = await api.patch(`/admin/menu/${menuId}`, formData)
+        const response = await api.put(`/admin/menu/${menuId}`, formData)
         this.successMessage = '메뉴가 성공적으로 수정되었습니다.'
         this.errorMessage = ''
         return response.data

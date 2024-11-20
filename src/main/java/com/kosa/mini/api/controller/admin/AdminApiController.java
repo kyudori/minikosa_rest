@@ -264,10 +264,10 @@ public class AdminApiController {
         return ResponseEntity.status(HttpStatus.OK).body(menuAdminDTO);
     }
 
-    @PatchMapping("/menu/{menuId}")
+    @PutMapping("/menu/{menuId}")
     public ResponseEntity<?> updateStoreMenus(@PathVariable Integer menuId,
-                                        @RequestPart MultipartFile menuPhoto,
-                                        @RequestPart MenuAdminDTO menuAdminDTO) throws Exception {
+                                              @RequestPart(value = "menuPhoto", required = false) MultipartFile menuPhoto, // required = false로 수정
+                                              @RequestPart MenuAdminDTO menuAdminDTO) throws Exception {
         menuAdminDTO = menuService.updateStoreMenus(menuId, menuPhoto, menuAdminDTO);
         return ResponseEntity.status(HttpStatus.OK).body(menuAdminDTO);
     }
