@@ -115,7 +115,7 @@ public class LoginApiController {
         }
 
         if (refreshToken == null || refreshToken.isEmpty()) {
-            return ResponseEntity.badRequest().body("Refresh Token이 필요합니다.");
+            return ResponseEntity.badRequest().body("회원정보가 존재하지 않습니다.");
         }
 
         try {
