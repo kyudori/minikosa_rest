@@ -231,7 +231,7 @@ public class AdminApiController {
     public ResponseEntity<?> updateStore(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable Integer storeId,
-            @RequestPart MultipartFile storePhoto,
+            @RequestPart(value = "storePhoto", required = false) MultipartFile storePhoto,
             @RequestPart StoreCreateDTO store) {
         if (userDetails == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
