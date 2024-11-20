@@ -3,6 +3,7 @@ package com.kosa.mini.api.service.store;
 import com.kosa.mini.api.dto.member.UserSearchDTO;
 import com.kosa.mini.api.dto.request.AssignOwnerRequest;
 import com.kosa.mini.api.dto.response.AssignOwnerResponse;
+import com.kosa.mini.api.dto.store.StoreContentCategoryDTO;
 import com.kosa.mini.api.dto.store.StoreContentDTO;
 import com.kosa.mini.api.dto.store.StoreCreateDTO;
 import com.kosa.mini.api.dto.store.StoreSearchDTO;
@@ -39,12 +40,33 @@ public class StoreApiServiceImpl implements StoreApiService {
 
     @Override
     @Transactional(readOnly = true) // 읽기 전용 트랜잭션 설정
-    public StoreContentDTO storeInfo(Integer id) {
+    public StoreContentCategoryDTO storeInfo(Integer id) {
         StoreContentDTO storeContentDTO = storeRepository.findStoreWithContent(id);
+        StoreContentCategoryDTO storeContentCategoryDTO = new StoreContentCategoryDTO();
+
+        storeContentCategoryDTO.setStoreId(storeContentDTO.getStoreId());
+        storeContentCategoryDTO.setStoreName(storeContentDTO.getStoreName());
+        storeContentCategoryDTO.setPostcode(storeContentDTO.getPostcode());
+        storeContentCategoryDTO.setRoadAddress(storeContentDTO.getRoadAddress());
+        storeContentCategoryDTO.setDetailAddress(storeContentDTO.getDetailAddress());
+        storeContentCategoryDTO.setExtraAddress(storeContentDTO.getExtraAddress());
+        storeContentCategoryDTO.setStoreDescription(storeContentDTO.getStoreDescription());
+        storeContentCategoryDTO.setWebsiteInfo(storeContentDTO.getWebsiteInfo());
+        storeContentCategoryDTO.setOpeningTime(storeContentDTO.getOpeningTime());
+        storeContentCategoryDTO.setClosingTime(storeContentDTO.getClosingTime());
+        storeContentCategoryDTO.setContactNumber(storeContentDTO.getContactNumber());
+        storeContentCategoryDTO.setStorePhoto(storeContentDTO.getStorePhoto());
+        storeContentCategoryDTO.setOwnerMemberId(storeContentDTO.getOwnerMemberId());
+        storeContentCategoryDTO.setRatingAvg(storeContentDTO.getRatingAvg());
+        storeContentCategoryDTO.setCountReview(storeContentDTO.getCountReview());
+        Category category= storeRepository.findById(storeContentDTO.getStoreId()).orElse(null).getCategory();
+
+        storeContentCategoryDTO.setCategoryId(category.getCategoryId());
+
         if (storeContentDTO == null) {
             throw new StoreNotFoundException("Store not found with id: " + id);
         }
-        return storeContentDTO;
+        return storeContentCategoryDTO;
     }
 
     @Override
