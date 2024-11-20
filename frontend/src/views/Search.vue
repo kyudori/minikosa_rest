@@ -225,12 +225,6 @@
       })
   
       const performSearch = async () => {
-        try {
-          if (!authStore.accessToken) {
-            // 로그인되지 않은 경우 처리
-            alert('로그인이 필요합니다.')
-            return
-          }
   
           const response = await api.get('/search', {
             params: {
@@ -245,12 +239,6 @@
           } else if (type.value === 'review') {
             Object.assign(reviewResults, response.data)
           }
-        } catch (error) {
-          console.error(error)
-          if (error.response && error.response.status === 401) {
-            alert('로그인이 필요합니다.')
-          }
-        }
       }
   
       const switchTab = (tab) => {
