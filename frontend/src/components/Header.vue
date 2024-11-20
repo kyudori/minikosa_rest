@@ -8,7 +8,12 @@
         </router-link>
       </div>
       <nav class="nav" id="mainNav">
-        <form @submit.prevent="handleSearch" class="search-form d-inline-block">
+        <!-- 검색 폼을 조건부로 렌더링 -->
+        <form
+          v-if="showSearchForm"
+          @submit.prevent="handleSearch"
+          class="search-form d-inline-block"
+        >
           <div class="d-flex">
             <input
               type="text"
@@ -57,18 +62,22 @@
 <script>
 import { ref, computed } from 'vue'
 import { useAuthStore } from '../stores/auth'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 export default {
   name: 'Header',
   setup() {
     const authStore = useAuthStore()
     const router = useRouter()
+    const route = useRoute() // 현재 라우트 정보를 가져옵니다.
     const showUserMenu = ref(false)
     const searchQuery = ref('')
 
     const isLoggedIn = computed(() => !!authStore.accessToken)
     const userRoleId = computed(() => authStore.user?.roleId || null)
+
+    // 현재 라우트가 /search가 아닌 경우에만 검색 폼을 표시합니다.
+    const showSearchForm = computed(() => route.path !== '/search')
 
     const toggleUserMenu = () => {
       showUserMenu.value = !showUserMenu.value
@@ -85,8 +94,10 @@ export default {
     }
 
     const handleSearch = () => {
-      if (searchQuery.value.trim() !== '') {
-        router.push({ name: 'Search', query: { q: searchQuery.value.trim() } })
+      const trimmedQuery = searchQuery.value.trim()
+      if (trimmedQuery !== '') {
+        router.push({ name: 'Search', query: { q: trimmedQuery } })
+        searchQuery.value = '' // 검색어 입력 필드 초기화
       }
     }
 
@@ -97,7 +108,8 @@ export default {
       userRoleId,
       handleLogout,
       searchQuery,
-      handleSearch
+      handleSearch,
+      showSearchForm // 템플릿에서 사용할 수 있도록 반환
     }
   }
 }
@@ -145,7 +157,7 @@ export default {
   position: absolute;
   right: 0;
   background-color: #f9f9f9;
-  min-width: 160px;
+  min-width: 170px;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
   z-index: 1;
 }
@@ -165,5 +177,25 @@ export default {
   background: none;
   border: none;
   cursor: pointer;
+}
+
+.nav a:hover {
+  color: #FF885B;
+  transition: color 0.3s;
+}
+
+/* Active Link 스타일 조정 */
+.nav a.router-link-active.router-link-exact-active {
+  margin: 0 2px; /* 좌우 마진을 줄임 */
+  padding: 0 2px; /* 좌우 패딩을 줄임 */
+  color: #FF885B; /* 활성화된 링크 색상 변경 */
+  font-weight: bold; /* 글씨를 굵게 */
+  transition: margin 0.3s, padding 0.3s, color 0.3s, font-weight 0.3s; /* 부드러운 전환 효과 */
+}
+
+/* Hover 효과 추가 */
+.nav a:hover {
+  color: #FF885B;
+  transition: color 0.3s;
 }
 </style>
