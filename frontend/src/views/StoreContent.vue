@@ -1,3 +1,4 @@
+<!-- src/views/StoreContent.vue -->
 <template>
   <div id="storeWrapper">
     <!-- Store Content -->
@@ -10,9 +11,7 @@
             <div class="top_image_line">
               <span
                 class="image_present"
-                :style="`background-image: url(${getImageUrl(
-                  store.storePhoto
-                )})`"
+                :style="`background-image: url(${getImageUrl(store.storePhoto)})`"
               ></span>
               <span class="frame_g"></span>
 
@@ -55,13 +54,13 @@
                       alt="filled-star"
                       class="icon_star"
                     />
-                    <span class="evaluation_link"
-                      >평점 : {{ store.ratingAvg }}</span
-                    >
+                    <span class="evaluation_link">
+                      평점 : {{ formatRating(store.ratingAvg) }}
+                    </span>
                     <span class="bar"></span>
-                    <span class="evaluation_link"
-                      >리뷰 : {{ store.countReview }}</span
-                    >
+                    <span class="evaluation_link">
+                      리뷰 : {{ store.countReview }}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -173,9 +172,7 @@
                 />
               </h4>
               <div class="place_location">
-                <span class="title_info_text">{{
-                  store.storeDescription
-                }}</span>
+                <span class="title_info_text">{{ store.storeDescription }}</span>
               </div>
             </div>
           </div>
@@ -216,7 +213,7 @@
         </div>
 
         <!-- Review Section -->
-         <!-- <template v-if="isCurrentUser(review.memberId) == false"> -->
+        <!-- <template v-if="isCurrentUser(review.memberId) == false"> -->
         <div class="rate_container">
           <form @submit.prevent="submitReview" id="userWrite">
             <div class="rate_box">
@@ -275,7 +272,6 @@
                   <label for="1-star" class="star">★</label>
                 </div>
               </div>
-           
 
               <!-- Review Textarea and Buttons -->
               <div class="comment_write_box">
@@ -301,7 +297,7 @@
             </div>
           </form>
         </div>
-      <!-- </template> -->
+        <!-- </template> -->
 
         <!-- Reviews List -->
         <div class="comments_box">
@@ -318,8 +314,8 @@
                 alt="filled-star"
                 class="icon_star"
               />
-              <em class="num_rate"
-                >{{ store.ratingAvg }}
+              <em class="num_rate">
+                {{ formatRating(store.ratingAvg) }}
                 <span class="text_score">점</span>
               </em>
               <span class="ico_star_rate">
@@ -351,9 +347,9 @@
                     <span class="text_desc">{{ review.rating }}</span>
                     <span class="bar"></span>
                     <span class="text_item">작성일 : </span>
-                    <span class="time_write">{{
-                      formatDate(review.createdAt)
-                    }}</span>
+                    <span class="time_write">
+                      {{ formatDate(review.createdAt) }}
+                    </span>
                   </div>
 
                   <div class="photo_group">
@@ -375,12 +371,13 @@
                     <!-- Owner Reply Button -->
                     <template v-if="isCurrentUser(review.memberId)">
                       <button
-                      type="button" 
-                      :class="['btn_util', { util_on: isMenuOpen }]"
-                      @click="toggleMenu">
+                        type="button"
+                        :class="['btn_util', { util_on: isMenuOpen }]"
+                        @click="toggleMenu"
+                      >
                         <span class="ico_comm ico_more">메뉴 더보기</span>
                       </button>
-                      <div class="layer_util">
+                      <div class="layer_util" v-if="isMenuOpen">
                         <ul class="list_opt">
                           <li>
                             <a
@@ -403,15 +400,14 @@
                         </ul>
                       </div>
                       <button
-                      v-if="isOwner && !review.replyId"
-                      type="button"
-                      class="comment_pd_button"
-                      @click="openReplyModal(review)"
-                    >
-                      답글
-                    </button>
+                        v-if="isOwner && !review.replyId"
+                        type="button"
+                        class="comment_pd_button"
+                        @click="openReplyModal(review)"
+                      >
+                        답글
+                      </button>
                     </template>
-
 
                     <!-- User Modify/Delete Buttons -->
                     <!--                     
@@ -539,7 +535,6 @@
     :style="{ top: modalTop }"
   >
     <!-- <div
-  
     data-root=""
     class="evaluation_layer"
     :style="{ top: modalTop }"
@@ -601,14 +596,14 @@
                   <span class="ico_star star_rate">
                     <span
                       class="ico_star inner_star"
-                      style="width: 100%"
+                      :style="{ width: starWidth }"
                     ></span>
                   </span>
                 </div>
               </div>
               <span class="info_rate">
                 <span class="screen_out">선택한 별점</span>
-                <span class="num_rate">{{ newReview.rating }}</span
+                <span class="num_rate">{{ formatRating(newReview.rating) }}</span
                 >/<span class="screen_out">선택 가능한 총 별점</span
                 ><span class="num_limit">5</span>
               </span>
@@ -652,6 +647,7 @@
     </div>
   </div>
 </template>
+
 <script>
 import { ref, onMounted, computed } from "vue";
 import { useAuthStore } from "../stores/auth";
@@ -678,6 +674,12 @@ export default {
       () => user.value && user.value.memberId === store.value.ownerMemberId
     );
     const starWidth = computed(() => `${(store.value.ratingAvg / 5) * 100}%`);
+
+    // Format Rating Method
+    const formatRating = (rating) => {
+      if (typeof rating !== "number") return "0.00";
+      return rating.toFixed(2);
+    };
 
     // Review Form
     const newReview = ref({
@@ -871,6 +873,7 @@ export default {
     const openEditModal = (review) => {
       if (confirm("후기를 수정하시겠습니까?")) {
         const scrollY = window.scrollY || document.documentElement.scrollTop;
+
         const viewportHeight = window.innerHeight;
 
         // 모달이 화면 중앙에 위치하도록 설정
@@ -899,7 +902,6 @@ export default {
       try {
         await api.patch(
           `/reviews/${store.value.storeId}/${currentReview.value.reviewId}`,
-          
           {
             reviewId: currentReview.value.reviewId,
             // storeId: store.value.storeId,
@@ -909,7 +911,9 @@ export default {
             // memberId: user.value.memberId,
           }
         );
-        console.log(`/reviews/${store.value.storeId}/${currentReview.value.reviewId}`);
+        console.log(
+          `/reviews/${store.value.storeId}/${currentReview.value.reviewId}`
+        );
         alert("후기가 성공적으로 수정되었습니다.");
         closeEditModal();
         await fetchReviews();
@@ -1038,6 +1042,7 @@ export default {
       formatTime,
       formatPrice,
       formatDate,
+      formatRating,
       isCurrentUser,
       showReplyModal,
       showEditModal,
@@ -1045,11 +1050,11 @@ export default {
       replyText,
       editReviewText,
       editReplyText,
-      getImageUrl, // Expose the function to the template
+      getImageUrl,
       modalTop,
       editRating,
       toggleMenu,
-      isMenuOpen
+      isMenuOpen,
     };
   },
 };
@@ -1057,7 +1062,4 @@ export default {
 
 <style scoped>
 @import "../../src/assets/css/content.css";
-
-/* Scoped CSS similar to your Thymeleaf template's CSS */
-/* Example styles */
 </style>
