@@ -3,7 +3,10 @@
   <div id="storeWrapper">
     <!-- Store Content -->
     <div class="container">
-      <div class="dimmed_layer" v-show="showEditModal"></div>
+      <div
+        class="dimmed_layer"
+        v-if="showEditModal || showReplyModal || showReplyEditModal"
+      ></div>
       <!-- Store Top Section -->
       <div class="content_out_line">
         <div class="content_inner">
@@ -11,7 +14,9 @@
             <div class="top_image_line">
               <span
                 class="image_present"
-                :style="`background-image: url(${getImageUrl(store.storePhoto)})`"
+                :style="`background-image: url(${getImageUrl(
+                  store.storePhoto
+                )})`"
               ></span>
               <span class="frame_g"></span>
 
@@ -172,7 +177,9 @@
                 />
               </h4>
               <div class="place_location">
-                <span class="title_info_text">{{ store.storeDescription }}</span>
+                <span class="title_info_text">{{
+                  store.storeDescription
+                }}</span>
               </div>
             </div>
           </div>
@@ -213,94 +220,94 @@
         </div>
 
         <!-- Review Section -->
-        <!-- <template v-if="isCurrentUser(review.memberId) == false"> -->
-        <div class="rate_container">
-          <form @submit.prevent="submitReview" id="userWrite">
-            <div class="rate_box">
-              <div class="rate_intro">
-                <p class="desc_rate_username">
-                  {{ user.nickname }}님! 이 장소의 후기를 남겨주세요
-                </p>
-                <div class="user_rate">
-                  <div class="grade_star_box">
-                    <span class="ico_star_rate">
-                      <span class="ico_star_rate inner_star"></span>
-                    </span>
+        <template v-if="!isAdmin">
+          <div class="rate_container">
+            <form @submit.prevent="submitReview" id="userWrite">
+              <div class="rate_box">
+                <div class="rate_intro">
+                  <p class="desc_rate_username">
+                    {{ user.nickname }}님! 이 장소의 후기를 남겨주세요
+                  </p>
+                  <div class="user_rate">
+                    <div class="grade_star_box">
+                      <span class="ico_star_rate">
+                        <span class="ico_star_rate inner_star"></span>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="star-rating space-x-4 mx-auto">
+                    <input
+                      type="radio"
+                      id="5-stars"
+                      name="rating"
+                      value="5"
+                      v-model="newReview.rating"
+                      checked
+                    />
+                    <label for="5-stars" class="star pr-4">★</label>
+                    <input
+                      type="radio"
+                      id="4-stars"
+                      name="rating"
+                      value="4"
+                      v-model="newReview.rating"
+                    />
+                    <label for="4-stars" class="star">★</label>
+                    <input
+                      type="radio"
+                      id="3-stars"
+                      name="rating"
+                      value="3"
+                      v-model="newReview.rating"
+                    />
+                    <label for="3-stars" class="star">★</label>
+                    <input
+                      type="radio"
+                      id="2-stars"
+                      name="rating"
+                      value="2"
+                      v-model="newReview.rating"
+                    />
+                    <label for="2-stars" class="star">★</label>
+                    <input
+                      type="radio"
+                      id="1-star"
+                      name="rating"
+                      value="1"
+                      v-model="newReview.rating"
+                    />
+                    <label for="1-star" class="star">★</label>
                   </div>
                 </div>
-                <div class="star-rating space-x-4 mx-auto">
-                  <input
-                    type="radio"
-                    id="5-stars"
-                    name="rating"
-                    value="5"
-                    v-model="newReview.rating"
-                    checked
-                  />
-                  <label for="5-stars" class="star pr-4">★</label>
-                  <input
-                    type="radio"
-                    id="4-stars"
-                    name="rating"
-                    value="4"
-                    v-model="newReview.rating"
-                  />
-                  <label for="4-stars" class="star">★</label>
-                  <input
-                    type="radio"
-                    id="3-stars"
-                    name="rating"
-                    value="3"
-                    v-model="newReview.rating"
-                  />
-                  <label for="3-stars" class="star">★</label>
-                  <input
-                    type="radio"
-                    id="2-stars"
-                    name="rating"
-                    value="2"
-                    v-model="newReview.rating"
-                  />
-                  <label for="2-stars" class="star">★</label>
-                  <input
-                    type="radio"
-                    id="1-star"
-                    name="rating"
-                    value="1"
-                    v-model="newReview.rating"
-                  />
-                  <label for="1-star" class="star">★</label>
-                </div>
-              </div>
 
-              <!-- Review Textarea and Buttons -->
-              <div class="comment_write_box">
-                <div id = "app">
-                <p></p>
-                <textarea
-                  class="comment_write"
-                  name="reviewText"
-                  id="u-comment-write"
-                  v-model="newReview.reviewText"
-                  placeholder="후기를 작성해주세요."
-                  required
-                ></textarea>
-                <div class="button_box">
-                  <button
-                    class="select_button"
-                    type="reset"
-                    @click="resetReview"
-                  >
-                    다시쓰기
-                  </button>
-                </div>
-                  <button class="select_button" type="submit">작성완료</button>
+                <!-- Review Textarea and Buttons -->
+                <div class="comment_write_box">
+                  <textarea
+                    class="comment_write"
+                    name="reviewText"
+                    id="u-comment-write"
+                    v-model="newReview.reviewText"
+                    placeholder="후기를 작성해주세요."
+                    required
+                  ></textarea>
+                  <div class="button_box">
+                    <button
+                      class="select_button"
+                      type="reset"
+                      @click="resetReview"
+                    >
+                      다시쓰기
+                    </button>
+
+                    <button class="select_button" type="submit">
+                      작성완료
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          </form>
-        </div>
-        <!-- </template> -->
+            </form>
+          </div>
+        </template>
 
         <!-- Reviews List -->
         <div class="comments_box">
@@ -356,12 +363,7 @@
                   </div>
 
                   <div class="photo_group">
-                    <ul class="list_photo">
-                      <!-- If there are photos, display them -->
-                      <!-- <li v-for="photo in review.photos" :key="photo.photoId">
-                        <img :src="photo.url" alt="Review Photo" class="img_thumb" />
-                      </li> -->
-                    </ul>
+                    <ul class="list_photo"></ul>
                   </div>
 
                   <div class="comment_info">
@@ -372,7 +374,11 @@
 
                   <div class="wrap_util">
                     <!-- Owner Reply Button -->
-                    <template v-if="isCurrentUser(review.memberId)">
+                    <template
+                      v-if="
+                        isCurrentUser(review.memberId) || isAdmin || isOwner
+                      "
+                    >
                       <button
                         type="button"
                         :class="['btn_util', { util_on: isMenuOpen }]"
@@ -382,51 +388,49 @@
                       </button>
                       <div class="layer_util" v-if="isMenuOpen">
                         <ul class="list_opt">
-                          <li>
-                            <a
-                              href="#none"
-                              data-id="updateBtn"
-                              class="link_util"
-                              @click="openEditModal(review)"
-                              >수정</a
-                            >
-                          </li>
-                          <li>
-                            <a
-                              href="#none"
-                              data-id="deleteBtn"
-                              class="link_util"
-                              @click="deleteReview(review.reviewId)"
-                              >삭제</a
-                            >
-                          </li>
+                          <template v-if="isOwner && !review.replyId">
+                            <li>
+                              <a
+                                href="#none"
+                                data-id="replyBtn"
+                                class="link_util"
+                                @click="openReplyModal(review)"
+                                >답글</a
+                              >
+                            </li>
+                          </template>
+                          <template
+                            v-else-if="
+                              !isAdmin && isCurrentUser(review.memberId)
+                            "
+                          >
+                            <li>
+                              <a
+                                href="#none"
+                                data-id="updateBtn"
+                                class="link_util"
+                                @click="openEditModal(review)"
+                                >수정</a
+                              >
+                            </li>
+                          </template>
+                          <template
+                            v-else-if="
+                              isAdmin || isCurrentUser(review.memberId)
+                            "
+                          >
+                            <li>
+                              <a
+                                href="#none"
+                                data-id="deleteBtn"
+                                class="link_util"
+                                @click="deleteReview(review.reviewId)"
+                                >삭제</a
+                              >
+                            </li>
+                          </template>
                         </ul>
                       </div>
-                      <button
-                        v-if="isOwner && !review.replyId"
-                        type="button"
-                        class="comment_pd_button"
-                        @click="openReplyModal(review)"
-                      >
-                        답글
-                      </button>
-                    </template>
-                    <!-- User Modify/Delete Buttons -->
-                    <template v-if="isCurrentUser(review.memberId)">
-                      <button
-                        type="button"
-                        class="comment_user_button"
-                        @click="openEditModal(review)"
-                      >
-                        수정
-                      </button>
-                      <button
-                        type="button"
-                        class="comment_user_button"
-                        @click="deleteReview(review.reviewId)"
-                      >
-                        삭제
-                      </button>
                     </template>
                   </div>
                 </li>
@@ -451,26 +455,41 @@
                     </div>
                     <div class="wrap_util">
                       <!-- Owner Edit/Delete Reply Buttons -->
-                      <button
-                        v-if="isOwner"
-                        type="button"
-                        class="comment_pd_button"
-                        @click="openReplyEditModal(review)"
-                      >
-                        수정
-                      </button>
-                      <button
-                        v-if="isOwner"
-                        type="button"
-                        class="comment_pd_button"
-                        @click="deleteReply(review.replyId)"
-                      >
-                        삭제
-                      </button>
+                      <template v-if="isOwner">
+                        <button
+                          type="button"
+                          :class="['btn_util', { util_on: isMenuOpen }]"
+                          @click="toggleMenu(review.replyId)"
+                        >
+                          <span class="ico_comm ico_more">메뉴 더보기</span>
+                        </button>
+                        <div class="layer_util" v-if="isMenuOpen">
+                          <ul class="list_opt">
+                            <li>
+                              <a
+                                href="#none"
+                                data-id="updateBtn"
+                                class="link_util"
+                                @click="openReplyEditModal(review)"
+                                >수정</a
+                              >
+                            </li>
+                            <li>
+                              <a
+                                href="#none"
+                                data-id="deleteBtn"
+                                class="link_util"
+                                @click="deleteReply(review.replyId)"
+                                >삭제</a
+                              >
+                            </li>
+                          </ul>
+                        </div>
+                      </template>
                     </div>
                   </div>
                 </li>
-                <!-- <p v-else>작성된 후기가 없습니다.</p> -->
+
               </ul>
             </template>
           </div>
@@ -488,65 +507,15 @@
         </div>
       </div>
     </div>
-
-    <!-- Reply Modal -->
-    <div v-if="showReplyModal" class="modal">
-      <div class="modal-content">
-        <span class="close" @click="closeReplyModal">&times;</span>
-        <div id="app">
-        <p>「{{ forbiddenText }}」, 「{{ forbiddenText2 }}」, 「{{ forbiddenText3 }}」, 「{{ forbiddenText4 }}」, 「{{ forbiddenText5 }}」</p>
-        <h3>답글 작성</h3>
-        <textarea
-          v-model="replyText"
-          placeholder="답글을 작성해주세요."
-        ></textarea>
-        </div>
-        <button @click="submitReply">작성</button>
-      </div>
-    </div>
-
-    <!-- Edit Review Modal -->
-    <!-- <div v-if="showEditModal" class="modal">
-      <div class="modal-content">
-        <span class="close" @click="closeEditModal">&times;</span>
-        <h3>후기 수정</h3>
-        <textarea
-          v-model="editReviewText"
-          placeholder="후기를 수정해주세요."
-        ></textarea>
-        <button @click="updateReview">수정</button>
-      </div>
-    </div> -->
-
-    <!-- Edit Reply Modal -->
-    <div v-if="showReplyEditModal" class="modal">
-      <div class="modal-content">
-        <span class="close" @click="closeReplyEditModal">&times;</span>
-        <h3>답글 수정</h3>
-        <div id="app">
-        <p>「{{ forbiddenText }}」, 「{{ forbiddenText2 }}」</p>
-        <textarea
-          v-model="editReplyText"
-          placeholder="답글을 수정해주세요."
-        ></textarea>
-        </div>div>
-        <button @click="updateReply">수정</button>
-      </div>
-    </div>
   </div>
 
   <!-- Edit Review Modal -->
   <div
-    v-show="showEditModal"
+    v-if="showEditModal"
     data-root=""
     class="evaluation_layer"
     :style="{ top: modalTop }"
   >
-    <!-- <div
-    data-root=""
-    class="evaluation_layer"
-    :style="{ top: modalTop }"
-  > -->
     <div class="inner_layer">
       <div class="layer_head">
         <strong class="tit_layer">{{ store.storeName }}</strong>
@@ -611,7 +580,9 @@
               </div>
               <span class="info_rate">
                 <span class="screen_out">선택한 별점</span>
-                <span class="num_rate">{{ formatRating(newReview.rating) }}</span
+                <span class="num_rate">{{
+                  formatRating(newReview.rating)
+                }}</span
                 >/<span class="screen_out">선택 가능한 총 별점</span
                 ><span class="num_limit">5</span>
               </span>
@@ -627,17 +598,18 @@
                   placeholder="작성내용은 마이페이지와 장소상세에 노출되며 매장주를 포함한 다른 사용자들이 볼 수 있으니, 서로를 배려하는 마음을 담아 작성해 주세요."
                 ></textarea>
               </div>
+
               <div class="group_etc">
-                <a
-                  href="https://kakaomap.tistory.com/358"
-                  target="_blank"
-                  class="link_notice"
-                  >후기 작성 시 주의사항</a
+                <a href="#none" target="_blank" class="link_notice"
+                  >답글 작성 시 주의사항</a
                 >
                 <span class="num_letter">
-                  <span class="screen_out">등록한 글자수: </span
-                  ><span class="txt_len"></span
-                  ><span class="num_total"> / 2000</span></span
+                  <span class="txt_len"></span
+                  ><span class="num_total"
+                    >작성내용은 마이페이지와 장소상세에 노출되며 매장주를 포함한
+                    다른 사용자들이 볼 수 있으니, 서로를 배려하는 마음을 담아
+                    작성해 주세요."</span
+                  ></span
                 >
               </div>
             </div>
@@ -654,10 +626,118 @@
       </div>
     </div>
   </div>
+
+  <!-- Create Reply Modal -->
+  <div
+    v-if="showReplyModal"
+    data-root=""
+    class="evaluation_layer"
+    :style="{ top: modalTop }"
+  >
+    <div class="inner_layer">
+      <div class="layer_head">
+        <strong class="tit_layer">{{ store.storeName }}</strong>
+      </div>
+      <div class="layer_body">
+        <form action="#">
+          <fieldset>
+            <legend class="screen_out">답글작성</legend>
+            <div class="box_evaluation">
+              <div class="group_review">
+                <label for="tfReview" class="screen_out">후기 작성</label>
+                <textarea
+                  v-model="replyText"
+                  id="tfReview"
+                  name="reviewText"
+                  class="tf_review"
+                  placeholder="작성내용은 마이페이지와 장소상세에 노출되며 매장주를 포함한 다른 사용자들이 볼 수 있으니, 서로를 배려하는 마음을 담아 작성해 주세요."
+                ></textarea>
+              </div>
+              <div class="group_etc">
+                <a href="#none" target="_blank" class="link_notice"
+                  >답글 작성 시 주의사항</a
+                >
+                <span class="num_letter">
+                  <span class="txt_len"></span
+                  ><span class="num_total"
+                    >작성내용은 마이페이지와 장소상세에 노출되며 매장주를 포함한
+                    다른 사용자들이 볼 수 있으니, 서로를 배려하는 마음을 담아
+                    작성해 주세요."</span
+                  ></span
+                >
+              </div>
+            </div>
+            <div class="group_btn">
+              <button type="reset" class="btn_reset" @click="closeReplyModal">
+                취소
+              </button>
+              <button type="submit" class="btn_submit" @click="submitReply">
+                등록
+              </button>
+            </div>
+          </fieldset>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Reply Modal -->
+  <div
+    v-if="showReplyEditModal"
+    data-root=""
+    class="evaluation_layer"
+    :style="{ top: modalTop }"
+  >
+    <div class="inner_layer">
+      <div class="layer_head">
+        <strong class="tit_layer">{{ store.storeName }}</strong>
+      </div>
+      <div class="layer_body">
+        <form action="#">
+          <fieldset>
+            <legend class="screen_out">답글작성</legend>
+            <div class="box_evaluation">
+              <div class="group_review">
+                <label for="tfReview" class="screen_out">후기 작성</label>
+                <textarea
+                  v-model="editReplyText"
+                  id="tfReview"
+                  name="reviewText"
+                  class="tf_review"
+                  placeholder="작성내용은 마이페이지와 장소상세에 노출되며 매장주를 포함한 다른 사용자들이 볼 수 있으니, 서로를 배려하는 마음을 담아 작성해 주세요."
+                ></textarea>
+              </div>
+              <div class="group_etc">
+                <a href="#none" target="_blank" class="link_notice"
+                  >답글 작성 시 주의사항</a
+                >
+                <span class="num_letter">
+                  <span class="txt_len"></span
+                  ><span class="num_total"
+                    >작성내용은 마이페이지와 장소상세에 노출되며 매장주를 포함한
+                    다른 사용자들이 볼 수 있으니, 서로를 배려하는 마음을 담아
+                    작성해 주세요."</span
+                  ></span
+                >
+              </div>
+            </div>
+            <div class="group_btn">
+              <button type="reset" class="btn_reset" @click="closeReplyModal">
+                취소
+              </button>
+              <button type="submit" class="btn_submit" @click="updateReply">
+                등록
+              </button>
+            </div>
+          </fieldset>
+        </form>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, watch } from "vue";
 import { useAuthStore } from "../stores/auth";
 import { useAdminStore } from "../stores/admin";
 import api from "../axios"; // Centralized Axios instance import
@@ -671,46 +751,7 @@ export default {
       required: true,
     },
   },
-  name: "App",
-    data (){
-    return {
-      forbiddenText: "씨발",
-      forbiddenText2: "병신",
-      forbiddenText3: "새끼",
-      forbiddenText4: "좆",
-      inputText: "",
-    };
 
-  },
-  watch: {
-          // inputText 감시
-        inputText: function () {
-            var pos = this.inputText.indexOf(this.forbiddenText);
-            if (pos >= 0) {
-            alert("욕설 비방 관련된 글은 입력할 수 없습니다.");
-              // 입력문자에서 금지 문자를 삭제한다.
-            this.inputText = this.inputText.substr(0, pos);
-            }
-            var pos = this.inputText.indexOf(this.forbiddenText2);
-            if (pos >= 0) {
-            alert("욕설 비방 관련된 글은 입력할 수 없습니다.");
-             // 입력문자에서 금지 문자를 삭제한다.
-            this.inputText = this.inputText.substr(0, pos);
-            }
-            var pos = this.inputText.indexOf(this.forbiddenText3);
-            if (pos >= 0) {
-            alert("욕설 비방 관련된 글은 입력할 수 없습니다.");
-              // 입력문자에서 금지 문자를 삭제한다.
-            this.inputText = this.inputText.substr(0, pos);
-            }
-            var pos = this.inputText.indexOf(this.forbiddenText4);
-            if (pos >= 0) {
-            alert("욕설 비방 관련된 글은 입력할 수 없습니다.");
-              // 입력문자에서 금지 문자를 삭제한다.
-            this.inputText = this.inputText.substr(0, pos);
-            }
-        },
-      },
   setup(props) {
     const store = ref({});
     const reviews = ref([]);
@@ -734,7 +775,6 @@ export default {
       rating: 5,
       reviewText: "",
     });
-    const currentRating = ref(5);
 
     // Modals
     const showReplyModal = ref(false);
@@ -883,9 +923,18 @@ export default {
 
     // Open Reply Modal
     const openReplyModal = (review) => {
-      currentReview.value = review;
-      replyText.value = "";
-      showReplyModal.value = true;
+      if (confirm("답글을 작성하시겠습니까?")) {
+        const scrollY = window.scrollY || document.documentElement.scrollTop;
+
+        const viewportHeight = window.innerHeight;
+
+        // 모달이 화면 중앙에 위치하도록 설정
+        modalTop.value = `${scrollY + viewportHeight / 2}px`;
+
+        currentReview.value = review;
+        replyText.value = "";
+        showReplyModal.value = true;
+      }
     };
 
     // Close Reply Modal
@@ -917,22 +966,6 @@ export default {
       }
     };
 
-    // Open Edit Review Modal
-    const openEditModal = (review) => {
-      if (confirm("후기를 수정하시겠습니까?")) {
-        const scrollY = window.scrollY || document.documentElement.scrollTop;
-
-        const viewportHeight = window.innerHeight;
-
-        // 모달이 화면 중앙에 위치하도록 설정
-        modalTop.value = `${scrollY + viewportHeight / 2}px`;
-        currentReview.value = review;
-        newReview.value.rating = review.rating;
-        editReviewText.value = review.reviewText;
-        showEditModal.value = true;
-      }
-    };
-
     // Close Edit Review Modal
     const closeEditModal = () => {
       showEditModal.value = false;
@@ -952,11 +985,8 @@ export default {
           `/reviews/${store.value.storeId}/${currentReview.value.reviewId}`,
           {
             reviewId: currentReview.value.reviewId,
-            // storeId: store.value.storeId,
             rating: newReview.value.rating, // Maintain existing rating
             reviewText: editReviewText.value,
-            // updatedAt: new Date(),
-            // memberId: user.value.memberId,
           }
         );
         console.log(
@@ -973,9 +1003,11 @@ export default {
 
     // Open Edit Reply Modal
     const openReplyEditModal = (review) => {
-      currentReview.value = review;
-      editReplyText.value = review.replyText;
-      showReplyEditModal.value = true;
+      if (confirm("답글을 수정하시겠습니까?")) {
+        currentReview.value = review;
+        editReplyText.value = review.replyText;
+        showReplyEditModal.value = true;
+      }
     };
 
     // Close Edit Reply Modal
@@ -1059,6 +1091,70 @@ export default {
       });
     };
 
+    const forbiddenText = "씨발";
+    const forbiddenText2 = "병신";
+    const forbiddenText3 = "새끼";
+    const forbiddenText4 = "좆";
+
+    // 금지어 검사 함수
+    const checkForbiddenText = (text) => {
+      let pos = text.indexOf(forbiddenText);
+      if (pos >= 0) {
+        alert("욕설 비방 관련된 글은 입력할 수 없습니다.");
+        return text.substr(0, pos);
+      }
+
+      pos = text.indexOf(forbiddenText2);
+      if (pos >= 0) {
+        alert("욕설 비방 관련된 글은 입력할 수 없습니다.");
+        return text.substr(0, pos);
+      }
+
+      pos = text.indexOf(forbiddenText3);
+      if (pos >= 0) {
+        alert("욕설 비방 관련된 글은 입력할 수 없습니다.");
+        return text.substr(0, pos);
+      }
+
+      pos = text.indexOf(forbiddenText4);
+      if (pos >= 0) {
+        alert("욕설 비방 관련된 글은 입력할 수 없습니다.");
+        return text.substr(0, pos);
+      }
+
+      return text;
+    };
+
+    // reviewText와 editReviewText에 대해 금지어 체크
+    watch(
+      () => newReview.value.reviewText,
+      (newValue) => {
+        newReview.value.reviewText = checkForbiddenText(newValue);
+      }
+    );
+
+    watch(editReviewText, (newValue) => {
+      editReviewText.value = checkForbiddenText(newValue);
+    });
+    watch(replyText, (newValue) => {
+      replyText.value = checkForbiddenText(newValue);
+    });
+
+    const openEditModal = (review) => {
+      if (confirm("후기를 수정하시겠습니까?")) {
+        const scrollY = window.scrollY || document.documentElement.scrollTop;
+
+        const viewportHeight = window.innerHeight;
+
+        // 모달이 화면 중앙에 위치하도록 설정
+        modalTop.value = `${scrollY + viewportHeight / 2}px`;
+        currentReview.value = review;
+        newReview.value.rating = review.rating;
+        editReviewText.value = review.reviewText;
+        showEditModal.value = true;
+      }
+    };
+
     onMounted(async () => {
       await fetchStoreInfo();
       initMap();
@@ -1071,7 +1167,6 @@ export default {
       isAdmin,
       isOwner,
       starWidth,
-      newReview,
       submitReview,
       resetReview,
       deleteReview,
@@ -1103,6 +1198,7 @@ export default {
       editRating,
       toggleMenu,
       isMenuOpen,
+      newReview,
     };
   },
 };
