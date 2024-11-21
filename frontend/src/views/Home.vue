@@ -168,5 +168,8 @@ export default {
 @import '../assets/css/home/bootstrap.css';
 @import '../assets/css/home/main.css';
 
+.dropdown button:focus{
+  outline: none;
 
+}
 </style>
