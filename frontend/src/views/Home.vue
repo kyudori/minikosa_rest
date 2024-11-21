@@ -168,29 +168,8 @@ export default {
 @import '../assets/css/home/bootstrap.css';
 @import '../assets/css/home/main.css';
 
-/* 링크 스타일 수정 */
-h5 {
-    text-decoration-line: none;
-    text-decoration: none;
-    color: black;
-    transition: color 0.3s, text-decoration 0.3s;
-}
+.dropdown button:focus{
+  outline: none;
 
-a:hover {
-    text-decoration: underline;
-    color: #FF885B;
 }
-
-/* 특정 클래스에서 언더라인 스타일 오버라이드 */
-.search_store_name {
-    color: #FF885B;
-    text-decoration: none;
-}
-
-.search_store_name:hover {
-    text-decoration: underline;
-    color: #FF885B;
-}
-
-/* 추가적인 스타일 조정이 필요할 경우 여기에 작성 */
 </style>

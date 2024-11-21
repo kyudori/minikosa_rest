@@ -487,7 +487,8 @@ button {
 .container {
     margin: 0 auto;
     padding-top: 16px;
-    width: 800px;
+    min-width: 800px;
+    max-width: 800px;
 }
 
 .content_inner {
@@ -652,6 +653,7 @@ button {
 .place_location .address_text {
     display: block;
     word-break: break-all;
+    padding-top: 5px;
 }
 
 .place_location .address_num_text {
@@ -719,7 +721,7 @@ button {
     margin-top: 12px;
     width: 12px;
     height: 15px;
-    margin-left: 1px;
+    margin-left: -15px;
 }
 
 /*.place_location .phone_text .phone_num_text {
@@ -730,7 +732,7 @@ button {
 .place_location .phone_text .phone_num_text {
     font-size: 15px;
     letter-spacing: 0;
-    margin-top: 4px;
+    margin-top: 7px;
     padding-top: 4px;
     display: inline-block;
 }
@@ -741,11 +743,17 @@ button {
 }
 */
 
+.place_location .business_hours_text .hours_text{
+    line-height: 5px;
+    padding-top: 14px;
+}
+
 
 .place_location .title_info_text {
     font-size: 16px;
     display: block;
     word-break: break-all;
+    line-height: 2;
 
 }
 

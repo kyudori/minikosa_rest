@@ -197,6 +197,11 @@ export default {
 </script>
 
 <style scoped>
+a {
+  text-decoration: none;
+  color: #333;
+}
+
 /* main-content 스타일 */
 .main-content {
   width: 800px;
