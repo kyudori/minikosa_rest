@@ -1023,7 +1023,9 @@ export default {
     };
 
     // Update Reply
-    const updateReply = async () => {
+    const updateReply = async (event) => {
+      // page reload 방지
+      event.preventDefault();
       if (!editReplyText.value) {
         alert("답글을 작성해주세요.");
         return;
