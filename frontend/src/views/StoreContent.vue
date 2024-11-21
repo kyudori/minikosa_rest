@@ -977,7 +977,10 @@ export default {
     };
 
     // Update Review
-    const updateReview = async () => {
+    const updateReview = async (event) => {
+      // page reload 방지
+      event.preventDefault();
+
       if (!editReviewText.value) {
         alert("후기를 작성해주세요.");
         return;
@@ -990,11 +993,7 @@ export default {
             reviewId: currentReview.value.reviewId,
             rating: newReview.value.rating, // Maintain existing rating
             reviewText: editReviewText.value,
-          }
-        );
-        console.log(
-          `/reviews/${store.value.storeId}/${currentReview.value.reviewId}`
-        );
+          });
         alert("후기가 성공적으로 수정되었습니다.");
         closeEditModal();
         await fetchReviews();
