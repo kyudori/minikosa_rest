@@ -19,7 +19,8 @@
 ## ⚡️ 프로젝트 정보
 
 - [한국소프트웨어산업협회(KOSA)](https://www.sw.or.kr/site/sw/edu/selectEduView.do?eduNo=1715) Full Stack 양성 과정 1~2차 미니 프로젝트
-- 발표 자료: [다운로드](https://github.com/user-attachments/files/17963770/_.pd)
+- 발표 자료: [다운로드](https://github.com/user-attachments/files/17963770/_.pdf)
+- 프로젝트 노션: [링크](https://kyudori.notion.site/fffec16cd2d781dabd96e9297f752b38?v=fffec16cd2d7812fa482000c2c56e00f&pvs=4)
 
 <br/>
 
@@ -81,6 +82,18 @@
 <br>
 
 ## 📚 프로젝트 정보
+
+<details>
+<summary>핵심 코드 분석</summary>
+
+- [**controller**](https://kyudori.notion.site/Controller-147ec16cd2d780a99509cf5400864d67?pvs=4)
+- [**entity**](https://kyudori.notion.site/Entity-147ec16cd2d78083bb55cc1d5b32e7c6?pvs=4)
+- [**service**](https://kyudori.notion.site/Service-147ec16cd2d7805d883be230bc43d3b5?pvs=4)
+- [**exception**](https://kyudori.notion.site/Exception-147ec16cd2d780bcaaa1e63c245028a4?pvs=4)
+- [**repository**](https://kyudori.notion.site/Repository-147ec16cd2d780818bc9d472a76503f3?pvs=4)
+- [**vue.js**](https://kyudori.notion.site/Vue-147ec16cd2d78022a041f3ead26c1885?pvs=4)
+
+</details>
 
 <details>
 <summary>커밋 컨벤션</summary>
