@@ -9,7 +9,7 @@
 - [🔥 작업 기간](#🔥-작업-기간)
 - [📌 프로젝트 및 기능 소개](#📌-프로젝트-및-기능-소개)
 - [🌳 프로젝트 목표](#🌳-프로젝트-목표)
-- [🏕️ DataBase Schema](#🏕️-DataBase-Schema)
+- [✨️ DataBase Schema](#✨️-DataBase-Schema)
 - [🏕️ 최종 아키텍처](#🏕️-최종-아키텍처)
 - [🛠️ 기술 스택](#🛠️-기술-스택)
 - [🦸🏻‍ 팀원 및 역할](#🦸🏻‍-팀원-및-역할)
@@ -20,16 +20,15 @@
 ## ⚡️ 프로젝트 정보
 
 - [한국소프트웨어산업협회(KOSA)](https://www.sw.or.kr/site/sw/edu/selectEduView.do?eduNo=1715) Full Stack 양성 과정 1~2차 미니 프로젝트
-- 시연 영상: [Youtube](https://youtu.be/js_8dlwmXRs)
 - 발표 자료: [다운로드](https://github.com/user-attachments/files/17963770/_.pdf)
-- 프로젝트 노션: [링크](https://kyudori.notion.site/fffec16cd2d781dabd96e9297f752b38?v=fffec16cd2d7812fa482000c2c56e00f&pvs=4)
+- 노션: [링크](https://kyudori.notion.site/fffec16cd2d781dabd96e9297f752b38?v=fffec16cd2d7812fa482000c2c56e00f&pvs=4)
 
 <br/>
 
 ## 🔥 작업 기간
 
-- 1차: 2024.10.14 - 2024.10.23
-- 2차: 2024.11.13 - 2024.11.21
+- 1차 (기능 개발): 2024.10.14 - 2024.10.23
+- 2차 (기술 전환): 2024.11.13 - 2024.11.21
 
 <br/>
 
@@ -39,13 +38,19 @@
 
 맛집 정보를 공유하는 플랫폼, **먹코살코**입니다.
 
+시연 영상: [YouTube](https://youtu.be/js_8dlwmXRs)
+
+API Docs: [POSTMAN](https://documenter.getpostman.com/view/39478882/2sAY4ydLKy)
+
 - 💬 맛집에 대한 정보를 얻을 수 있습니다.
 - 💺 맛집에 대해 손님과 사장님 간 댓글 소통이 가능합니다.
 - ✅ 고객(손님, 사장)에 피드백(회원 제안)을 받아 서비스를 개선합니다.
 
 <br>
 
-## 🏕️ DataBase Schema
+## ✨️ DataBase Schema
+DataBase Schema: [DB diagram](https://dbdiagram.io/d/mini-DB-diagram-66f8fd5b3430cb846cf4b1fc)
+
 <img src="https://github.com/user-attachments/assets/cf970d25-3129-4a9b-97e8-794691efb101" height=350 width=450>
 <br/>
 
@@ -62,11 +67,18 @@
 #### Development 
 <img src="https://img.shields.io/badge/Java-007396?style=flat&logo=Java&logoColor=white"> <img src="https://img.shields.io/badge/Spring%20Boot-6DB33F?style=flat&logo=Spring%20Boot&logoColor=white">
 <img src="https://img.shields.io/badge/Javascript-F7DF1E?style=flat&logo=Javascript&logoColor=white"> <img src="https://img.shields.io/badge/Bootstrap-7952B3?style=flat&logo=Bootstrap&logoColor=white">
-##### 1차
+##### 1차 (기능 개발)
 <img src="https://img.shields.io/badge/MyBatis-4479A1?style=flat&logo=MyBatis&logoColor=white"> <img src="https://img.shields.io/badge/Thymeleaf-005F73?style=flat&logo=Thymeleaf&logoColor=white"> 
-##### 2차
+
+- Server Side MVC 
+- 백엔드 : Spring MVC, MyBatis, 세션에 기반한 인증처리, Thymeleaf 
+- 프론트엔드 : HTM5, CSS3, JavaScript, HttpServletRequest 기반의 AJAX
+##### 2차 (기술 전환)
 <img src="https://img.shields.io/badge/JPA-000000?style=flat&logo=Java%20Persistence%20API&logoColor=white"> <img src="https://img.shields.io/badge/Vue.js-4FC08D?style=flat&logo=vue.js&logoColor=white">
 
+- Client Side MVC 
+- 백엔드 : Spring Rest, JPA, Spring Security 를 활용한 JWT 토큰 기반의 인증처리 
+- 프론트엔드 : Vue 3(HTM5, CSS3, JavaScript), Axios 기반의 AJAX
 #### DataBase
 
 <img src="https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=MySQL&logoColor=white"> <img src="https://img.shields.io/badge/Redis-DC382D?style=flat&logo=Redis&logoColor=white">
@@ -88,7 +100,7 @@
 
 ## 📚 프로젝트 정보
 
-##### 핵심 코드 분석
+#### 핵심 코드 분석
 - [**controller**](https://kyudori.notion.site/Controller-147ec16cd2d780a99509cf5400864d67?pvs=4)
 - [**entity**](https://kyudori.notion.site/Entity-147ec16cd2d78083bb55cc1d5b32e7c6?pvs=4)
 - [**service**](https://kyudori.notion.site/Service-147ec16cd2d7805d883be230bc43d3b5?pvs=4)
@@ -96,8 +108,7 @@
 - [**repository**](https://kyudori.notion.site/Repository-147ec16cd2d780818bc9d472a76503f3?pvs=4)
 - [**vue.js**](https://kyudori.notion.site/Vue-147ec16cd2d78022a041f3ead26c1885?pvs=4)
 
-<details>
-<summary>커밋 컨벤션</summary>
+#### 커밋 컨벤션 
 
 - **feat**: 새로운 기능 추가
 - **fix**: 버그 수정
@@ -108,7 +119,5 @@
 - **chore**: 빌드 작업 또는 설정 변경
 - **perf**: 성능 개선을 위한 코드 변경
 - **ci**: CI 설정 파일 및 스크립트 변경
-
-</details>
 
 <br/>
