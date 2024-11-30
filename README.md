@@ -9,7 +9,7 @@
 - [🔥 작업 기간](#🔥-작업-기간)
 - [📌 프로젝트 및 기능 소개](#📌-프로젝트-및-기능-소개)
 - [🌳 프로젝트 목표](#🌳-프로젝트-목표)
-- [🏕️ 아키텍처](#🏕️-아키텍처)
+- [🏕️ 최종 아키텍처](#🏕️-최종-아키텍처)
 - [🛠️ 기술 스택](#🛠️-기술-스택)
 - [🦸🏻‍ 팀원 및 역할](#🦸🏻‍-팀원-및-역할)
 - [📚 프로젝트 정보](#📚-프로젝트-정보)
@@ -19,6 +19,7 @@
 ## ⚡️ 프로젝트 정보
 
 - [한국소프트웨어산업협회(KOSA)](https://www.sw.or.kr/site/sw/edu/selectEduView.do?eduNo=1715) Full Stack 양성 과정 1~2차 미니 프로젝트
+- 발표 자료: [다운로드](https://github.com/user-attachments/files/17963770/_.pd)
 
 <br/>
 
@@ -41,9 +42,8 @@
 
 <br>
 
-## 🏕️ 아키텍처
-추가예정입니다.
-
+## 🏕️ 최종 아키텍처
+<img src="https://github.com/user-attachments/assets/63d3cc0c-aab8-4556-ad3f-efc7c8ced845">
 <br/>
 
 ## 🛠️ 기술 스택
@@ -75,7 +75,7 @@
 
 | **김슬기** | **장현수** | **정지용** | **한규현** |
 |:----------:|:----------:|:----------:|:----------:|
-| [<img src="https://avatars.githubusercontent.com/u/138750403?v=4" height=150 width=250>](https://github.com/ksks1234) | [<img src="https://avatars.githubusercontent.com/u/182710725?v=4" height=150 width=200>](https://github.com/jhsnex123) | [<img src="https://avatars.githubusercontent.com/u/135500953?v=4" height=150 width=250>](https://github.com/RyanJeeyong) | [<img src="https://avatars.githubusercontent.com/u/57388014?v=4" height=150 width=250>](https://github.com/kyudori) |
+| [<img src="https://avatars.githubusercontent.com/u/138750403?v=4" height=200 width=200>](https://github.com/ksks1234) | [<img src="https://avatars.githubusercontent.com/u/182710725?v=4" height=200 width=200>](https://github.com/jhsnex123) | [<img src="https://avatars.githubusercontent.com/u/135500953?v=4" height=200 width=200>](https://github.com/RyanJeeyong) | [<img src="https://avatars.githubusercontent.com/u/57388014?v=4" height=200 width=200>](https://github.com/kyudori) |
 | 메인 기능<br>가게 상세 기능<br>댓글, 대댓글 기능 | 팀장<br>내 정보 수정<br>Spring Security | 소개 페이지<br>댓글 금지어 | 데이터베이스 설계<br>관리자 기능<br>JWT & Redis|
 
 <br>
@@ -96,62 +96,5 @@
 - **ci**: CI 설정 파일 및 스크립트 변경
 
 </details>
-
-<details>
-<summary>파일트리</summary>
-
-```
-📦 
-minikosa/
-├── frontend/
-│   ├── public/
-│   │   ├── images/
-│   │   │   └── main_logo.png
-│   │   └── index.html
-│   ├── src/
-│   │   ├── assets/
-│   │   ├── components/
-│   │   ├── views/
-│   │   ├── App.vue
-│   │   └── main.js
-│   ├── .gitignore
-│   ├── babel.config.js
-│   ├── package.json
-│   └── README.md
-├── gradle/
-│   └── wrapper/
-│       ├── gradle-wrapper.jar
-│       └── gradle-wrapper.properties
-├── src/
-│   ├── main/
-│   │   ├── java/
-│   │   │   └── com/
-│   │   │       └── example/
-│   │   │           └── minikosa/
-│   │   │               ├── controller/
-│   │   │               ├── model/
-│   │   │               ├── repository/
-│   │   │               ├── service/
-│   │   │               └── MinikosaApplication.java
-│   │   └── resources/
-│   │       ├── static/
-│   │       ├── templates/
-│   │       └── application.properties
-│   └── test/
-│       └── java/
-│           └── com/
-│               └── example/
-│                   └── minikosa/
-│                       └── MinikosaApplicationTests.java
-├── .gitignore
-├── README.md
-├── build.gradle
-├── gradlew
-├── gradlew.bat
-└── settings.gradle
-```
-
-</details>
-
 
 <br/>
