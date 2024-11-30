@@ -9,6 +9,7 @@
 - [🔥 작업 기간](#🔥-작업-기간)
 - [📌 프로젝트 및 기능 소개](#📌-프로젝트-및-기능-소개)
 - [🌳 프로젝트 목표](#🌳-프로젝트-목표)
+- [🏕️ DataBase Schema](#🏕️-DataBase-Schema)
 - [🏕️ 최종 아키텍처](#🏕️-최종-아키텍처)
 - [🛠️ 기술 스택](#🛠️-기술-스택)
 - [🦸🏻‍ 팀원 및 역할](#🦸🏻‍-팀원-및-역할)
@@ -43,6 +44,10 @@
 
 <br>
 
+## 🏕️ DataBase Schema
+<img src="https://github.com/user-attachments/assets/cf970d25-3129-4a9b-97e8-794691efb101">
+<br/>
+
 ## 🏕️ 최종 아키텍처
 <img src="https://github.com/user-attachments/assets/63d3cc0c-aab8-4556-ad3f-efc7c8ced845">
 <br/>
@@ -59,8 +64,7 @@
 ##### 1차
 <img src="https://img.shields.io/badge/MyBatis-4479A1?style=flat&logo=MyBatis&logoColor=white"> <img src="https://img.shields.io/badge/Thymeleaf-005F73?style=flat&logo=Thymeleaf&logoColor=white"> 
 ##### 2차
-<img src="https://img.shields.io/badge/JPA-000000?style=flat&logo=Java%20Persistence%20API&logoColor=white"> 
-<img src="https://img.shields.io/badge/Vue.js-4FC08D?style=flat&logo=vue.js&logoColor=white">
+<img src="https://img.shields.io/badge/JPA-000000?style=flat&logo=Java%20Persistence%20API&logoColor=white"> <img src="https://img.shields.io/badge/Vue.js-4FC08D?style=flat&logo=vue.js&logoColor=white">
 
 #### DataBase
 
